@@ -1,7 +1,7 @@
 {
   "name": "subagent-orchestration",
   "description": "Ein Zielbild, Issue oder eine Etappe als Ganzes umsetzen: Kontext aufnehmen, offene Fragen klären, in Arbeitspakete schneiden, an zugeschnittene Subagenten vergeben (Rolle, Modell, Aufwand, Kontext), Wellen überwachen, Fehlschläge nach Klasse neu ansetzen, mit frischen Agenten gegen Abnahmekriterien prüfen, zusammenführen und als ein fertiges Ergebnis abliefern. Mit Vorgangsbuch, Auftragsvorlage, Projektprofil, zwei mitgelieferten Agenten und den belegten Fehlern, die ohne sie auftreten.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": {
     "name": "florianfinn"
   },
