@@ -1,2 +1,7 @@
 .DS_Store
 Thumbs.db
+
+# Arbeitsverzeichnisse der Skill-Evaluierung: Testläufe, Fixture-Kopien mit
+# eigenem .git, Ausgaben. Wiederverwendbare Teile bei Bedarf gezielt mit
+# `git add -f` aufnehmen.
+*-workspace/
