@@ -1,4 +1,4 @@
-# flofi-skills
+# florianfinn-skills
 
 Eigene Skills für [Claude Code](https://docs.claude.com/en/docs/claude-code),
 als installierbare Plugins. Ein Repo, das gleichzeitig der Marktplatz ist.
