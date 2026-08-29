@@ -82,11 +82,15 @@ zwei:
 Test ihn fängt, aber Verständnis vor der Ausführung nötig ist. Leicht dort, wo
 gar kein Urteil gefragt ist — nur Anwendung einer festen Regel.**
 
-⚠️ **Die Haiku-Stufe ist aus [VoltAgents Modellrouting](https://github.com/VoltAgent/awesome-claude-code-subagents)
-übernommen, nicht aus eigenen Vorfällen belegt** (anders als Opus/Sonnet, siehe
-[`references/field-notes.md`](references/field-notes.md)). Beobachte sie beim
-ersten Einsatz gezielt — Rückläufer oder ein sauberer Lauf gehören dann in die
-Field Notes nach.
+⚠️ **Der erste Einsatz der Haiku-Stufe war ein Rückläufer.** Ein Scout-Auftrag
+zum Suchen/Zählen behauptete, zwei Verzeichnisse existierten nicht und 29
+Klassen seien tot — beides unbelegt und falsch (siehe
+[`references/field-notes.md`](references/field-notes.md), Vorfall 10). Grund
+war der Auftrag, nicht zwingend das Modell: kein festgelegter Suchraum, kein
+verlangter Rohbefehl als Beleg. Gib jedem Such-/Zähl-/Totcode-Auftrag auf
+dieser Stufe ausdrücklich den vollständigen Suchraum (auch `docker/`, `ci/`,
+`scripts/`) und verlange zu jeder Bestandsaussage den Rohbefehl samt Ausgabe —
+nicht nur die Behauptung.
 
 Den *Aufwand* steuert nicht das Modell, sondern der Zuschnitt des Auftrags:
 eine Etappe, genannte Dateiliste, genannte Rückmeldung.
@@ -99,10 +103,16 @@ Ein Auftrag ist **selbsttragend**. Der Agent hat weder deinen Verlauf noch den
 Vorgang gelesen. Was er nicht im Auftrag findet, leitet er her — plausibel, aber
 nicht unbedingt richtig. Vier Punkte gehören ausnahmslos hinein:
 
-1. ⚠️ **Der Basis-Commit als SHA, mit `git fetch --all && git reset --hard <sha>`.**
-   Agenten-Worktrees hängen am **Standardbranch**, nicht an deinem
-   Arbeitsbranch. Ohne diese Zeile arbeiten sie auf einem Stand, auf dem deine
-   Vorarbeit fehlt — im schlimmsten Fall fehlt die Datei, die sie ändern sollen.
+1. ⚠️ **Ein eigenes Worktree je Auftrag, von dir angelegt, plus der
+   Basis-Commit als SHA.** Ein Agent kann im **Hauptcheckout** landen statt in
+   einem eigenen Worktree — dort trifft `git fetch --all && git reset --hard
+   <sha>` fremden, ungesicherten Stand (siehe
+   [`references/field-notes.md`](references/field-notes.md), Vorfall 9). Lege
+   das Worktree selbst an (`git worktree add <pfad> <sha>`) und nenne dem
+   Agenten den Pfad wörtlich, statt ihm nur einen Reset zu geben, dessen
+   Isolation du nicht geprüft hast. Ohne das arbeitet er sonst auf einem
+   Stand, auf dem deine Vorarbeit fehlt — im schlimmsten Fall fehlt die
+   Datei, die er ändern soll.
 2. ⚠️ **Konventionen wörtlich**, nicht als Verweis. Zeichensatz, Sprache,
    Commit-Form. Ein Verweis auf die Konventionsdatei ersetzt sie nicht: Agenten
    lesen sie und halten sie trotzdem nicht ein.
@@ -135,6 +145,12 @@ Lies den **Diff**, nicht den Bericht.
   `<befehl> > lauf.txt 2>&1; echo "code=$?"; tail -25 lauf.txt`.
 - **Zähl jede gemeldete Zahl selbst nach** (`grep -c`, `wc -l`), bevor sie in
   einen Commit- oder Änderungstext kommt. Dort wird sie zum Beleg.
+- ⚠️ **Bestands- und Totcode-Aussagen sind Behauptungen, keine Fakten.**
+  Verlang zu jeder solchen Aussage den Rohbefehl und seine Ausgabe
+  (`ls`/`find` für Existenz, `grep -r` über den ganzen Baum inklusive
+  `docker/`, `ci/`, `scripts/` für Totcode) — ein Bericht ohne das ist ein
+  falsches Negativ, das wie ein Fakt aussieht (siehe
+  [`references/field-notes.md`](references/field-notes.md), Vorfall 10).
 - ⚠️ **Schwellen in Wächtertests verfallen lautlos.** Eine Marke der Form
   `>= N` wird nicht rot, wenn der Bestand über sie hinauswächst. Zähl bei jeder
   Etappe nach, statt sie zu übernehmen.
