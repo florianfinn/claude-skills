@@ -57,6 +57,11 @@ Der Schnitt steht **schriftlich, bevor der erste Agent läuft**.
   und die Gabeln auf, bevor du startest.
 - **Ein Agent bekommt eine Etappe.** Zwei Etappen in einem Agenten ergeben einen
   Diff, den du hinterher nicht mehr in zwei Änderungssätze schneiden kannst.
+- Ist das Plugin [VoltAgent/awesome-claude-code-subagents](https://github.com/VoltAgent/awesome-claude-code-subagents)
+  installiert, rüste die Etappe mit dessen spezialisiertem Subagent-Typ aus
+  (z. B. `backend-developer`, `security-auditor`), statt mit einem generischen
+  Agenten — der Katalog deckt die meisten Flächen ab. Ohne passenden Treffer
+  bleibt es beim generischen Agenten.
 - ⚠️ **Die vorgegebene Reihenfolge ist eine Vermutung, bis du sie gemessen
   hast.** Prüfe vor dem Schnitt, wer wen importiert (`grep -rl`). Eine Datei,
   die wie eine Flächendatei aussieht, kann eine gemeinsame Sprachdatei mit
