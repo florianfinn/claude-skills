@@ -75,21 +75,81 @@ Modellauflösung, in dieser Reihenfolge:
 3. Das `model:` der Agentendefinition
 4. Das Modell der Hauptsitzung
 
-**Konsequenz für den Aufwand:** Du kannst den Aufwand eines fremden Agenten
-nicht pro Aufruf hochdrehen. Drei Wege bleiben:
+**Konsequenz für den Aufwand:** Du kannst den Aufwand eines **fremden** Agenten
+nicht pro Aufruf hochdrehen. Das heißt aber nicht, dass Aufwand und Werkzeuge
+unerreichbar wären — sie liegen eine Ebene tiefer, in der Definition. Und die
+kannst du schreiben. Siehe Abschnitt 3a.
 
-- **Eigene Agentendatei** unter `.claude/agents/` im Projekt, mit dem passenden
-  `effort:`, `tools:`, `maxTurns:` und `skills:`. Der Weg für Arbeitsklassen,
-  die im Projekt wiederkehren. ⚠️ Prüfe, ob eine neu angelegte Datei in der
-  laufenden Sitzung schon greift, bevor du dich darauf verlässt.
-- **Zuschnitt des Auftrags.** Eine Etappe, genannte Dateiliste, genanntes
-  Kriterium — das begrenzt den Aufwand zuverlässiger als jede Einstellung.
-- **Modellwahl.** Kein Ersatz für Aufwand, aber der wirksamste Hebel, der pro
-  Aufruf zur Verfügung steht.
+## 3a. Eine Rolle bekommt Aufwand und Werkzeuge — über ihre Definition
 
-Die beiden mitgelieferten Agenten (`orchestration-scout`,
-`orchestration-verifier`) setzen `effort:` und `tools:` deshalb fest — dafür
-gibt es sie.
+`effort`, `tools`, `disallowedTools`, `maxTurns`, `skills` und `memory` sind in
+jeder Agentendatei setzbar. Der Umweg über die Definition ist kein Hindernis,
+sondern der eigentliche Weg: **passt keine vorhandene Rolle, schreibst du eine.**
+
+```yaml
+---
+name: repo-migrator
+description: Führt Flächenmigrationen in diesem Repo aus.
+tools: Read, Write, Edit, Bash, Glob, Grep   # Agent fehlt: darf nichts starten
+disallowedTools: WebFetch, WebSearch          # aus einer geerbten Liste entfernen
+model: opus
+effort: high                                  # low | medium | high | xhigh | max
+maxTurns: 50
+skills:
+  - projekt-konventionen                      # lädt den Skill VOLLSTÄNDIG vor
+---
+
+<Systemprompt: Rolle, Disziplin, Rückmeldevertrag.>
+```
+
+### Neue Definitionen greifen sofort
+
+Claude Code beobachtet `~/.claude/agents/` und `.claude/agents/`. Eine neu
+angelegte oder geänderte Agentendatei wird **innerhalb weniger Sekunden**
+erkannt; die nächste Vergabe nutzt sie, ohne Neustart. Du kannst also mitten im
+Vorgang eine Rolle für ein Paket bauen und sie in derselben Welle einsetzen.
+
+⚠️ **Drei Ausnahmen, die einen Neustart brauchen:**
+
+1. Der Beobachter deckt nur Verzeichnisse ab, **die beim Sitzungsstart schon
+   existierten**. Legst du `.claude/agents/` selbst erst an, greift die erste
+   Datei darin nicht mehr in dieser Sitzung. → Leg das Verzeichnis früh an, am
+   besten zusammen mit dem Projektprofil in Phase 0.
+2. `.claude/agents/` in Verzeichnissen, die per `--add-dir` oder `/add-dir`
+   dazugekommen sind, wird nicht beobachtet.
+3. Sitzungen mit `--disable-slash-commands` beobachten diese Verzeichnisse gar
+   nicht.
+
+### Welche Definition gewinnt
+
+Bei gleichem Namen entscheidet der Ort, von oben nach unten:
+
+1. Verwaltete Einstellungen (organisationsweit)
+2. `--agents` beim Start
+3. `.claude/agents/` — dieses Projekt
+4. `~/.claude/agents/` — alle deine Projekte
+5. `agents/` eines Plugins
+
+**Eine Projektdefinition überschreibt also eine gleichnamige Plugin-Rolle.** Das
+ist der saubere Weg, eine mitgelieferte oder fremde Rolle anzupassen: gleicher
+Name unter `.claude/agents/`, angepasster Kopf.
+
+### Wann sich das lohnt — und wann nicht
+
+| Lohnt sich | Lohnt sich nicht |
+| --- | --- |
+| Die Arbeitsklasse kehrt im Projekt wieder | Ein einmaliges Paket — nimm eine vorhandene Rolle plus `model`-Überschreibung |
+| Der Aufwand ist der entscheidende Hebel (stille Fehlerklasse) | Der Zuschnitt des Auftrags reicht |
+| Werkzeuge sollen eng gefasst werden (Prüfer ohne `Write`) | Du würdest nur den Systemprompt umformulieren |
+| Projektkonventionen sollen über `skills:` vorgeladen werden statt in jeden Auftrag kopiert | |
+
+Der letzte Punkt ist der größte Gewinn für den Token-Haushalt: Konventionen
+einmal als Projektskill schreiben, in der Definition nennen — statt sie in jeden
+Auftrag zu kopieren. ⚠️ Ein Skill mit `disable-model-invocation: true` lässt
+sich so **nicht** vorladen.
+
+Die vier mitgelieferten Agenten setzen `effort:`, `tools:`, `model:` und
+`maxTurns:` deshalb fest — dafür gibt es sie.
 
 ## 4. Worktrees hängen am Standardbranch
 
@@ -162,10 +222,7 @@ starten. Sie schreiben Pläne.
   du sie liest — deshalb liegt das Ausführliche dort und nicht in der
   `SKILL.md`.
 - Das Feld `skills:` einer Agentendefinition lädt einen Skill **vollständig** in
-  den Subagenten. Für Projektkonventionen ist das der sauberste Weg: einmal als
-  Projektskill schreiben, in der Agentendefinition nennen, statt sie in jeden
-  Auftrag zu kopieren. ⚠️ Ein Skill mit `disable-model-invocation: true` lässt
-  sich so **nicht** vorladen.
+  den Subagenten — siehe Abschnitt 3a.
 - In Plugin-Skills stehen `${CLAUDE_PLUGIN_ROOT}` und `${CLAUDE_SKILL_DIR}` zur
   Verfügung — damit findest du die Referenzdateien unabhängig vom
   Arbeitsverzeichnis.

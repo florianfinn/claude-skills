@@ -120,6 +120,29 @@ abgeholt.
 
 ---
 
+## Kurzfassung für die mitgelieferten Rollen
+
+`orchestration-mechanic` und `orchestration-builder` tragen die Disziplin schon
+im Systemprompt: Basisstand herstellen, im Rand bleiben, nicht mergen oder
+pushen, keine Wächtermarke senken, echten Exit-Code fangen, gedeckelt in Zahlen
+melden. An sie schreibst du nur noch die Abschnitte, die **projekt- und
+paketspezifisch** sind:
+
+- **Basis** (nur der SHA — die Anleitung kennt die Rolle)
+- **Auftrag** mit vollständiger Dateiliste
+- **Fertig ist es, wenn** — das Kriterium mit seinem Befehl
+- **Nicht dein Auftrag** — die Dateien anderer Pakete
+- **Konventionen** wörtlich
+- **Stille Fallen auf dieser Fläche**
+- **Wächter**, die nachzuziehen sind
+- **Prüfbefehle** des Projekts
+
+Das halbiert den Auftrag gegenüber der vollen Vorlage. Bei einer fremden Rolle
+(VoltAgent, `general-purpose`) nimmst du die **volle** Vorlage — dort trägt
+nichts die Disziplin außer deinem Text.
+
+---
+
 ## Der Rückmeldevertrag ist Pflicht
 
 Die letzten Zeilen sind keine Höflichkeit, sondern deine Kontextbremse. Ohne

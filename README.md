@@ -70,13 +70,33 @@ selbst, sobald Arbeit auf mehrere Agenten verteilt werden soll.
 
 ### Mitgelieferte Agenten
 
-Als Plugin heißen sie `subagent-orchestration:orchestration-scout` und
-`subagent-orchestration:orchestration-verifier`.
+Vier Stufen — je eine Arbeitsart, mit festem Modell, Aufwand und Werkzeugsatz.
+Als Plugin tragen sie das Präfix `subagent-orchestration:`.
 
-| Agent | Wofür | Modell |
+| Agent | Wofür | Modell / Aufwand |
 | --- | --- | --- |
-| `orchestration-scout` | Karte der Codebasis aufnehmen: Flächen, gemessene Importbeziehungen, echte Prüfbefehle, Wächtertests mit Schwellen. Nur Befunde, keine Empfehlung. | haiku, geringer Aufwand |
-| `orchestration-verifier` | Frisch gegen Abnahmekriterien prüfen, **ohne Schreibrechte**. Antwortet mit erfüllt / nicht erfüllt / nicht prüfbar, je mit Beleg. | opus, hoher Aufwand |
+| `orchestration-scout` | Karte der Codebasis aufnehmen: Flächen, gemessene Importbeziehungen, echte Prüfbefehle, Wächtertests mit Schwellen. Nur Befunde, keine Empfehlung. | haiku / low, lesend |
+| `orchestration-mechanic` | Fläche umstellen, Bestand löschen mit Nachweis, Tests und Doku nachziehen. Misst vorher und nachher. | sonnet / medium |
+| `orchestration-builder` | Stille Fehlerklassen: Nebenläufigkeit, Zustand, Sicherheit, Migration, neue Bauart. Muss benennen, was er nicht beurteilen konnte. | opus / high |
+| `orchestration-verifier` | Frisch gegen Abnahmekriterien prüfen, **ohne Schreibrechte**. Antwortet mit erfüllt / nicht erfüllt / nicht prüfbar, je mit Beleg. | opus / high, lesend |
+
+Alle vier tragen die Disziplin im **Systemprompt** statt im Auftrag: Basis-SHA
+herstellen, im Dateirahmen bleiben, nicht mergen oder pushen, keine Wächtermarke
+senken, echten Exit-Code fangen, gedeckelt in Zahlen melden. Das halbiert jeden
+Auftrag an sie.
+
+### Eigene Rollen mit Aufwand und Werkzeugen
+
+`effort`, `tools`, `maxTurns` und `skills` sind pro Aufruf nicht setzbar — sie
+stehen in der Agentendefinition. Die kannst du aber schreiben, und
+**neue Agentendateien greifen ohne Neustart**: Claude Code beobachtet
+`.claude/agents/` und übernimmt Änderungen in Sekunden. Eine gleichnamige Datei
+dort überschreibt eine Plugin- oder Fremdrolle — so gibst du einem
+VoltAgent-Fachspezialisten Aufwand, Zugrenze und einen engeren Werkzeugsatz,
+ohne seinen Prompt zu verlieren.
+
+⚠️ Der Beobachter deckt nur Verzeichnisse ab, die beim Sitzungsstart existierten.
+Deshalb legt Phase 0 `.claude/agents/` an, auch leer.
 
 ### Zusammenspiel mit `awesome-claude-code-subagents`
 
@@ -132,7 +152,7 @@ skills/subagent-orchestration/
 skills/orchestrate/           Einstieg   (getippt: /subagent-orchestration:orchestrate)
 skills/orchestrate-resume/    Wiederaufnahme aus dem Vorgangsbuch
 skills/orchestrate-profile/   Projektprofil anlegen/fortschreiben
-agents/                       orchestration-scout, orchestration-verifier
+agents/                       scout, mechanic, builder, verifier
 ```
 
 ---

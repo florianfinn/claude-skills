@@ -143,6 +143,10 @@ eine Liste beantworteter Fragen. Nichts wird gebaut.
    `.claude/subagent-profile.md`. Einmal je Repo, danach zieht jeder Auftrag
    daraus. Ohne Profil schreibst du unvollständige Aufträge und merkst es erst
    an den Rückläufern.
+   ⚠️ **Leg dabei `.claude/agents/` an, auch leer.** Neue Agentendateien greifen
+   ohne Neustart — aber nur in Verzeichnissen, die es beim Sitzungsstart schon
+   gab. Fehlt das Verzeichnis, kannst du in dieser Sitzung keine Rolle mehr
+   nachschärfen.
 5. **Stell die offenen Fragen — einmal, gebündelt, mit Empfehlung.**
    Frag über `AskUserQuestion`, mit deiner Empfehlung an erster Stelle.
 
@@ -197,8 +201,21 @@ Je Paket entscheidest du **vier** Dinge. Trag sie ins Vorgangsbuch:
 | --- | --- | --- |
 | **Rolle** (`subagent_type`) | Fachliche Fehlerklasse der Fläche | Spezialist nur, wenn die Fläche eine **fachtypische stille Fehlerklasse** hat, die die Rolle wirklich abdeckt. Sonst `general-purpose` — der ist berechenbarer. |
 | **Modell** | Fehlerklasse, nicht Textmenge | **Stark, wo ein Fehler grün durchkommt. Mittel, wo ein Test ihn fängt. Schwach, wo am Ende eine Zahl steht.** |
-| **Aufwand** | Urteilstiefe | Ist in der Agentendefinition festgelegt, **nicht pro Aufruf**. Steuerbar über eigene Agentendateien oder über den Zuschnitt des Auftrags. |
+| **Aufwand** | Urteilstiefe | Steht in der Agentendefinition, nicht im Aufruf. Nimm eine der vier mitgelieferten Stufen — oder schreib eine Rolle mit passendem `effort:`, `tools:`, `maxTurns:`, `skills:`. **Neue Agentendateien greifen ohne Neustart.** |
 | **Kontext** | Was der Agent nicht herleiten darf | Konventionen wörtlich, stille Fallen namentlich, Basis-SHA. Alles andere weglassen. |
+
+Die vier Stufen sind schon besetzt — `orchestration-scout` (messen, haiku/low),
+`orchestration-mechanic` (Fläche umstellen, sonnet/medium),
+`orchestration-builder` (stille Fehlerklassen, opus/high) und
+`orchestration-verifier` (prüfen, opus/high). Alle vier tragen die Disziplin im
+Systemprompt — Basis-SHA, Rand, kein Merge, keine Marke senken, gedeckelte
+Rückmeldung —, was jeden Auftrag an sie deutlich kürzer macht.
+
+Passt keine, **schreib eine**: `.claude/agents/<name>.md` mit `effort:`,
+`tools:`, `maxTurns:` und `skills:`. Eine gleichnamige Datei dort überschreibt
+eine Plugin- oder Fremdrolle, du kannst also einen Fachspezialisten übernehmen
+und ihm Aufwand und Werkzeuge geben. Das lohnt bei wiederkehrenden
+Arbeitsklassen, nicht bei einem einmaligen Paket.
 
 Modellwahl im Detail:
 
@@ -438,6 +455,12 @@ prüfst.
 | [`references/project-profile.md`](references/project-profile.md) | Das Profil je Repo, aus dem jeder Auftrag zieht. |
 | [`references/field-notes.md`](references/field-notes.md) | Woher jede Warnung stammt — die Vorfälle hinter den Regeln. |
 
-Mitgelieferte Agenten: `orchestration-scout` (Karte aufnehmen, billig) und
-`orchestration-verifier` (frisch prüfen, ohne Schreibrechte). Beide sind in
-[`references/casting.md`](references/casting.md) beschrieben.
+Mitgelieferte Agenten — vier Stufen, jede mit festem Modell, Aufwand und
+Werkzeugsatz, beschrieben in [`references/casting.md`](references/casting.md):
+
+| Rolle | Arbeitsart | Modell / Aufwand |
+| --- | --- | --- |
+| `orchestration-scout` | Karte aufnehmen, messen, zählen — lesend, ohne Urteil | haiku / low |
+| `orchestration-mechanic` | Fläche umstellen, löschen mit Nachweis, nachziehen | sonnet / medium |
+| `orchestration-builder` | Stille Fehlerklassen: Nebenläufigkeit, Zustand, Sicherheit, Migration | opus / high |
+| `orchestration-verifier` | Gegen ein Kriterium prüfen — ohne Schreibrechte | opus / high |

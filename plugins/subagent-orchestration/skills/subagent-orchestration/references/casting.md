@@ -115,9 +115,23 @@ Namensraum. Stell einmal fest, wie sie in deiner Installation heißen, und trag
 die Namen ins Vorgangsbuch — ein `subagent_type`, den es nicht gibt, kostet
 einen Fehlversuch je Paket.
 
-Zwei Rollen, für die der Bestand keine passende Entsprechung hat, weil beide
-über ihre **Werkzeugliste und ihren Rückmeldevertrag** definiert sind und nicht
-über eine Fachdomäne.
+Vier Rollen, für die der VoltAgent-Bestand keine Entsprechung hat, weil sie
+nicht über eine **Fachdomäne** definiert sind, sondern über **Aufwand,
+Werkzeugliste und Rückmeldevertrag** — genau die Felder, die der Bestand nicht
+setzt.
+
+| Rolle | Arbeitsart | Modell | Aufwand | Werkzeuge |
+| --- | --- | --- | --- | --- |
+| `orchestration-scout` | Karte aufnehmen, messen, zählen | haiku | low | lesend |
+| `orchestration-mechanic` | Fläche umstellen, löschen mit Nachweis, Tests und Doku nachziehen | sonnet | medium | bauend |
+| `orchestration-builder` | Stille Fehlerklassen: Nebenläufigkeit, Zustand, Sicherheit, Migration, neue Bauart | opus | high | bauend |
+| `orchestration-verifier` | Gegen ein Kriterium prüfen | opus | high | lesend |
+
+Alle vier tragen die Disziplin im **Systemprompt** statt im Auftrag: Basis-SHA
+herstellen, im Rand bleiben, nicht mergen oder pushen, keine Wächtermarke
+senken, echten Exit-Code fangen, gedeckelt in Zahlen melden. Das macht jeden
+Auftrag an sie deutlich kürzer — du schreibst nur noch Etappe, Dateiliste,
+Kriterium, Konventionen und stille Fallen.
 
 ### `orchestration-scout`
 
@@ -131,6 +145,28 @@ bleibt beim Leitstand.
 *Unterschied zum eingebauten `Explore`:* `Explore` sucht gut, antwortet aber in
 Prosa und überspringt CLAUDE.md. Der Scout liefert die Tabelle, die der Schnitt
 braucht. Für „wo ist X?" ist `Explore` das bessere Werkzeug.
+
+### `orchestration-mechanic` und `orchestration-builder`
+
+Dieselbe Disziplin, zwei Stufen. Der Unterschied ist die **Fehlerklasse**, nicht
+die Textmenge:
+
+- **`orchestration-mechanic`** (sonnet, medium): Der Fehler wird von einem Test
+  gefangen. Sein Prompt betont Messen vorher/nachher, Nachweis beim Löschen und
+  die lautlos verfallende `>=`-Marke. Meldet er, dass ein Paket Urteil statt
+  Ausführung verlangt, liegt es auf der falschen Stufe — dann umbesetzen, nicht
+  nachfassen.
+- **`orchestration-builder`** (opus, high): Der Fehler kommt grün durch. Sein
+  Prompt richtet die Sorgfalt auf Nebenläufigkeit, Abbruch mitten im Schritt,
+  Idempotenz, Altwerte ohne Regel und die genannten stillen Fallen — und verlangt
+  eine ausdrückliche Angabe, was er **nicht** abschließend beurteilen konnte.
+
+⚠️ **Ein Fachspezialist schlägt beide, wenn die Fläche eine fachtypische stille
+Fehlerklasse hat.** `react-specialist` weiß mehr über Renderzyklen als
+`orchestration-builder`. Umgekehrt trägt der Spezialist die Disziplin nicht —
+dann gehört sie vollständig in den Auftrag. Willst du beides, ist das der Fall
+für eine eigene Rolle: Prompt des Spezialisten übernehmen, Kopf mit `effort`,
+`tools` und `maxTurns` ersetzen.
 
 ### `orchestration-verifier`
 
@@ -171,36 +207,72 @@ Kontext wirkt nur der Rückmeldevertrag.
 
 ---
 
-## Aufwand
+## Aufwand und Werkzeuge
 
-`effort` ist **nicht pro Aufruf** setzbar, nur in der Agentendefinition. Drei
-Wege, in dieser Reihenfolge:
+`effort`, `tools`, `disallowedTools`, `maxTurns` und `skills` sind **nicht pro
+Aufruf** setzbar — sie stehen in der Agentendefinition. Das ist kein Hindernis:
+**Definitionen kannst du schreiben, und sie greifen sofort.**
 
-1. **Zuschnitt des Auftrags.** Eine Etappe, genannte Dateiliste, genanntes
-   Kriterium. Begrenzt den Aufwand zuverlässiger als jede Einstellung — und
-   kostet nichts.
-2. **Modellwahl.** Kein Ersatz, aber der Hebel, den du zur Laufzeit hast.
-3. **Eigene Agentendatei** unter `.claude/agents/` im Projekt. Der Weg für
-   Arbeitsklassen, die im Projekt wiederkehren:
+Drei Wege, in dieser Reihenfolge der Kosten:
+
+### 1. Eine mitgelieferte Stufe nehmen
+
+Die vier Agenten dieses Plugins tragen Aufwand und Werkzeuge fest — für die vier
+Arbeitsarten, die der Schnitt ohnehin unterscheidet. Kostet nichts und ist der
+Normalfall.
+
+### 2. Den Auftrag enger schneiden
+
+Eine Etappe, genannte Dateiliste, genanntes Kriterium. Begrenzt den tatsächlichen
+Aufwand zuverlässiger als jede Einstellung — und kostet ebenfalls nichts.
+Zusammen mit der Modellwahl (pro Aufruf überschreibbar) deckt das die meisten
+Pakete ab.
+
+### 3. Eine eigene Rolle schreiben
+
+Wenn die Arbeitsklasse im Projekt **wiederkehrt** oder eine mitgelieferte Stufe
+fachlich nicht passt. Datei nach `.claude/agents/<name>.md`:
 
 ```yaml
 ---
 name: repo-migrator
 description: Führt Flächenmigrationen in diesem Repo aus.
-tools: Read, Write, Edit, Bash, Glob, Grep
-model: sonnet
-effort: high
-maxTurns: 40
+tools: Read, Write, Edit, Bash, Glob, Grep   # Agent fehlt: darf nichts starten
+model: opus
+effort: high                                  # low | medium | high | xhigh | max
+maxTurns: 50
 skills:
-  - projekt-konventionen     # lädt den Skill VOLLSTÄNDIG in den Agenten
+  - projekt-konventionen                      # lädt den Skill VOLLSTÄNDIG vor
 ---
+
+<Systemprompt: Rolle, Disziplin aus der Auftragsvorlage, Rückmeldevertrag.>
 ```
 
-Das `skills:`-Feld ist der sauberste Weg für wiederkehrende Konventionen: einmal
-als Projektskill schreiben, hier nennen, statt sie in jeden Auftrag zu kopieren.
-⚠️ Ein Skill mit `disable-model-invocation: true` lässt sich so nicht vorladen.
-⚠️ Prüfe, ob eine neu angelegte Agentendatei in der **laufenden** Sitzung schon
-greift, bevor du dich auf sie verlässt.
+**Neue Agentendateien greifen ohne Neustart** — Claude Code beobachtet
+`.claude/agents/` und `~/.claude/agents/` und erkennt Änderungen in Sekunden. Du
+kannst also mitten im Vorgang eine Rolle für ein Paket bauen und sie in derselben
+Welle einsetzen.
+
+⚠️ **Mit einer Ausnahme, die dich genau einmal trifft:** Der Beobachter deckt nur
+Verzeichnisse ab, die beim Sitzungsstart schon existierten. Existiert
+`.claude/agents/` noch nicht, greift die erste Datei darin erst nach einem
+Neustart. **Leg das Verzeichnis deshalb in Phase 0 an**, zusammen mit dem
+Projektprofil — auch leer.
+
+Zwei weitere Fälle brauchen ebenfalls einen Neustart: `.claude/agents/` in
+Verzeichnissen aus `--add-dir`, und Sitzungen mit `--disable-slash-commands`.
+
+### Drei Muster, die sich lohnen
+
+| Muster | Wofür |
+| --- | --- |
+| **Fremde Rolle anpassen** | Gleicher Name unter `.claude/agents/` überschreibt die Plugin-Rolle. So gibst du einer VoltAgent-Rolle `effort`, `maxTurns` und einen engeren Werkzeugsatz, ohne ihren Prompt zu verlieren — Text übernehmen, Kopf ersetzen. |
+| **Konventionen über `skills:` vorladen** | Konventionen einmal als Projektskill schreiben, in der Definition nennen — statt sie in jeden Auftrag zu kopieren. Der größte Einzelgewinn für den Token-Haushalt. ⚠️ Ein Skill mit `disable-model-invocation: true` lässt sich so nicht vorladen. |
+| **Disziplin in den Systemprompt** | Basis-SHA, Rand, kein Merge, keine Marke senken, Rückmeldevertrag — im Systemprompt sind sie auffälliger als in der Auftragsnachricht und machen jeden Auftrag kürzer. Genau das tun die mitgelieferten Bauagenten. |
+
+⚠️ **Schreib keine Rolle für ein einmaliges Paket.** Dann ist der Zuschnitt des
+Auftrags plus `model`-Überschreibung billiger als eine Datei, die danach im
+Projekt liegen bleibt.
 
 ---
 

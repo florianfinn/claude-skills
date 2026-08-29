@@ -143,7 +143,10 @@ widerspricht eine Beobachtung, gilt die Beobachtung.
 | Konventionen wörtlich, nicht als Verweis | Die CLAUDE.md-Kette **erreicht** den Agenten. Dass Regeln trotzdem fallen, ist kein Verfügbarkeits-, sondern ein Auffälligkeitsproblem — das schränkt die Regel ein und begründet sie zugleich. |
 | Der Rückmeldevertrag ist Pflicht | Nur die Abschlussmeldung des Agenten landet in deinem Fenster. Die Ersparnis ist also eine Folge des Deckels, keine Eigenschaft von Subagenten. |
 | Nachsteuern statt neu starten | Jeder Aufruf erzeugt eine **neue Instanz**; `SendMessage` setzt die bestehende mit vollem Verlauf fort und wird als normale Auftragsführung behandelt, auch mitten in der Arbeit. |
-| Aufwand über Zuschnitt und Modell, nicht über die Rolle | `effort`, `tools`, `maxTurns` und `skills` stehen **nur** in der Agentendefinition. Pro Aufruf steuerbar sind Rolle, Auftragstext, Modell, Hintergrund und Isolation. |
+| Aufwand und Werkzeuge über die Definition, nicht über den Aufruf | `effort`, `tools`, `maxTurns` und `skills` stehen **nur** in der Agentendefinition. Pro Aufruf steuerbar sind Rolle, Auftragstext, Modell, Hintergrund und Isolation. |
+| Rollen dürfen mitten im Vorgang entstehen | Claude Code beobachtet `.claude/agents/` und `~/.claude/agents/` und übernimmt neue oder geänderte Dateien binnen Sekunden ohne Neustart. |
+| `.claude/agents/` gehört in Phase 0 angelegt | Der Beobachter deckt nur Verzeichnisse ab, die beim Sitzungsstart existierten — die erste Datei in einem neu angelegten Verzeichnis greift erst nach einem Neustart. |
+| Eine Projektrolle schlägt eine Plugin-Rolle | Bei gleichem Namen gewinnt der höherrangige Ort: verwaltete Einstellungen, `--agents`, `.claude/agents/`, `~/.claude/agents/`, Plugin. |
 | Der Basis-SHA gehört in jeden Auftrag | `isolation: worktree` zweigt **standardmäßig vom Standardbranch** ab, nicht vom `HEAD` der Sitzung. Das ist die dokumentierte Ursache von Vorfall 1. |
 | Kein Prüfer mit Schreibrechten | Aus der Sache, nicht aus der Mechanik: ein Prüfer, der repariert, beurteilt anschließend seine eigene Reparatur. Die Mechanik liefert nur das Mittel (`tools:`) — und dass Plugin-Agenten `permissionMode` ignorieren, weshalb das Verbot zusätzlich im Prompt steht. |
 | Keine verschachtelten Orchestrierer | Verschachtelung ist möglich (drei Ebenen), aber ein verschachtelter Leitstand hat kein Vorgangsbuch und keinen Zugang zum Auftraggeber: er kann weder nachfragen noch zusammenführen noch abnehmen. |
@@ -192,7 +195,7 @@ Ehrlich benannt, damit es nicht als Erfahrung durchgeht:
   braucht überhaupt einen Deckel" folgt aus der Mechanik; die Zahl nicht.
 - **Zwei Schleifen je Paket** ist eine Konvention gegen das Weiterprobieren,
   keine gemessene Grenze.
-- **Ob eine neu angelegte Agentendatei in der laufenden Sitzung schon greift**,
-  ist ungeprüft. Deshalb steht im Skill, dass du es prüfen sollst.
-
-Wer diese vier Punkte misst, sollte die Zahlen hier ersetzen.
+- **Die Aufteilung in vier Stufen** (messen / umstellen / stille Fehlerklasse /
+  prüfen) folgt der Modellregel, ist aber nicht gegen eine feinere oder gröbere
+  Einteilung gemessen.
+Wer diese drei Punkte misst, sollte die Zahlen hier ersetzen.
