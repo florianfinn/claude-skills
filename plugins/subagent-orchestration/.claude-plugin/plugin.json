@@ -1,11 +1,20 @@
 {
   "name": "subagent-orchestration",
-  "description": "Arbeit auf mehrere zugeschnittene Subagenten aufteilen und wieder zusammenführen: schneiden, Modell wählen, Auftrag schreiben, führen, prüfen, zusammenführen, abnehmen. Mit Auftragsvorlage, Projektprofil und den belegten Fehlern, die ohne sie auftreten.",
-  "version": "0.1.0",
+  "description": "Ein Zielbild, Issue oder eine Etappe als Ganzes umsetzen: Kontext aufnehmen, offene Fragen klären, in Arbeitspakete schneiden, an zugeschnittene Subagenten vergeben (Rolle, Modell, Aufwand, Kontext), Wellen überwachen, Fehlschläge nach Klasse neu ansetzen, mit frischen Agenten gegen Abnahmekriterien prüfen, zusammenführen und als ein fertiges Ergebnis abliefern. Mit Vorgangsbuch, Auftragsvorlage, Projektprofil, zwei mitgelieferten Agenten und den belegten Fehlern, die ohne sie auftreten.",
+  "version": "0.2.0",
   "author": {
     "name": "florianfinn"
   },
   "license": "MIT",
   "repository": "https://github.com/florianfinn/claude-skills",
-  "keywords": ["subagents", "orchestration", "delegation", "workflow", "code-review"]
+  "keywords": [
+    "subagents",
+    "orchestration",
+    "delegation",
+    "workflow",
+    "parallel",
+    "token-efficiency",
+    "verification",
+    "code-review"
+  ]
 }
