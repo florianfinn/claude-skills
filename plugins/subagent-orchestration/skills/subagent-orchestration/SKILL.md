@@ -57,6 +57,11 @@ Der Schnitt steht **schriftlich, bevor der erste Agent läuft**.
   und die Gabeln auf, bevor du startest.
 - **Ein Agent bekommt eine Etappe.** Zwei Etappen in einem Agenten ergeben einen
   Diff, den du hinterher nicht mehr in zwei Änderungssätze schneiden kannst.
+- Ist das Plugin [VoltAgent/awesome-claude-code-subagents](https://github.com/VoltAgent/awesome-claude-code-subagents)
+  installiert, rüste die Etappe mit dessen spezialisiertem Subagent-Typ aus
+  (z. B. `backend-developer`, `security-auditor`), statt mit einem generischen
+  Agenten — der Katalog deckt die meisten Flächen ab. Ohne passenden Treffer
+  bleibt es beim generischen Agenten.
 - ⚠️ **Die vorgegebene Reihenfolge ist eine Vermutung, bis du sie gemessen
   hast.** Prüfe vor dem Schnitt, wer wen importiert (`grep -rl`). Eine Datei,
   die wie eine Flächendatei aussieht, kann eine gemeinsame Sprachdatei mit
@@ -64,17 +69,24 @@ Der Schnitt steht **schriftlich, bevor der erste Agent läuft**.
 
 ## 2. Modell wählen
 
-Das Modell folgt der **Fehlerklasse**, nicht der Textmenge:
+Das Modell folgt der **Fehlerklasse**, nicht der Textmenge — drei Stufen, nicht
+zwei:
 
 | Arbeit | Modell | Warum |
 | --- | --- | --- |
 | Neue Bauart, Nebenläufigkeit, Zustand, Sicherheit | stark (Opus) | Hier entstehen Fehler, die **still** bleiben: Tests grün, Verhalten falsch. Urteil, nicht Ausführung. |
-| Fläche umstellen, Bestand löschen mit Nachweis | mittel (Sonnet) | Mechanisch, aber mit Beleg. Ein Test fängt den Fehler. |
-| Messen, zählen, Marken nachziehen | mittel (Sonnet) | Am Ende steht eine Zahl, kein Urteil. |
-| Prosa und Doku nachziehen | mittel (Sonnet) | Der Bestand gibt den Ton vor. |
+| Fläche umstellen, Bestand löschen mit Nachweis, Logik debuggen | mittel (Sonnet) | Mechanisch, aber mit Beleg. Ein Test fängt den Fehler — dafür muss der Agent aber erst verstehen, was der Code tut. |
+| Suchen, zählen, Marken nachziehen, Doku im vorgegebenen Ton, Abhängigkeiten nachziehen | leicht (Haiku) | Reine Ausführung ohne Ermessensspielraum: Regel oder Vorlage liegt schon fest, der Agent wendet sie nur an. Ein falscher Zähler oder Ton fällt sofort auf. |
 
 **Faustregel: stark dort, wo ein Fehler grün durchkommt. Mittel dort, wo ein
-Test ihn fängt.**
+Test ihn fängt, aber Verständnis vor der Ausführung nötig ist. Leicht dort, wo
+gar kein Urteil gefragt ist — nur Anwendung einer festen Regel.**
+
+⚠️ **Die Haiku-Stufe ist aus [VoltAgents Modellrouting](https://github.com/VoltAgent/awesome-claude-code-subagents)
+übernommen, nicht aus eigenen Vorfällen belegt** (anders als Opus/Sonnet, siehe
+[`references/field-notes.md`](references/field-notes.md)). Beobachte sie beim
+ersten Einsatz gezielt — Rückläufer oder ein sauberer Lauf gehören dann in die
+Field Notes nach.
 
 Den *Aufwand* steuert nicht das Modell, sondern der Zuschnitt des Auftrags:
 eine Etappe, genannte Dateiliste, genannte Rückmeldung.

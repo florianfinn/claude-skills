@@ -52,7 +52,9 @@ Der Kern in drei Sätzen:
 1. **Eine Datei gehört genau einem Agenten.** Zwei Agenten in derselben Datei
    erzeugen Konflikte, die du hinterher von Hand auflöst.
 2. **Das Modell folgt der Fehlerklasse, nicht der Textmenge.** Stark dort, wo
-   ein Fehler grün durchkommt; mittel dort, wo ein Test ihn fängt.
+   ein Fehler grün durchkommt; mittel dort, wo ein Test ihn fängt, aber
+   Verständnis vor der Ausführung braucht; leicht dort, wo nur eine feste
+   Regel angewendet wird.
 3. **Was du selbst baust, prüft niemand.** Behalte nur, was kein Agent
    übernehmen kann: Konfliktauflösung, Schnitt, Abnahme, und die Fragen an den
    Auftraggeber.

@@ -130,3 +130,11 @@ laufen sie nacheinander, nicht parallel.
   mit Empfehlung an den Auftraggeber zurück. Eine wurde gegen die Empfehlung
   entschieden — das war sein Recht und kostete nichts, weil die Frage vorher
   kam und nicht hinterher.
+
+## Offen
+
+- **Leichte Modellstufe (Haiku).** Diese Nacht kannte nur stark/mittel — die
+  dritte, leichte Stufe in `SKILL.md` ist aus VoltAgents Modellrouting
+  übernommen, nicht hier gemessen. Erster Einsatz und Ergebnis (Rückläufer
+  oder sauberer Lauf) gehören oben in „Was gut funktioniert hat" oder als
+  neuer Vorfall nach, sobald es einen gibt.
