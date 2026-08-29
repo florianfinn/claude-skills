@@ -114,6 +114,52 @@ noch enthielt.
 **Die Regel:** Eine Datei gehört genau einem Agenten. Wenn zwei sie brauchen,
 laufen sie nacheinander, nicht parallel.
 
+## 9. Der Hauptcheckout statt eigenes Worktree
+
+**Was passierte:** Ein Auftrag enthielt wie vorgeschrieben `git reset --hard
+<sha>`. Die Agenten liefen aber nicht in einem eigenen Worktree, sondern im
+Hauptcheckout — demselben Stand, in dem der Auftraggeber selbst arbeitete.
+Ein `git reset --hard` dort hätte echte, ungesicherte Arbeit gelöscht. Beim
+Nachprüfen zeigte das Reflog keinen ausgeführten Reset, und der Hauptcheckout
+stand ohnehin schon auf der verlangten SHA — es ging nichts verloren, aber nur
+durch Zufall.
+
+**Die Regel:** Jedes Baupaket bekommt sein **eigenes** Worktree, angelegt vom
+Organisator (`git worktree add <pfad> <sha>`), nicht nur eine Basis-SHA zum
+Selbst-Zurücksetzen. Der Auftrag nennt den Worktree-Pfad wörtlich. Ein
+`reset --hard` im Auftrag ist nur sicher, wenn seine Isolation vorher geprüft
+ist — nicht angenommen.
+
+**Warum es nicht auffällt:** Ein `reset --hard`, der zufällig auf dem
+richtigen Stand landet, sieht wie ein normaler Lauf aus. Der Unterschied
+zwischen „im eigenen Worktree" und „im geteilten Hauptcheckout" steht in
+keiner Ausgabe, die der Agent von sich aus meldet.
+
+## 10. Die unbelegte Bestandsaussage
+
+**Was passierte:** Ein Scout-Auftrag sollte die Karte eines Repos ziehen:
+welche Verzeichnisse es gibt, welche Klassen tot sind. Der Bericht behauptete,
+`web/tests/ui/` und `browser/` existierten nicht, und 29 Klassen seien totes
+Fläche. Beides war falsch — beide Verzeichnisse existierten, und die 29
+Klassen wurden aus `docker/`-Dateien heraus benutzt, einem Verzeichnis, das
+eine Quellcode-Suche typischerweise nicht mitnimmt. Erst das Nachzählen von
+Hand deckte es auf.
+
+**Die Regel:** Bestands- und Totcode-Aussagen sind Behauptungen, keine
+Fakten. Der Auftrag verlangt zu jeder solchen Aussage den Rohbefehl und seine
+Ausgabe (`ls`/`find` für Existenz, `grep -r` über den **ganzen** Baum für
+Totcode) — und der Suchraum wird ausdrücklich genannt, inklusive
+Verzeichnissen, die keine Quelldateien im engeren Sinn enthalten (`docker/`,
+`ci/`, `scripts/`, Infrastruktur-Konfiguration). Eine Suche, die sich auf
+„übliche" Quellverzeichnisse beschränkt, liefert ein falsches Negativ, das
+wie ein Fakt aussieht.
+
+**Nachtrag zur leichten Modellstufe:** Das war der erste Einsatz von Haiku für
+„suchen, zählen" (siehe „Offen" unten) — und ein Rückläufer. Nicht zwingend
+weil Haiku dafür ungeeignet wäre, sondern weil der Auftrag den Suchraum nicht
+festgelegt und keinen Rohbefehl als Beleg verlangt hatte. Die Fehlerklasse
+war für das Modell nicht vermeidbar, weil sie im Auftrag fehlte.
+
 ## Was gut funktioniert hat
 
 - **Modellwahl nach Fehlerklasse.** Die Arbeiten mit stillen Fehlerklassen
@@ -133,8 +179,9 @@ laufen sie nacheinander, nicht parallel.
 
 ## Offen
 
-- **Leichte Modellstufe (Haiku).** Diese Nacht kannte nur stark/mittel — die
-  dritte, leichte Stufe in `SKILL.md` ist aus VoltAgents Modellrouting
-  übernommen, nicht hier gemessen. Erster Einsatz und Ergebnis (Rückläufer
-  oder sauberer Lauf) gehören oben in „Was gut funktioniert hat" oder als
-  neuer Vorfall nach, sobald es einen gibt.
+- **Leichte Modellstufe (Haiku) bei sauber gefasstem Auftrag.** Der erste
+  Einsatz (Vorfall 10) war ein Rückläufer, aber mit einem eindeutigen Loch im
+  Auftrag: kein festgelegter Suchraum, kein verlangter Rohbefehl als Beleg. Ob
+  Haiku bei einem Auftrag reicht, der beides nennt, ist noch nicht gemessen —
+  das gehört oben in „Was gut funktioniert hat" oder als neuer Vorfall nach,
+  sobald es so einen Lauf gab.

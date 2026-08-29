@@ -15,8 +15,11 @@ Du baust <Etappe/Teilaufgabe>. Die Begründung und die Dateiliste stehen in
 
 ## Basis
 
-Dein Worktree hängt am Standardbranch — das ist NICHT der Stand, auf dem
-gearbeitet wird. Setze ihn zuerst um:
+Du arbeitest in deinem eigenen Worktree unter <worktree-pfad> — nicht im
+Hauptcheckout. Bist du das nicht, sag es zurück, bevor du irgendetwas tust:
+ein `reset --hard` im Hauptcheckout trifft fremden, ungesicherten Stand.
+
+Setze deinen Stand zuerst um:
 
     git fetch --all && git reset --hard <basis-sha>
 
