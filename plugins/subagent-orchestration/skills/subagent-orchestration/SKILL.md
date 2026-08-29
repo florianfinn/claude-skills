@@ -132,12 +132,20 @@ eine Liste beantworteter Fragen. Nichts wird gebaut.
    `orchestration-scout` oder `Explore` — nicht selbst. Du willst die **Karte**,
    nicht das Gelände. Was du selbst liest, bezahlst du für den Rest des
    Vorgangs.
-3. **Schreib das Zielbild als Abnahmekriterien.** Jedes Kriterium ist von außen
-   prüfbar und nennt den Befehl oder die Beobachtung, die es entscheidet.
-   „Dialoge sind einheitlich" ist kein Kriterium. „`grep -rl 'OldDialog' src/`
-   liefert 0 Treffer, `pnpm test` grün" ist eins.
+3. **Schreib das Zielbild als Abnahmekriterien, jedes mit der Kennung `AK-n`.**
+   Jedes Kriterium ist von außen prüfbar und nennt den Befehl oder die
+   Beobachtung, die es entscheidet. „Dialoge sind einheitlich" ist kein
+   Kriterium. „**AK-2:** `grep -rl 'OldDialog' src/` liefert 0 Treffer,
+   `pnpm test` grün" ist eins.
    ⚠️ Ohne Kriterien in dieser Form kannst du in Phase 7 nicht abnehmen, und
    deine Prüfagenten haben nichts, wogegen sie prüfen.
+   ⚠️ **Die Kennung ist nicht Kosmetik, sondern die Verweiskette des ganzen
+   Vorgangs.** Jedes Paket trägt sein `AK-n`, jeder Prüfauftrag nennt eines,
+   jede Zeile im Bericht verweist darauf. Ohne durchgehende Kennung kannst du
+   nach der zweiten Welle nicht mehr sagen, welches Kriterium noch offen ist und
+   welches Paket es erfüllen sollte — und genau das ist die Frage, die dich zur
+   Abnahme trägt. Nummeriere in der Reihenfolge, in der du sie aufschreibst, und
+   ändere die Nummern danach nicht mehr.
 4. **Fülle das Projektprofil**, falls es fehlt:
    [`references/project-profile.md`](references/project-profile.md) → nach
    `.claude/subagent-profile.md`. Einmal je Repo, danach zieht jeder Auftrag

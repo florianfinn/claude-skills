@@ -7,8 +7,9 @@ Die Regeln haben **zwei** Quellen, und der Unterschied ist wichtig:
 
 | Quelle | Was das heißt | Wo sie steht |
 | --- | --- | --- |
-| **Vorfall** | Einmal schiefgegangen, hat Nacharbeit gekostet | Teil A, unten |
-| **Mechanik** | Aus dem dokumentierten Verhalten von Claude Code hergeleitet | [`mechanics.md`](mechanics.md), mit Quelle und Datum |
+| **Vorfall** | Einmal schiefgegangen, hat Nacharbeit gekostet | Teil A |
+| **Mechanik** | Aus dem dokumentierten Verhalten von Claude Code hergeleitet | Teil B, ausführlich in [`mechanics.md`](mechanics.md) |
+| **Messung** | Am Skill selbst gemessen, mit Aufbau und Zahlen | Teil C |
 
 Was weder das eine noch das andere ist — eine bloße Meinung darüber, wie man
 arbeiten sollte —, gehört nicht in den Skill. Findest du dort eine Regel, die
@@ -168,6 +169,92 @@ August 2026). Nachprüfbar mit `grep -c` über die Kategorien:
 | Keine Rolle setzt `effort` oder `maxTurns` | Beides kommt aus Sitzung und Zuschnitt, nicht aus der Rolle. |
 | Einige Rollen setzen MCP-Server voraus (`ui-ux-tester`, `visual-asset-generator`, `codebase-orchestrator`) | Vor dem Einsatz prüfen, sonst startet der Agent mit weniger, als sein Prompt annimmt. |
 
+---
+
+# Teil C: aus dem Test des Skills
+
+Ein Testlauf gegen ein gebautes Repo (zwei Flächen, eine gemeinsame Sprachdatei
+mit acht Importeuren, eine verfallene `>= 4`-Marke bei echtem Bestand 6, ein
+Wächter der per Bauart fällt). Drei Aufgaben, jede einmal **mit** und einmal
+**ohne** Skill, dieselbe Sitzung, dasselbe Modell.
+
+| | mit Skill | ohne Skill |
+| --- | --- | --- |
+| erfüllte Prüfkriterien | 17/17 | 9/17 |
+
+⚠️ **Ein Lauf je Zelle.** Die Streuung ist nicht gemessen; das sind
+Einzelbeobachtungen, keine Mittelwerte.
+
+## C1. Was der Skill nachweislich trägt
+
+Zwei Merkmale kamen mit Skill in **3 von 3** Läufen vor und ohne Skill in
+**0 von 3**:
+
+- **Der Schnitt steht schriftlich** — Pakete und Wellen als Dokument, nicht im
+  Kopf des Leitstands.
+- **Der echte Exit-Code wird gefangen** statt der von `tail`. Ohne Skill kein
+  einziges Mal — und das ist die Fehlerart, die einen roten Lauf als grün
+  meldet.
+
+## C2. Was der Test nicht zeigen konnte
+
+- **Der Wächter, der per Bauart fällt**, wurde von beiden Seiten erkannt (3/3
+  gegen 3/3). Der Testwächter sagte es in seinem eigenen Kommentar — das
+  Kriterium war zu leicht und trennt nichts.
+- **Beim Einzeldatei-Fall sagten beide Seiten das Verteilen korrekt ab.** Ein
+  starkes Modell braucht dafür keinen Skill. Der Unterschied lag allein in der
+  Form des Berichts.
+- **Die Phasen 4 bis 7 sind ungetestet.** Alle drei Läufe haben geplant und
+  gebaut; keiner musste eine Welle mit Rücklauf, Fehlschlag und Neuansatz
+  fahren. Fehler-Playbook, frische Prüfung und Rückschleife sind der teuerste
+  Teil des Skills und der am wenigsten belegte.
+
+## C3. Die Kennung kam nicht an
+
+**Was passierte:** Der Skill verlangt Abnahmekriterien mit Kennung (`AK-1`,
+`AK-2`), damit Pakete, Prüfaufträge und Bericht aufeinander verweisen können.
+Nur **einer von drei** Läufen tat das; die anderen erfanden `K1`…`K5`.
+
+**Warum:** Die Kennung stand nur in `intake.md`, nicht in der `SKILL.md`. Wer
+die Referenz nicht las, erfand ein eigenes Schema.
+
+**Die Regel:** Was die Verweiskette des Vorgangs trägt, steht in der `SKILL.md`
+selbst — mit der Begründung, wozu es dient. Eine Formvorschrift ohne Zweck wird
+durch eine gleichwertig aussehende ersetzt.
+
+## C4. Der Messaufbau war kaputt, nicht das Gemessene
+
+**Was passierte:** Eine Messung der Auslösegenauigkeit ergab 0 von 10 bei den
+Anfragen, die auslösen sollten. Der naheliegende Schluss — die Beschreibung ist
+zu schwach — war falsch.
+
+Eine **Kontrolle mit bekanntem Ergebnis** deckte es auf: Eine maximal plumpe
+Beschreibung („ALWAYS INVOKE THIS SKILL FIRST …") kam auf denselben Wert. Wenn
+die Obergrenze das Ergebnis ist, misst der Aufbau nicht das, was er messen soll.
+
+Zwei Ursachen, beide banal:
+
+1. **Parallele Sonden teilten sich ein Projektverzeichnis.** Jede legt eine
+   Skill-Datei mit derselben Beschreibung an; bei sechs gleichzeitig sieht jede
+   Sitzung alle sechs und ruft irgendeine auf, meist nicht die eigene. Das
+   meldet „nicht ausgelöst".
+2. **Die Sonden liefen in einem leeren Verzeichnis.** Dort fragt ein Modell nach
+   Kontext, statt einen Skill zu laden — gemessen wurde die Leere.
+
+Nach beiden Korrekturen erreichte die echte Beschreibung denselben Wert wie die
+plumpe Kontrolle. Die Beschreibung war nie der Engpass.
+
+**Die Regel:** Ein negatives Urteil ist erst ein Befund, wenn eine Kontrolle
+zeigt, dass der Aufbau überhaupt ein positives liefern kann. Verdächtig ist
+dabei die **Einheitlichkeit**: Ein einzelnes negatives Urteil ist plausibel,
+zehn gleichförmige über verschiedene Flächen sind ein Aufbaufehler. Ausgeschrieben
+in [`verification.md`](verification.md), Abschnitt „Wenn die Messung selbst
+falsch sein kann".
+
+**Nachtrag:** Der Fehlschluss ging als Befund an den Auftraggeber, bevor die
+Kontrolle lief, und musste zurückgenommen werden. Eine Zahl, die einmal als
+Befund im Raum steht, wird weiterverwendet — auch die falsche.
+
 ## Was gut funktioniert hat
 
 - **Modellwahl nach Fehlerklasse.** Die Arbeiten mit stillen Fehlerklassen
@@ -198,4 +285,10 @@ Ehrlich benannt, damit es nicht als Erfahrung durchgeht:
 - **Die Aufteilung in vier Stufen** (messen / umstellen / stille Fehlerklasse /
   prüfen) folgt der Modellregel, ist aber nicht gegen eine feinere oder gröbere
   Einteilung gemessen.
+- **Die Phasen 4 bis 7** sind bisher nur beschrieben, nicht durchlaufen — siehe
+  C2. Ein Test, der einen Fehlschlag erzwingt, fehlt.
+- **Die Auslösegenauigkeit der Beschreibung** ist weiterhin unbekannt. Der
+  korrigierte Aufbau hat eine eigene Obergrenze (Sondenrepo ohne echten
+  Projektkontext), unter der eine Aussage über die Beschreibung nicht möglich
+  ist.
 Wer diese drei Punkte misst, sollte die Zahlen hier ersetzen.

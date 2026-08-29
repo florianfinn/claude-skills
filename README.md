@@ -117,6 +117,26 @@ Drei Dinge, die dabei zählen und am Bestand nachgezählt sind:
   Rollen stehen auf `sonnet`. Bei stiller Fehlerklasse wird sie beim Aufruf
   überschrieben.
 
+### Gemessen
+
+Ein Testlauf gegen ein gebautes Repo (zwei Flächen, eine gemeinsame Sprachdatei
+mit acht Importeuren, eine verfallene `>= 4`-Marke, ein Wächter der per Bauart
+fällt): drei Aufgaben, jede einmal mit und einmal ohne Skill.
+
+| | mit Skill | ohne Skill |
+| --- | --- | --- |
+| erfüllte Prüfkriterien | **17/17** | 9/17 |
+
+Nachweislich unterscheidend, jeweils 3/3 gegen 0/3: **der Schnitt steht
+schriftlich** und **der echte Exit-Code wird gefangen** statt der von `tail`.
+
+Was der Test **nicht** zeigen konnte, steht genauso dabei — die Phasen 4 bis 7
+(Fehler-Playbook, frische Prüfung, Rückschleife) sind ungetestet, und beim
+Einzeldatei-Fall sagten beide Seiten das Verteilen korrekt ab. Aufbau, Zahlen
+und Fehlschlüsse in
+[`references/field-notes.md`](plugins/subagent-orchestration/skills/subagent-orchestration/references/field-notes.md),
+Teil C.
+
 ### Der Kern in fünf Sätzen
 
 1. **Eine Datei gehört genau einem Paket.** Zwei Agenten in derselben Datei

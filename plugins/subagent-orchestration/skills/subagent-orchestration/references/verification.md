@@ -80,6 +80,39 @@ Der Prüferbericht ersetzt den Diff nicht.
   eine Untergrenze prüft, ist ein Alarm, kein Inventar — er schweigt in die
   andere Richtung.
 
+### Wenn die Messung selbst falsch sein kann
+
+Ein negatives Urteil ist erst dann ein Befund, wenn du weißt, dass dein
+Messmittel überhaupt ein positives liefern **könnte**. Sonst misst du dein
+Werkzeug statt die Arbeit — und ein kaputtes Werkzeug meldet in aller Regel
+„nicht erfüllt", nie „ich bin kaputt".
+
+Bau dir deshalb eine **Kontrolle mit bekanntem Ergebnis**, bevor du auf ein
+Nullresultat hin handelst: derselbe Aufbau, aber ein Fall, der bestehen **muss**.
+
+- Der Prüflauf meldet 0 Treffer → lass ihn einmal gegen einen Stand laufen, auf
+  dem es Treffer geben muss. Meldet er dort auch 0, liegt es am Befehl.
+- Ein Agent meldet ein Kriterium als nicht erfüllt → gib ihm einen Fall, der es
+  offensichtlich erfüllt. Erkennt er den nicht, liegt es am Auftrag.
+- Eine ganze Reihe von Prüfungen fällt gleichförmig aus → das ist fast nie die
+  Arbeit. Gleichförmigkeit ist das Erkennungszeichen eines Aufbaufehlers, nicht
+  eines Baufehlers.
+
+⚠️ **Verdächtig ist Einheitlichkeit, nicht Auffälligkeit.** Ein einzelnes
+negatives Urteil ist plausibel. Zehn identische negative Urteile über
+unterschiedliche Flächen sind es nicht — dort prüfst du zuerst den Aufbau.
+
+Zwei Fehlerarten, die sich in einem Prüfaufbau besonders gern verstecken:
+
+| Fehler | Woran du ihn erkennst |
+| --- | --- |
+| **Geteilter Zustand zwischen parallelen Prüfungen** (dasselbe Verzeichnis, dieselbe Datei, derselbe Branch) | Die Ergebnisse schwanken zwischen Läufen, ohne dass sich die Arbeit ändert. |
+| **Eine Prüfumgebung, in der die Frage sinnlos ist** (leeres Repo, fehlende Abhängigkeiten, kein Bezugsstand) | Der Prüfer antwortet mit Rückfragen statt mit einem Urteil. |
+
+Das ist dieselbe Regel wie „prüfe den Fall, der ohne den Fix falsch wäre" — nur
+eine Ebene höher: Dort prüfst du, ob die **Arbeit** wirkt, hier, ob die
+**Prüfung** wirkt.
+
 ---
 
 ## 6. Zusammenführen
