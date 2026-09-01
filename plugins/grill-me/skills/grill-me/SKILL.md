@@ -116,6 +116,19 @@ Ein Vorhaben, bei dem du in keiner dieser Richtungen etwas findest, ist
 wahrscheinlich klar genug und braucht diesen Skill nicht. Sag das, statt Fragen
 zu erfinden.
 
+## Kein Risikokatalog vorweg
+
+Die Versuchung ist groß, erst einmal zu zeigen, wie viel man schon sieht: eine
+Liste mit fünfzehn Risiken, und darunter die erste Frage.
+
+Das macht das Gegenteil von dem, was du willst. Auf zwanzig Bedenken auf einmal
+antwortet jeder mit „ja, das ist alles bedacht" — und damit ist kein einziges
+geprüft, sondern nur pauschal abgeräumt. Dieselben Bedenken einzeln als Frage
+gestellt, jedes an seiner Stelle im Baum, werden beantwortet.
+
+**Ein Bedenken wird zur Frage, oder es wird nicht ausgesprochen.** Was den
+Filter oben nicht besteht, gehört auch nicht als Randbemerkung ins Gespräch.
+
 ## Gnadenlos heißt gründlich, nicht unangenehm
 
 Der Auftraggeber hat um Widerstand gebeten, nicht um Zermürbung.
@@ -154,6 +167,13 @@ Annahme, an der später alles hängt.
 ### Nächste Schritte
 1. <konkret>
 ```
+
+**Was im Protokoll als Entscheidung steht, war vorher eine Frage.** Am Ende
+fällt einem oft noch eine Kleinigkeit ein — der Name des Moduls, das Format der
+Ausgabe — und sie rutscht als Vorschlag ins Protokoll, statt gefragt zu werden.
+Nicken tut der Auftraggeber dann den ganzen Block ab, nicht diesen Punkt. Fällt
+dir beim Schreiben eine unentschiedene Weiche auf, stell sie als Frage, bevor
+du das Protokoll vorlegst.
 
 Steht das Protokoll, frag genau einmal nach der Freigabe: **„Passt das so, oder
 fehlt etwas?"** Bau erst danach.
