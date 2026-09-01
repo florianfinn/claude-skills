@@ -15,6 +15,7 @@ Vorsätzen: was drinsteht, ist einmal schiefgegangen.
 
 ```bash
 /plugin install subagent-orchestration@flofi-skills
+/plugin install grill-me@flofi-skills
 ```
 
 Danach ist der Skill in jedem Projekt verfügbar. Zum Aktualisieren genügt
@@ -29,6 +30,7 @@ Alternativ ohne Plugin-Mechanik: den Ordner
 | Plugin | Was es tut |
 | --- | --- |
 | [`subagent-orchestration`](plugins/subagent-orchestration) | Arbeit auf mehrere zugeschnittene Subagenten aufteilen und wieder zusammenführen. |
+| [`grill-me`](plugins/grill-me) | Ein Vorhaben stresstesten, bevor es gebaut wird — Weiche für Weiche, mit Empfehlung. |
 
 ### subagent-orchestration
 
@@ -58,6 +60,26 @@ Der Kern in drei Sätzen:
 3. **Was du selbst baust, prüft niemand.** Behalte nur, was kein Agent
    übernehmen kann: Konfliktauflösung, Schnitt, Abnahme, und die Fragen an den
    Auftraggeber.
+
+### grill-me
+
+Greift, sobald jemand „grill mich", „stresstest meinen Plan" oder „hinterfrag
+das" sagt — oder einen Plan schildert und erkennbar Widerstand statt Zustimmung
+sucht. Der Skill geht den Entscheidungsbaum des Vorhabens durch und legt jede
+Weiche einzeln zur Wahl vor, jeweils mit begründeter Empfehlung. Am Ende steht
+ein Protokoll, das ausdrücklich bestätigt wird; vorher wird nicht gebaut.
+
+Der Kern in drei Sätzen:
+
+1. **Ändert die Antwort das Vorgehen?** Wenn nicht, wird die Frage gestrichen.
+   Das ist das Abbruchkriterium statt einer festen Fragenzahl — und der Filter,
+   der Verständigung von Verhör trennt.
+2. **Fakten werden nachgeschlagen, Entscheidungen vorgelegt.** Was in Dateien,
+   Konfiguration oder Git-Verlauf steht, ist Recherche und keine Frage. Was du
+   fragst, kostet den Auftraggeber Zeit; was du nachschlägst, kostet nur dich.
+3. **Eine Frage, ein Aufruf, warten.** Das Fragewerkzeug erlaubt vier Fragen auf
+   einmal — genau das ist die Falle: dann sieht niemand mehr, wie Frage 3 von
+   Antwort 1 abhängt.
 
 ## Einen weiteren Skill aufnehmen
 
