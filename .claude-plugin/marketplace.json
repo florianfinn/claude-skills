@@ -12,6 +12,13 @@
       "source": "./plugins/subagent-orchestration",
       "category": "workflow",
       "homepage": "https://github.com/florianfinn/claude-skills/tree/master/plugins/subagent-orchestration"
+    },
+    {
+      "name": "grill-me",
+      "description": "Ein Vorhaben stresstesten, bevor es gebaut wird: den Entscheidungsbaum durchgehen, jede Weiche einzeln zur Wahl stellen — jeweils mit Empfehlung — und mit einem bestätigten Protokoll abschließen. Fakten werden nachgeschlagen, Entscheidungen vorgelegt.",
+      "source": "./plugins/grill-me",
+      "category": "workflow",
+      "homepage": "https://github.com/florianfinn/claude-skills/tree/master/plugins/grill-me"
     }
   ]
 }
