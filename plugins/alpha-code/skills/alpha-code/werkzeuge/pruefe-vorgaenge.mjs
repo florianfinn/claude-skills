@@ -64,8 +64,30 @@ if (!existsSync(join(WURZEL, ROADMAP))) {
   ende();
 }
 
+/* ── Der Vorlagenzustand ist kein Fehler, aber auch kein Schweigen ──
+
+   `einrichten.mjs` legt `docs/ROADMAP.md` an, sobald es ein
+   GitHub-Repository sieht. Ihre Phasen heißen dann `{{PHASE}}` und
+   tragen `Vorgang: #{{N}}` — dieselbe Prüfung, die einen echten
+   Fahrplan absichert, wäre darauf sofort rot, und die Kette wäre
+   **direkt nach dem Einrichten** kaputt. Das bringt niemandem etwas
+   und gewöhnt einem das Übergehen an.
+
+   Also: Solange Platzhalter drinstehen, gilt die Datei als
+   unausgefüllt. Sie wird **gemeldet** statt still durchgewunken —
+   sonst wäre ein Projekt, das seine Roadmap nie füllt, für immer
+   grün. */
+const roh = liesDatei(ROADMAP);
+if (roh.includes("{{")) {
+  const offen = (roh.match(/\{\{[A-Z_]+\}\}/g) || []).length;
+  console.log(`  ${ROADMAP} ist noch die Vorlage (${offen} Platzhalter)`);
+  console.log("    Fahrplan füllen, dann: node werkzeuge/vorgaenge.mjs roadmap");
+  melde(true, `${ROADMAP} angelegt, noch nicht gefüllt`);
+  ende();
+}
+
 /* ── Die Roadmap lesen: `##` Phase, `###` Schritt, `Vorgang: #N` ──── */
-const zeilen = liesDatei(ROADMAP).split(/\r?\n/);
+const zeilen = roh.split(/\r?\n/);
 const phasen = [];
 let imBlock = false;
 zeilen.forEach((zeile, i) => {
