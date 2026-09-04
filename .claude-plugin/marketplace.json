@@ -19,6 +19,13 @@
       "source": "./plugins/grill-me",
       "category": "workflow",
       "homepage": "https://github.com/florianfinn/claude-skills/tree/master/plugins/grill-me"
+    },
+    {
+      "name": "alpha-code",
+      "description": "Ein Projekt so einrichten oder nachrüsten, dass Fehler auffallen, bevor sie auf main landen: Wegweiser, Funktions-Tags an jeder Datei, Prüfkette mit sechs mitgelieferten Wächtern, vorbefülltes Fehlerbuch, Workclaim gegen parallele Sitzungen, Changelog-Pflicht, Altlasten-Ratchet und eine Freigabeliste samt Git-Historie vor jeder Veröffentlichung.",
+      "source": "./plugins/alpha-code",
+      "category": "workflow",
+      "homepage": "https://github.com/florianfinn/claude-skills/tree/master/plugins/alpha-code"
     }
   ]
 }
