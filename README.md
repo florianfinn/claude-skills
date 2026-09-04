@@ -43,14 +43,16 @@ prüfen, zusammenführen, abnehmen, berichten.
 Drei Beilagen:
 
 - **`references/agent-brief.md`** — die Auftragsvorlage zum Ausfüllen, in
-  zwei Fassungen: voll für Bauagenten, kurz für nur lesende Scouts. Ein
-  Auftrag ist selbsttragend; der Agent hat weder deinen Verlauf noch den
-  Vorgang gelesen.
+  drei Fassungen: voll für Bauagenten, kurz für nur lesende Scouts, kurz für
+  Prüfaufträge. Ein Auftrag ist selbsttragend; der Agent hat weder deinen
+  Verlauf noch den Vorgang gelesen.
 - **`references/project-profile.md`** — ein Blatt, das einmal je Repo
-  ausgefüllt wird (Standardbranch, Prüfbefehle, Konventionen, Wächtertests,
-  stille Fallen). Jeder Auftrag zieht daraus.
-- **`references/field-notes.md`** — woher jede Regel stammt. Zehn Vorfälle aus
-  einer Nacht mit neun Agentenläufen, je mit der Regel, die daraus wurde.
+  ausgefüllt wird (Standardbranch, Prüfbefehle, Worktree-Einrichtung,
+  Konventionen, Wächtertests, stille Fallen). Jeder Auftrag zieht daraus.
+- **`references/field-notes.md`** — woher jede Regel stammt. Zwanzig Vorfälle
+  aus echten Vorgängen — einer Nacht mit neun Agentenläufen, einem Vorgang über
+  12 Pakete in zwei Repos und Nachträgen aus früheren Läufen —, je mit der
+  Regel, die daraus wurde.
 
 Der Kern in drei Sätzen:
 
@@ -63,6 +65,10 @@ Der Kern in drei Sätzen:
 3. **Was du selbst baust, prüft niemand.** Behalte nur, was kein Agent
    übernehmen kann: Konfliktauflösung, Schnitt, Abnahme, und die Fragen an den
    Auftraggeber.
+4. **Der Abriss am Zuglimit ist der Regelfall.** Rund jeder zweite Lauf endet
+   daran, ohne Rückmeldung. Deshalb wird gegen ihn geschnitten (Deckel je
+   Auftragsart) und gegen ihn gebaut (fortlaufende Rückmeldedatei,
+   Zwischencommit je Baustein).
 
 ### grill-me
 
