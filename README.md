@@ -32,7 +32,7 @@ Alternativ ohne Plugin-Mechanik: den Ordner
 | --- | --- |
 | [`subagent-orchestration`](plugins/subagent-orchestration) | Arbeit auf mehrere zugeschnittene Subagenten aufteilen und wieder zusammenführen. |
 | [`grill-me`](plugins/grill-me) | Ein Vorhaben stresstesten, bevor es gebaut wird — Weiche für Weiche, mit Empfehlung. |
-| [`alpha-code`](plugins/alpha-code) | Ein Projekt so einrichten oder nachrüsten, dass Fehler auffallen, bevor sie auf `main` landen. |
+| [`alpha-code`](plugins/alpha-code) | Ein Projekt so einrichten oder nachrüsten, dass Fehler auffallen, bevor sie auf `main` landen. (von [Kimpaliz](https://github.com/Kimpaliz)) |
 
 ### subagent-orchestration
 
@@ -84,7 +84,7 @@ Der Kern in drei Sätzen:
    einmal — genau das ist die Falle: dann sieht niemand mehr, wie Frage 3 von
    Antwort 1 abhängt.
 
-### alpha-code
+### alpha-code (von [Kimpaliz](https://github.com/Kimpaliz))
 
 Greift, sobald ein Projekt neu angelegt oder ein bestehendes aufgeräumt,
 strukturiert oder veröffentlicht werden soll. Der Skill stellt ein Gerüst auf —
