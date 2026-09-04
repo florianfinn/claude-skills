@@ -17,7 +17,8 @@ Aufträge und merkst es erst an den Rückläufern.
 | Standardbranch | <master / main> |
 | Arbeitsbranch-Schema | <z. B. claude/<thema>> |
 | Konventionsdatei | <AGENTS.md / CONTRIBUTING.md / …> |
-| Prüfbefehle | <lint> / <test> / <build> |
+| Prüfbefehle | <lint> / <test> / <build> — und aus welchem Verzeichnis sie laufen |
+| Worktree einrichten | <Befehl, der ein frisches Worktree lauffähig macht> |
 | Paketmanager | <pnpm 11, Node 22 — und was ausdrücklich NICHT benutzt wird> |
 | Wächtertests | <Pfadmuster der Tests, die Bestand am Quelltext festhalten> |
 | Deploy | <wer darf, von welchem Branch, mit welchem Befehl> |
@@ -45,6 +46,11 @@ Fremdcode-Verzeichnis anfassen.>
 - **Wächtertests finden:** die Tests, die den Quelltext lesen statt Verhalten zu
   prüfen (`readFile` plus `assert` auf eine Zahl). Genau die tragen Marken, die
   lautlos verfallen.
+- **Worktree einrichten heißt: der Befehl, nach dem die Prüfkette durchläuft.**
+  Abhängigkeiten kopieren gilt nicht — bei pnpm bricht das den Store. Dazu das
+  Verzeichnis, aus dem die Prüfbefehle laufen: derselbe Test meldet aus der
+  Repo-Wurzel „1 test, 1 fail" und aus dem Paket grün (field-notes,
+  Vorfall 16).
 - **Stille Fallen sammeln, nicht erfinden.** Ein Eintrag entsteht, wenn ein
   Fehler durch die Prüfläufe gekommen ist. Vermutungen gehören nicht hinein —
   sie machen den Auftrag lang und die echten Warnungen unsichtbar.
@@ -55,7 +61,8 @@ Aus einem Frontend-Umbau (React, Tailwind, Radix), gekürzt:
 
 ```markdown
 | Standardbranch | master |
-| Prüfbefehle | pnpm run lint / pnpm run test / pnpm run build |
+| Prüfbefehle | pnpm run lint / pnpm run test / pnpm run build, aus web/ |
+| Worktree einrichten | CI=true pnpm install --frozen-lockfile --prefer-offline |
 | Konventionsdatei | AGENTS.md |
 | Wächtertests | web/tests/*.test.mjs (lesen Quelltext, tragen `>=`-Marken) |
 | Deploy | nur der Betreiber, nur von master |
@@ -73,6 +80,9 @@ Aus einem Frontend-Umbau (React, Tailwind, Radix), gekürzt:
   nicht über Spezifität. Kein Spezifitätstrick hilft.
 - Radix-Dismissal und eigener Escape-Stapel schließen beide: eine Ebene zu
   viel. Fällt nur im echten Browser auf.
+- `node --test --import tsx` aus der Repo-Wurzel meldet „1 test, 1 fail", weil
+  `tsx` nur im Paket liegt. Sieht aus wie ein Baufehler des Agenten und ist
+  keiner — Tests laufen aus web/.
 
 ## Was Agenten nicht tun
 Nicht deployen, nicht mergen, keine Marke senken, `modules/*/upstream/**` ist
