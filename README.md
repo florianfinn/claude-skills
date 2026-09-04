@@ -16,6 +16,7 @@ Vorsätzen: was drinsteht, ist einmal schiefgegangen.
 ```bash
 /plugin install subagent-orchestration@flofi-skills
 /plugin install grill-me@flofi-skills
+/plugin install alpha-code@flofi-skills
 ```
 
 Danach ist der Skill in jedem Projekt verfügbar. Zum Aktualisieren genügt
@@ -31,6 +32,7 @@ Alternativ ohne Plugin-Mechanik: den Ordner
 | --- | --- |
 | [`subagent-orchestration`](plugins/subagent-orchestration) | Arbeit auf mehrere zugeschnittene Subagenten aufteilen und wieder zusammenführen. |
 | [`grill-me`](plugins/grill-me) | Ein Vorhaben stresstesten, bevor es gebaut wird — Weiche für Weiche, mit Empfehlung. |
+| [`alpha-code`](plugins/alpha-code) | Ein Projekt so einrichten oder nachrüsten, dass Fehler auffallen, bevor sie auf `main` landen. (von [Kimpaliz](https://github.com/Kimpaliz)) |
 
 ### subagent-orchestration
 
@@ -81,6 +83,52 @@ Der Kern in drei Sätzen:
 3. **Eine Frage, ein Aufruf, warten.** Das Fragewerkzeug erlaubt vier Fragen auf
    einmal — genau das ist die Falle: dann sieht niemand mehr, wie Frage 3 von
    Antwort 1 abhängt.
+
+### alpha-code (von [Kimpaliz](https://github.com/Kimpaliz))
+
+Greift, sobald ein Projekt neu angelegt oder ein bestehendes aufgeräumt,
+strukturiert oder veröffentlicht werden soll. Der Skill stellt ein Gerüst auf —
+Wegweiser, Regeln, Fehlerbuch, Workclaim, Changelog — und legt eine Prüfkette
+dazu, die nicht den Code prüft, sondern die **Arbeitsweise**: nie auf `main`,
+nichts ohne Changelog-Eintrag, jede Quelldatei mit Funktions-Tag, kein
+Doku-Verweis ins Leere, keine Datei über 1.000 Zeilen, kein Geheimnis im
+Arbeitsstand — und **kein Dokument, das einen Zustand behauptet**; der lebt
+als Vorgang im Tracker. Vor einer
+Veröffentlichung läuft zusätzlich eine Freigabeliste, die auch die gesamte
+Git-Historie durchsucht.
+
+Anders als die beiden anderen Skills bringt dieser **ausführbare Beilagen** mit:
+
+- **`einrichten.mjs`** — kopiert Vorlagen und Wächter ins Projekt, erkennt die
+  Zeilenenden am Bestand und überschreibt **nie** etwas. Nachrüsten heißt
+  einarbeiten, nicht ersetzen.
+- **`werkzeuge/`** — sieben Wächter plus die Kette darüber, dazu zwei, die
+  nur mit Konfiguration laufen (Sprachtrennung, Vorgänge). Sie sind Node,
+  brauchen aber nur Dateien und Git und laufen deshalb auch über einem
+  Godot-, Python- oder Nur-Doku-Projekt.
+- **`vorgaenge.mjs`** — macht aus dem Fahrplan verkettete GitHub-Issues:
+  Phasen als Sammelvorgänge, Schritte als Kinder, dazu Fehlerberichte und
+  offene Entscheidungen. Jede Verbindung wird in beide Richtungen
+  geschrieben; ohne `--wirklich` läuft alles trocken.
+- **`vorlagen/`** — die Dokumente, darunter ein **vorbefülltes Fehlerbuch** mit
+  18 übertragbaren Fällen. Sie haben anderswo schon einmal Zeit gekostet; das
+  neue Projekt muss sie nicht ein zweites Mal bezahlen.
+
+Der Kern in drei Sätzen:
+
+1. **Jede Zahl ist gemessen.** Steht irgendwo eine Zahl, gibt es den Befehl, der
+   sie nachrechnet — nicht geschätzt, nicht aus einem Kommentar übernommen.
+2. **Jede neue Prüfung wird zuerst rot gemacht.** Fehler einbauen, anschlagen
+   sehen, zurücknehmen. Eine Prüfung, die nie rot war, prüft womöglich nichts.
+3. **Kein Dokument behauptet einen Zustand.** „Ist live", „noch offen",
+   „erledigt" veralten lautlos — nichts wird rot, und geglaubt wird es
+   trotzdem. Doku trägt die Begründung; der Stand lebt dort, wo er beim
+   Ändern der Wirklichkeit mitgeändert wird. Ein **datierter** Vermerk ist die
+   Ausnahme: Das Datum legt ihn trocken.
+
+Dazu zwei Sätze, die den Rest tragen: Umbau und Inhalt werden getrennt (nur
+ein Umbau ohne sichtbare Änderung lässt sich beweisen), und geprüft wird der
+Fall, der ohne die Arbeit falsch wäre — nicht der, der ohnehin gewinnt.
 
 ## Einen weiteren Skill aufnehmen
 
