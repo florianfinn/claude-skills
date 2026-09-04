@@ -16,6 +16,7 @@ Vorsätzen: was drinsteht, ist einmal schiefgegangen.
 ```bash
 /plugin install subagent-orchestration@flofi-skills
 /plugin install grill-me@flofi-skills
+/plugin install alpha-code@flofi-skills
 ```
 
 Danach ist der Skill in jedem Projekt verfügbar. Zum Aktualisieren genügt
@@ -31,6 +32,7 @@ Alternativ ohne Plugin-Mechanik: den Ordner
 | --- | --- |
 | [`subagent-orchestration`](plugins/subagent-orchestration) | Arbeit auf mehrere zugeschnittene Subagenten aufteilen und wieder zusammenführen. |
 | [`grill-me`](plugins/grill-me) | Ein Vorhaben stresstesten, bevor es gebaut wird — Weiche für Weiche, mit Empfehlung. |
+| [`alpha-code`](plugins/alpha-code) | Ein Projekt so einrichten oder nachrüsten, dass Fehler auffallen, bevor sie auf `main` landen. |
 
 ### subagent-orchestration
 
@@ -81,6 +83,39 @@ Der Kern in drei Sätzen:
 3. **Eine Frage, ein Aufruf, warten.** Das Fragewerkzeug erlaubt vier Fragen auf
    einmal — genau das ist die Falle: dann sieht niemand mehr, wie Frage 3 von
    Antwort 1 abhängt.
+
+### alpha-code
+
+Greift, sobald ein Projekt neu angelegt oder ein bestehendes aufgeräumt,
+strukturiert oder veröffentlicht werden soll. Der Skill stellt ein Gerüst auf —
+Wegweiser, Regeln, Fehlerbuch, Workclaim, Changelog — und legt eine Prüfkette
+dazu, die nicht den Code prüft, sondern die **Arbeitsweise**: nie auf `main`,
+nichts ohne Changelog-Eintrag, jede Quelldatei mit Funktions-Tag, kein
+Doku-Verweis ins Leere, keine Großdatei, die weiter wächst, kein Geheimnis im
+Arbeitsstand. Vor einer Veröffentlichung läuft zusätzlich eine Freigabeliste,
+die auch die gesamte Git-Historie durchsucht.
+
+Anders als die beiden anderen Skills bringt dieser **ausführbare Beilagen** mit:
+
+- **`einrichten.mjs`** — kopiert Vorlagen und Wächter ins Projekt, erkennt die
+  Zeilenenden am Bestand und überschreibt **nie** etwas. Nachrüsten heißt
+  einarbeiten, nicht ersetzen.
+- **`werkzeuge/`** — sechs Wächter plus die Kette darüber. Sie sind Node,
+  brauchen aber nur Dateien und Git und laufen deshalb auch über einem
+  Godot-, Python- oder Nur-Doku-Projekt.
+- **`vorlagen/`** — die Dokumente, darunter ein **vorbefülltes Fehlerbuch** mit
+  17 übertragbaren Fällen. Sie haben anderswo schon einmal Zeit gekostet; das
+  neue Projekt muss sie nicht ein zweites Mal bezahlen.
+
+Der Kern in drei Sätzen:
+
+1. **Jede Zahl ist gemessen.** Steht irgendwo eine Zahl, gibt es den Befehl, der
+   sie nachrechnet — nicht geschätzt, nicht aus einem Kommentar übernommen.
+2. **Jede neue Prüfung wird zuerst rot gemacht.** Fehler einbauen, anschlagen
+   sehen, zurücknehmen. Eine Prüfung, die nie rot war, prüft womöglich nichts.
+3. **Umbau und Inhalt werden getrennt.** Ein Umbau ohne sichtbare Änderung lässt
+   sich beweisen (gleiche Eingaben → byteweise gleiches Ergebnis); ein Umbau mit
+   Änderung nicht.
 
 ## Einen weiteren Skill aufnehmen
 
