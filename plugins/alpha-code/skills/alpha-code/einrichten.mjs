@@ -64,7 +64,12 @@ if (!existsSync(einstellung)) {
     hauptzweig: "main",
     quellordner: ["."],
     endungen: [".js", ".mjs"],
-    ausnahmen: ["node_modules", ".git", "vendor", "dist", "build", "daten", "docs"]
+    ausnahmen: ["node_modules", ".git", "vendor", "dist", "build", "daten", "docs"],
+    zeilengrenze: 500
+    /* Für die Sprachtrennung zusätzlich einen `sprache`-Block setzen
+       und `vorlagen/WORTLISTE.md` nach `docs/` kopieren — siehe
+       docs/REGELN.md, Regel 15. Ohne den Block läuft die Prüfung
+       nicht, und das ist Absicht: Die Wahl trifft das Projekt. */
   }, null, 2).replace(/\n/g, ende) + ende);
   console.log("  angelegt: alpha-code.json");
   kopiert++;
@@ -74,3 +79,6 @@ console.log(`\n${kopiert} Datei(en) angelegt, ${uebersprungen} übersprungen, ` 
   `Zeilenenden ${crlf ? "CRLF" : "LF"}.`);
 console.log("Nächste Schritte stehen in SKILL.md: Platzhalter füllen, " +
   "Systemtabelle, Tags, dann die Kette.");
+console.log("Bei Bedarf zusätzlich: vorlagen/ALTLASTEN.md (Nachrüsten), " +
+  "vorlagen/PROJEKTGRENZE.md (Nachbarprojekt),\n  vorlagen/WORTLISTE.md " +
+  "(Sprachtrennung — dann auch `sprache` in alpha-code.json setzen).");

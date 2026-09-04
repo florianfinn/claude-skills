@@ -5,13 +5,24 @@
    eines gewachsenen Projekts wäre „keine Datei über 500 Zeilen" ein
    Vorwand für einen riskanten Komplettumbau. Stattdessen:
 
-   - **Neue** Quelldateien bleiben unter 500 Zeilen — hart.
+   - **Neue** Quelldateien bleiben unter der Grenze — hart.
    - **Bekannte Altlasten** stehen mit ihrer gemessenen Zeilenzahl in
      `docs/ALTLASTEN.md` und dürfen **nie wachsen**, nur schrumpfen.
      Beim nächsten fachlichen Eingriff wird der berührte Teil zuerst
      herausgelöst.
 
-   Ohne `docs/ALTLASTEN.md` (Neubau) gilt schlicht: alles unter 500.
+   Ohne `docs/ALTLASTEN.md` (Neubau) gilt schlicht: alles unter der
+   Grenze. Wo sie liegt, sagt `alpha-code.json` (`zeilengrenze`,
+   Standard 500).
+
+   ⚠️ **Eine hereinkopierte Datei ist keine Altlast.** Die Liste ist
+   für das, was beim Nachrüsten **schon da war** — nicht für das, was
+   man später aus einem anderen Projekt übernimmt. Eine Kopie, die die
+   Grenze schon beim Ankommen reißt, wird **beim Kopieren** aufgeteilt,
+   nicht danach: „danach" kommt nie, und die Liste wäre der Ort, an dem
+   das begründet aussieht. Der Wächter sieht den Unterschied nicht —
+   er meldet jede neue Datei über der Grenze; wer sie in die Liste
+   einträgt, statt sie zu teilen, umgeht diese Regel bewusst.
 
    Was sie fängt: die Altlast, die „nur diesmal" um dreißig Zeilen
    wächst — genau so ist dort eine Datei auf 12.548 Zeilen gewachsen.
@@ -27,7 +38,10 @@ import { join } from "node:path";
 import { macheMelder, liesDatei, liesEinstellung, quellDateien, WURZEL } from "./helfer.mjs";
 
 const { melde, ende } = macheMelder({ still: true });
-const GRENZE = 500;
+/* Die Grenze steht in `alpha-code.json` (`zeilengrenze`), nicht hier.
+   Sonst gäbe es sie zweimal: einmal in der Regel, einmal im Wächter —
+   und beim Ändern verschiebt sich nur eine davon (Fehlerbuch E2). */
+const GRENZE = liesEinstellung().zeilengrenze;
 
 /* Die Baseline: | `pfad` | 1234 | … — nur Zeilen mit Backtick-Pfad. Wo sie
    liegt, sagt `alpha-code.json` (`altlasten`); Standard ist docs/ALTLASTEN.md. */

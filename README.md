@@ -92,19 +92,21 @@ Wegweiser, Regeln, Fehlerbuch, Workclaim, Changelog — und legt eine Prüfkette
 dazu, die nicht den Code prüft, sondern die **Arbeitsweise**: nie auf `main`,
 nichts ohne Changelog-Eintrag, jede Quelldatei mit Funktions-Tag, kein
 Doku-Verweis ins Leere, keine Großdatei, die weiter wächst, kein Geheimnis im
-Arbeitsstand. Vor einer Veröffentlichung läuft zusätzlich eine Freigabeliste,
-die auch die gesamte Git-Historie durchsucht.
+Arbeitsstand — und **kein Dokument, das einen Zustand behauptet**. Vor einer
+Veröffentlichung läuft zusätzlich eine Freigabeliste, die auch die gesamte
+Git-Historie durchsucht.
 
 Anders als die beiden anderen Skills bringt dieser **ausführbare Beilagen** mit:
 
 - **`einrichten.mjs`** — kopiert Vorlagen und Wächter ins Projekt, erkennt die
   Zeilenenden am Bestand und überschreibt **nie** etwas. Nachrüsten heißt
   einarbeiten, nicht ersetzen.
-- **`werkzeuge/`** — sechs Wächter plus die Kette darüber. Sie sind Node,
-  brauchen aber nur Dateien und Git und laufen deshalb auch über einem
-  Godot-, Python- oder Nur-Doku-Projekt.
+- **`werkzeuge/`** — sieben Wächter plus die Kette darüber, dazu ein achter,
+  der nur mit Konfiguration läuft. Sie sind Node, brauchen aber nur Dateien
+  und Git und laufen deshalb auch über einem Godot-, Python- oder
+  Nur-Doku-Projekt.
 - **`vorlagen/`** — die Dokumente, darunter ein **vorbefülltes Fehlerbuch** mit
-  17 übertragbaren Fällen. Sie haben anderswo schon einmal Zeit gekostet; das
+  18 übertragbaren Fällen. Sie haben anderswo schon einmal Zeit gekostet; das
   neue Projekt muss sie nicht ein zweites Mal bezahlen.
 
 Der Kern in drei Sätzen:
@@ -113,9 +115,15 @@ Der Kern in drei Sätzen:
    sie nachrechnet — nicht geschätzt, nicht aus einem Kommentar übernommen.
 2. **Jede neue Prüfung wird zuerst rot gemacht.** Fehler einbauen, anschlagen
    sehen, zurücknehmen. Eine Prüfung, die nie rot war, prüft womöglich nichts.
-3. **Umbau und Inhalt werden getrennt.** Ein Umbau ohne sichtbare Änderung lässt
-   sich beweisen (gleiche Eingaben → byteweise gleiches Ergebnis); ein Umbau mit
-   Änderung nicht.
+3. **Kein Dokument behauptet einen Zustand.** „Ist live", „noch offen",
+   „erledigt" veralten lautlos — nichts wird rot, und geglaubt wird es
+   trotzdem. Doku trägt die Begründung; der Stand lebt dort, wo er beim
+   Ändern der Wirklichkeit mitgeändert wird. Ein **datierter** Vermerk ist die
+   Ausnahme: Das Datum legt ihn trocken.
+
+Dazu zwei Sätze, die den Rest tragen: Umbau und Inhalt werden getrennt (nur
+ein Umbau ohne sichtbare Änderung lässt sich beweisen), und geprüft wird der
+Fall, der ohne die Arbeit falsch wäre — nicht der, der ohnehin gewinnt.
 
 ## Einen weiteren Skill aufnehmen
 

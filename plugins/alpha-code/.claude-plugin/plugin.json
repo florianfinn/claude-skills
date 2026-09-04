@@ -1,7 +1,7 @@
 {
   "name": "alpha-code",
-  "description": "Ein Projekt so einrichten oder nachrüsten, dass Fehler auffallen, bevor sie auf main landen: Wegweiser, Funktions-Tags an jeder Datei, Prüfkette mit sechs mitgelieferten Wächtern, vorbefülltes Fehlerbuch, Workclaim gegen parallele Sitzungen, Changelog-Pflicht, Altlasten-Ratchet und eine Freigabeliste samt Git-Historie vor jeder Veröffentlichung.",
-  "version": "0.1.0",
+  "description": "Ein Projekt so einrichten oder nachrüsten, dass Fehler auffallen, bevor sie auf main landen: Wegweiser, Funktions-Tags an jeder Datei, Prüfkette mit sieben mitgelieferten Wächtern, vorbefülltes Fehlerbuch, Workclaim gegen parallele Sitzungen, Changelog-Pflicht, Altlasten-Ratchet, kein Zustand in der Doku und eine Freigabeliste samt Git-Historie vor jeder Veröffentlichung.",
+  "version": "0.2.0",
   "author": {
     "name": "florianfinn"
   },
