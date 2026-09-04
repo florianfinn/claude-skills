@@ -1,14 +1,13 @@
 ---
 name: subagent-orchestration
-description: Arbeit auf mehrere zugeschnittene Subagenten aufteilen und das Ergebnis wieder zusammenführen — schneiden, Modell wählen, Auftrag schreiben, führen, prüfen, zusammenführen, abnehmen. Unbedingt benutzen, sobald jemand „teile das in Subagenten auf", „mach das parallel", „mehrere Agenten" oder „verteil das" sagt, und auch dann schon, wenn eine Aufgabe mehrere getrennte Flächen (Dateien, Module, Dienste) gleichzeitig berührt und eine Verteilung überhaupt erwogen wird. Enthält die Auftragsvorlage und die Fehler, die ohne sie regelmäßig auftreten.
+description: Arbeit auf mehrere Subagenten aufteilen und wieder zusammenführen. Benutzen, sobald jemand „in Subagenten aufteilen", „mach das parallel", „mehrere Agenten", „verteil das", „split into subagents", „fan out" oder „run in parallel" sagt — oder eine Aufgabe mehrere getrennte Flächen (Dateien, Module, Dienste) gleichzeitig berührt.
 ---
 
 # Arbeit auf Subagenten verteilen
 
-Der Zuschnitt einer Aufgabe auf mehrere Agenten, die Rolle des Organisators und
-die Prüfungen zwischen „der Agent meldet fertig" und „es ist abgenommen".
-
-Die Warnungen hier sind gemessen, nicht abgeleitet. Woher jede stammt, steht in
+Zuschnitt, Rolle des Organisators und die Prüfungen zwischen „der Agent meldet
+fertig" und „es ist abgenommen". Jede Warnung (⚠️) ist gemessen; der Vorfall
+dahinter steht unter seiner Nummer in
 [`references/field-notes.md`](references/field-notes.md).
 
 ## Erst prüfen, ob überhaupt verteilt wird
@@ -19,165 +18,139 @@ Verteile nur, wenn **beides** zutrifft:
    die einander nicht anfassen.
 2. Mindestens drei Agenten können **gleichzeitig** laufen.
 
-Verteilen kostet: jeder Agent beginnt ohne deinen Verlauf und leitet alles neu
-her, und du liest am Ende jeden Diff. Für eine Datei, für eine explorative Suche
-und für alles, wo der Schnitt noch nicht feststeht, ist der Alleingang schneller.
-
-**Ein unklarer Schnitt ist kein Grund zu verteilen, sondern der Grund, es nicht
-zu tun.** Wer ohne Plan verteilt, verteilt Konflikte.
+Verteilen kostet: jeder Agent beginnt ohne deinen Verlauf, und du liest am Ende
+jeden Diff. Für eine Datei, für eine explorative Suche und für alles, wo der
+Schnitt noch nicht feststeht, ist der Alleingang schneller. **Ein unklarer
+Schnitt ist kein Grund zu verteilen, sondern der Grund, es nicht zu tun.**
 
 ## Deine Rolle
 
 Du schneidest, rüstest aus, prüfst, führst zusammen. Gebaut wird von den Agenten.
-
-**Was du selbst baust, prüft niemand.** Behalte deshalb nur, was kein Agent
-übernehmen kann: die Konfliktauflösung beim Zusammenführen, den Schnitt in
-Änderungssätze, die Abnahme — und die Fragen an den Auftraggeber.
+**Was du selbst baust, prüft niemand.** Behalte nur, was kein Agent übernehmen
+kann: Konfliktauflösung, Schnitt in Änderungssätze, Abnahme, Fragen an den
+Auftraggeber.
 
 ## 0. Projektprofil
 
-Fülle einmal je Repo [`references/project-profile.md`](references/project-profile.md)
-aus: Standardbranch, Prüfbefehle, Konventionsdatei, Wächtertests, bekannte
-stille Fallen, Abnahmeweg. Jeder Auftrag zieht daraus.
-
-Ohne Profil schreibst du unvollständige Aufträge — und merkst es erst an den
-Rückläufern.
+Suche zuerst `.claude/subagent-profile.md`. Fehlt es, leite es aus `CLAUDE.md`
+oder `AGENTS.md` ab und schreibe nur nach, was dort fehlt — meist Wächtertests
+und stille Fallen. Vorlage:
+[`references/project-profile.md`](references/project-profile.md). Ohne Profil
+schreibst du unvollständige Aufträge und merkst es erst an den Rückläufern.
 
 ## 1. Schneiden
 
 Der Schnitt steht **schriftlich, bevor der erste Agent läuft**.
 
 - **Eine Datei gehört genau einem Agenten.** Zwei Agenten in derselben Datei
-  erzeugen Konflikte, die du später von Hand auflöst — der teuerste Weg
-  überhaupt, weil du dann die Arbeit von beiden liest statt eine zu prüfen.
+  erzeugen Konflikte, die du von Hand auflöst — dann liest du beide Arbeiten
+  statt eine zu prüfen (Vorfall 8).
 - Schneide entlang der **Fläche** (Datei, Modul, Dienst), nicht entlang der
-  Tätigkeit. „Alle Dialoge" ist ein Schnitt. „Alle Tests nachziehen" ist keiner
-  — das fasst jede Fläche an.
-- Abhängiges läuft **nacheinander**, Unabhängiges parallel. Schreibe die Ketten
-  und die Gabeln auf, bevor du startest.
-- **Ein Agent bekommt eine Etappe.** Zwei Etappen in einem Agenten ergeben einen
-  Diff, den du hinterher nicht mehr in zwei Änderungssätze schneiden kannst.
-- Ist das Plugin [VoltAgent/awesome-claude-code-subagents](https://github.com/VoltAgent/awesome-claude-code-subagents)
-  installiert, rüste die Etappe mit dessen spezialisiertem Subagent-Typ aus
-  (z. B. `backend-developer`, `security-auditor`), statt mit einem generischen
-  Agenten — der Katalog deckt die meisten Flächen ab. Ohne passenden Treffer
-  bleibt es beim generischen Agenten.
+  Tätigkeit. „Alle Dialoge" ist ein Schnitt. „Alle Tests nachziehen" fasst jede
+  Fläche an.
+- Abhängiges läuft **nacheinander**, Unabhängiges parallel. Schreibe Ketten und
+  Gabeln auf, bevor du startest.
+- **Ein Agent bekommt eine Etappe.** Zwei Etappen in einem Diff lassen sich
+  hinterher nicht mehr in zwei Änderungssätze schneiden.
 - ⚠️ **Die vorgegebene Reihenfolge ist eine Vermutung, bis du sie gemessen
-  hast.** Prüfe vor dem Schnitt, wer wen importiert (`grep -rl`). Eine Datei,
-  die wie eine Flächendatei aussieht, kann eine gemeinsame Sprachdatei mit
-  Dutzenden Importeuren sein — dann ist die geplante Reihenfolge nicht fahrbar.
+  hast.** Prüfe vorher, wer wen importiert (`grep -rl`). Eine vermeintliche
+  Flächendatei kann eine gemeinsame Datei mit Dutzenden Importeuren sein
+  (Vorfall 7).
 
-## 2. Modell wählen
+## 2. Agententyp und Modell wählen
 
-Das Modell folgt der **Fehlerklasse**, nicht der Textmenge — drei Stufen, nicht
-zwei:
+**Erst der Typ, dann das Modell.**
+
+- **Scout** (suchen, zählen, Bestand kartieren): ein **nur lesender** Agent — in
+  Claude Code der Typ `Explore`. Kein Worktree, kein Commit, Kurzvorlage aus
+  [`references/agent-brief.md`](references/agent-brief.md).
+- **Bauagent** (ändert Dateien, committet): eigenes Worktree, volle
+  Auftragsvorlage. Ist [VoltAgent/awesome-claude-code-subagents](https://github.com/VoltAgent/awesome-claude-code-subagents)
+  installiert, nimm dessen spezialisierten Typ für die Fläche (z. B.
+  `backend-developer`, `security-auditor`); sonst den generischen Agenten.
+
+Das Modell folgt der **Fehlerklasse**, nicht der Textmenge:
 
 | Arbeit | Modell | Warum |
 | --- | --- | --- |
-| Neue Bauart, Nebenläufigkeit, Zustand, Sicherheit | stark (Opus) | Hier entstehen Fehler, die **still** bleiben: Tests grün, Verhalten falsch. Urteil, nicht Ausführung. |
-| Fläche umstellen, Bestand löschen mit Nachweis, Logik debuggen | mittel (Sonnet) | Mechanisch, aber mit Beleg. Ein Test fängt den Fehler — dafür muss der Agent aber erst verstehen, was der Code tut. |
-| Suchen, zählen, Marken nachziehen, Doku im vorgegebenen Ton, Abhängigkeiten nachziehen | leicht (Haiku) | Reine Ausführung ohne Ermessensspielraum: Regel oder Vorlage liegt schon fest, der Agent wendet sie nur an. Ein falscher Zähler oder Ton fällt sofort auf. |
+| Neue Bauart, Nebenläufigkeit, Zustand, Sicherheit | stark (Opus) | Fehler bleiben **still**: Tests grün, Verhalten falsch. |
+| Fläche umstellen, Bestand löschen mit Nachweis, Logik debuggen | mittel (Sonnet) | Ein Test fängt den Fehler, aber der Agent muss den Code erst verstehen. |
+| Suchen, zählen, Marken nachziehen, Doku im vorgegebenen Ton | leicht (Haiku) | Feste Regel anwenden, kein Urteil. Ein Fehler fällt sofort auf. |
 
-**Faustregel: stark dort, wo ein Fehler grün durchkommt. Mittel dort, wo ein
-Test ihn fängt, aber Verständnis vor der Ausführung nötig ist. Leicht dort, wo
-gar kein Urteil gefragt ist — nur Anwendung einer festen Regel.**
-
-⚠️ **Der erste Einsatz der Haiku-Stufe war ein Rückläufer.** Ein Scout-Auftrag
-zum Suchen/Zählen behauptete, zwei Verzeichnisse existierten nicht und 29
-Klassen seien tot — beides unbelegt und falsch (siehe
-[`references/field-notes.md`](references/field-notes.md), Vorfall 10). Grund
-war der Auftrag, nicht zwingend das Modell: kein festgelegter Suchraum, kein
-verlangter Rohbefehl als Beleg. Gib jedem Such-/Zähl-/Totcode-Auftrag auf
-dieser Stufe ausdrücklich den vollständigen Suchraum (auch `docker/`, `ci/`,
-`scripts/`) und verlange zu jeder Bestandsaussage den Rohbefehl samt Ausgabe —
-nicht nur die Behauptung.
-
-Den *Aufwand* steuert nicht das Modell, sondern der Zuschnitt des Auftrags:
-eine Etappe, genannte Dateiliste, genannte Rückmeldung.
+⚠️ **Ein Scout-Auftrag ohne festgelegten Suchraum liefert falsche Negative, die
+wie Fakten aussehen** (Vorfall 10). Nenne den Suchraum vollständig — auch
+`docker/`, `ci/`, `scripts/` — und verlange zu jeder Bestandsaussage den
+Rohbefehl samt Ausgabe.
 
 ## 3. Auftrag schreiben
 
-Vorlage: [`references/agent-brief.md`](references/agent-brief.md).
+Vorlage: [`references/agent-brief.md`](references/agent-brief.md). Ein Auftrag
+ist **selbsttragend**: der Agent hat weder deinen Verlauf noch den Vorgang
+gelesen. Was fehlt, leitet er her — plausibel, nicht unbedingt richtig. In jeden
+Bauauftrag gehören:
 
-Ein Auftrag ist **selbsttragend**. Der Agent hat weder deinen Verlauf noch den
-Vorgang gelesen. Was er nicht im Auftrag findet, leitet er her — plausibel, aber
-nicht unbedingt richtig. Vier Punkte gehören ausnahmslos hinein:
-
-1. ⚠️ **Ein eigenes Worktree je Auftrag, von dir angelegt, plus der
-   Basis-Commit als SHA.** Ein Agent kann im **Hauptcheckout** landen statt in
-   einem eigenen Worktree — dort trifft `git fetch --all && git reset --hard
-   <sha>` fremden, ungesicherten Stand (siehe
-   [`references/field-notes.md`](references/field-notes.md), Vorfall 9). Lege
-   das Worktree selbst an (`git worktree add <pfad> <sha>`) und nenne dem
-   Agenten den Pfad wörtlich, statt ihm nur einen Reset zu geben, dessen
-   Isolation du nicht geprüft hast. Ohne das arbeitet er sonst auf einem
-   Stand, auf dem deine Vorarbeit fehlt — im schlimmsten Fall fehlt die
-   Datei, die er ändern soll.
-2. ⚠️ **Konventionen wörtlich**, nicht als Verweis. Zeichensatz, Sprache,
-   Commit-Form. Ein Verweis auf die Konventionsdatei ersetzt sie nicht: Agenten
-   lesen sie und halten sie trotzdem nicht ein.
-3. ⚠️ **Die stillen Fallen der Fläche namentlich** — jede Fehlerklasse, die in
-   der Testumgebung unsichtbar bleibt. Was ein Test fängt, muss nicht in den
-   Auftrag; was grün durchkommt, unbedingt.
+1. ⚠️ **Ein eigenes Worktree auf dem Basis-Commit als SHA.** Bietet das
+   Agent-Werkzeug Worktree-Isolation je Aufruf (in Claude Code
+   `isolation: "worktree"`), nimm sie. Sonst legst **du** es an
+   (`git worktree add <pfad> <sha>`) und nennst den Pfad wörtlich. Der Agent
+   prüft die SHA mit `git rev-parse HEAD` und **stoppt bei Abweichung** — kein
+   `reset --hard`, das trifft im Hauptcheckout fremden Stand (Vorfälle 1, 9).
+2. ⚠️ **Konventionen wörtlich**, nicht als Verweis. Agenten lesen die
+   Konventionsdatei und halten sie trotzdem nicht ein (Vorfall 2).
+3. ⚠️ **Die stillen Fallen der Fläche namentlich** — jede Fehlerklasse, die die
+   Tests nicht fangen. Was ein Test fängt, muss nicht hinein; was grün
+   durchkommt, unbedingt.
 4. **Auftrag und Nicht-Auftrag.** Welche Dateien er anfasst, welche anderen
-   Agenten gehören. Ein Agent, der „im Vorbeigehen" aufräumt, kostet dich den
-   Schnitt in Änderungssätze.
+   Agenten gehören. Wer „im Vorbeigehen" aufräumt, kostet dich den Schnitt.
 
-Dazu: was er zurückmeldet (**Zahlen**, nicht Prosa) und was er nicht tut
-(mergen, deployen, Wächtermarken senken).
+Dazu: Rückmeldung in **Zahlen**, und was er nicht tut (mergen, deployen,
+Wächtermarken senken).
 
-## 4. Führen
+## 4. Starten und führen
 
-- Steuere laufende Agenten mit `SendMessage` nach, **nicht** mit einem neuen
-  Agenten — der fängt kalt an und leitet denselben Kontext noch einmal her.
-- Fällt dir ein Fehler in deiner eigenen Ausstattung auf, geht die Korrektur an
-  **alle** laufenden Agenten, nicht nur an den, der nachfragt.
+- Unabhängige Agenten startest du **in einem Aufruf**, im Hintergrund. Ketten
+  Glied für Glied, jedes auf der SHA des Vorgängers.
+- Nachsteuern per `SendMessage`, **nicht** per neuem Agenten — der fängt kalt
+  an und leitet denselben Kontext noch einmal her.
+- Ein Fehler in deiner Ausstattung geht korrigiert an **alle** laufenden
+  Agenten, nicht nur an den, der nachfragt.
 - Entscheidungen, die den Zuschnitt ändern, gehören dem Auftraggeber. Frag mit
-  Empfehlung an erster Stelle. Entscheidet er anders, wende einmal ein und
-  führe dann aus.
+  Empfehlung an erster Stelle; entscheidet er anders, wende einmal ein und
+  führe aus.
 
 ## 5. Prüfen
 
 Lies den **Diff**, nicht den Bericht.
 
-- ⚠️ **`<befehl> 2>&1 | tail -25; echo $?` meldet den Exit-Code von `tail`.**
-  Das sieht wie ein grüner Lauf aus und ist keiner. Fang den echten Code:
-  `<befehl> > lauf.txt 2>&1; echo "code=$?"; tail -25 lauf.txt`.
-- **Zähl jede gemeldete Zahl selbst nach** (`grep -c`, `wc -l`), bevor sie in
-  einen Commit- oder Änderungstext kommt. Dort wird sie zum Beleg.
-- ⚠️ **Bestands- und Totcode-Aussagen sind Behauptungen, keine Fakten.**
-  Verlang zu jeder solchen Aussage den Rohbefehl und seine Ausgabe
-  (`ls`/`find` für Existenz, `grep -r` über den ganzen Baum inklusive
-  `docker/`, `ci/`, `scripts/` für Totcode) — ein Bericht ohne das ist ein
-  falsches Negativ, das wie ein Fakt aussieht (siehe
-  [`references/field-notes.md`](references/field-notes.md), Vorfall 10).
-- ⚠️ **Schwellen in Wächtertests verfallen lautlos.** Eine Marke der Form
-  `>= N` wird nicht rot, wenn der Bestand über sie hinauswächst. Zähl bei jeder
-  Etappe nach, statt sie zu übernehmen.
-- Die Prüfbefehle laufen auf dem **zusammengeführten** Stand, nicht je Agent.
-  Was einzeln grün ist, kann zusammen rot sein — genau dafür ist die
-  Zusammenführung da.
+- ⚠️ **`<befehl> 2>&1 | tail -25; echo $?` meldet den Exit-Code von `tail`**
+  (Vorfall 3). Richtig: `<befehl> > lauf.txt 2>&1; echo "code=$?"; tail -25 lauf.txt`.
+- **Zähl jede gemeldete Zahl nach** (`grep -c`, `wc -l`), bevor sie in einen
+  Commit- oder Änderungstext kommt.
+- ⚠️ **Bestands- und Totcode-Aussagen ohne Rohbefehl und Ausgabe gelten als
+  ungeprüft** (Vorfall 10).
+- ⚠️ **`>= N`-Marken in Wächtertests verfallen lautlos** (Vorfall 4). Nachzählen
+  statt übernehmen.
+- Prüfbefehle laufen auf dem **zusammengeführten** Stand. Was einzeln grün ist,
+  kann zusammen rot sein.
 
 ## 6. Zusammenführen und in Änderungssätze schneiden
 
 Ein Integrationsbranch, `git cherry-pick` in Abhängigkeitsreihenfolge.
 
-⚠️ **Der Schnitt folgt den Wächtern, nicht der Ästhetik.** Ein Test, der einen
-Übergang festhält (`assert gefunden > 0`), fällt **per Bauart**, sobald der
-Übergang zu Ende ist. Seine Löschung kann dann nicht in einen eigenen, hübschen
-Änderungssatz — der davor wäre rot. Prüfe vor dem Schnitt, welcher Wächter bei
-welcher Kombination kippt.
+⚠️ **Der Schnitt folgt den Wächtern, nicht der Ästhetik** (Vorfall 5). Ein Test
+mit `assert gefunden > 0` fällt **per Bauart**, sobald der Übergang zu Ende ist;
+seine Löschung kann dann nicht in einen eigenen Änderungssatz. Prüfe vor dem
+Schnitt, welcher Wächter bei welcher Kombination kippt.
 
 ## 7. Abnehmen
 
-- Abgenommen wird auf dem **zusammengeführten** Stand, nicht auf einem
-  Feature-Branch.
-- ⚠️ **Prüfe den Fall, der ohne den Fix falsch wäre** — nicht den, der ohnehin
-  gewinnt. Bei sortierten Größen ist das der kleinste Wert, nicht der größte:
-  der größte hätte auch ohne den Fix gestimmt und beweist nichts.
-- Was du nicht prüfen konntest, **benenne als ungeprüft**. Nicht weglassen.
+- Abgenommen wird auf dem **zusammengeführten** Stand.
+- ⚠️ **Prüfe den Fall, der ohne den Fix falsch wäre**, nicht den, der ohnehin
+  gewinnt (Vorfall 6). Bei sortierten Größen den kleinsten Wert, nicht den
+  größten.
+- Was du nicht prüfen konntest, **benenne als ungeprüft**.
 
 ## 8. Bericht
 
-Je Agent: Modell, Auftrag, Ergebnis in Zahlen. Dazu die Summe über alle und die
+Je Agent: Typ, Modell, Auftrag, Ergebnis in Zahlen. Dazu die Summe und die
 offenen Punkte — **als Frage, nicht als Vermutung**.

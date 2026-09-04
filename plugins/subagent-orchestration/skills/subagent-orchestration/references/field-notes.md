@@ -18,9 +18,11 @@ existierte — er baute etwas Richtiges an einer Stelle, die es nicht mehr gab.
 Zwei mussten ihren Stand nachträglich per `reset --hard` umsetzen und ihre
 Arbeit wiederholen.
 
-**Die Regel:** Der Basis-Commit als SHA plus `git fetch --all && git reset
---hard <sha>` steht in **jedem** Auftrag, auch wenn du glaubst, der Agent stünde
-richtig.
+**Die Regel:** Der Basis-Commit als SHA steht in **jedem** Auftrag, auch wenn
+du glaubst, der Agent stünde richtig, und der Agent prüft ihn mit
+`git rev-parse HEAD`, bevor er anfängt. Die erste Fassung dieser Regel ließ den
+Agenten selbst per `reset --hard` umsetzen — das fiel mit Vorfall 9: das
+Worktree legt der Organisator an, der Agent setzt nichts zurück.
 
 **Warum es nicht auffällt:** Der Agent meldet grüne Tests. Sie sind auf seinem
 Stand auch grün.
