@@ -19,8 +19,27 @@ Vorsätzen: was drinsteht, ist einmal schiefgegangen.
 /plugin install alpha-code@flofi-skills
 ```
 
-Danach ist der Skill in jedem Projekt verfügbar. Zum Aktualisieren genügt
-`/plugin marketplace update flofi-skills`.
+Danach ist der Skill in jedem Projekt verfügbar.
+
+## Aktualisieren
+
+Zwei Schritte, und der erste allein genügt nicht:
+
+```bash
+/plugin marketplace update flofi-skills
+/plugin update subagent-orchestration@flofi-skills
+```
+
+Der erste Befehl holt den Marktplatz neu vom Repo — erst danach kennt Claude
+Code die neue Versionsnummer. Der zweite vergleicht sie mit der installierten
+und tauscht das Plugin. Wer nur den ersten fährt, bekommt „kein Update
+verfügbar" zu sehen, obwohl eines da ist.
+
+Der Vergleich läuft über das Feld `version` in
+`plugins/<name>/.claude-plugin/plugin.json`. Solange diese Zahl gleich bleibt,
+gilt das Plugin als unverändert — auch wenn sich der Inhalt geändert hat. Läuft
+noch eine Sitzung, greift die neue Fassung erst nach `/reload-plugins` oder
+einem Neustart.
 
 Alternativ ohne Plugin-Mechanik: den Ordner
 `plugins/subagent-orchestration/skills/subagent-orchestration/` nach
@@ -139,7 +158,10 @@ Fall, der ohne die Arbeit falsch wäre — nicht der, der ohnehin gewinnt.
 ## Einen weiteren Skill aufnehmen
 
 1. `plugins/<name>/.claude-plugin/plugin.json` anlegen (Name, Beschreibung,
-   Version).
+   Version). Die `version` ist der Anker für Updates: **jede inhaltliche
+   Änderung hebt sie an**, sonst sieht ein installiertes Plugin sie nie. Kein
+   `version`-Feld in `marketplace.json` — steht es an beiden Stellen, gewinnt
+   `plugin.json` kommentarlos.
 2. `plugins/<name>/skills/<name>/SKILL.md` schreiben — YAML-Kopf mit `name` und
    `description`, darunter Markdown. Die `description` ist der
    Auslösemechanismus: sie nennt, **was** der Skill tut **und wann** er greifen
