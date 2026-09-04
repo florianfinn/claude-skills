@@ -46,7 +46,29 @@ export const GEHEIMNIS_MUSTER = [
   ["GitHub-PAT", new RegExp("github" + "_pat_[A-Za-z0-9_]{30,}")],
   ["GitLab-Token", new RegExp("glpat" + "-[A-Za-z0-9_-]{20,}")],
   ["AWS-Schlüssel", new RegExp("AKIA" + "[A-Z0-9]{16}")],
-  ["hartes Passwort", new RegExp("(?:PASSWORD|PASSWORT|SECRET)\\s*=\\s*[\"'][^\"']{4,}[\"']", "i")]
+  /* ⚠️ Zwei Verschärfungen, beide am 04.09.2026 an `github-zugang.mjs`
+     gemessen, wo nur der **Feldname** des Git-Anmeldeprotokolls steht:
+
+     `(?<!["'])` — sitzt das Schlüsselwort selbst in einem Literal (etwa
+     als Feldname eines Protokolls, den ein `slice` abschneidet), dann
+     wäre dessen schließendes Anführungszeichen das öffnende des
+     vermeintlichen Werts, und alles bis zum nächsten Anführungszeichen
+     derselben Zeile gälte als Passwort.
+
+     ⚠️ **Der Fehlalarm wird hier absichtlich nicht wörtlich zitiert.**
+     Ein Beispiel, das das eigene Muster erfüllt, macht die Prüfung an
+     ihrer eigenen Begründung rot — beim ersten Anlauf genau passiert
+     (Fehlerbuch B4). Wer eine Musterprüfung erklärt, beschreibt den
+     Fall, statt ihn hinzuschreiben.
+
+     `\n\r` in der Zeichenklasse — ein Passwort steht auf **einer**
+     Zeile; ohne diese Grenze spannt das Muster über zwei und verbindet
+     zwei harmlose Zeilen zu einem Fund.
+
+     **Bekannte Lücke, bewusst nicht hier behoben:** JSON und YAML
+     schreiben `"password": "…"` mit Doppelpunkt statt Gleichheitszeichen
+     — das fängt dieses Muster nicht, und das war schon vorher so. */
+  ["hartes Passwort", new RegExp("(?<![\"'])(?:PASSWORD|PASSWORT|SECRET)\\s*=\\s*[\"'][^\"'\\n\\r]{4,}[\"']", "i")]
 ];
 
 /* `pruefe-freigabe.mjs` importiert nur die Muster — der Lauf selbst

@@ -1,6 +1,6 @@
 ---
 name: alpha-code
-description: Ein Projekt nach der Alpha-Code-Methode einrichten oder ein bestehendes nachrüsten — Wegweiser, Funktions-Tags an jeder Datei, Prüfkette mit Wächtern, vorbefülltes Fehlerbuch, Workclaim gegen parallele Sitzungen, Changelog-Pflicht, Altlasten-Ratchet für Großdateien, Geheimnisprüfung samt Git-Historie vor jeder Veröffentlichung. Benutzen, sobald jemand ein neues Projekt anlegt, ein bestehendes „aufräumen", „strukturieren", „sortieren", „klar Schiff machen" oder „nachrüsten" will, ein Repository veröffentlichen oder öffentlich schalten möchte, nach Wegweiser, Wächtern, Prüfkette, Fehlerbuch, Workclaim oder der Trennung von Begründung und Stand fragt — oder „Alpha-Code" sagt, auch ohne das Wort Skill.
+description: Ein Projekt nach der Alpha-Code-Methode einrichten oder ein bestehendes nachrüsten — Wegweiser, Funktions-Tags an jeder Datei, Prüfkette mit Wächtern, vorbefülltes Fehlerbuch, Workclaim gegen parallele Sitzungen, Changelog-Pflicht, Altlasten-Ratchet für Großdateien, Geheimnisprüfung samt Git-Historie vor jeder Veröffentlichung. Benutzen, sobald jemand ein neues Projekt anlegt, ein bestehendes „aufräumen", „strukturieren", „sortieren", „klar Schiff machen" oder „nachrüsten" will, ein Repository veröffentlichen oder öffentlich schalten möchte, nach Wegweiser, Wächtern, Prüfkette, Fehlerbuch, Workclaim, Roadmap, Vorgängen oder Issues fragt — oder „Alpha-Code" sagt, auch ohne das Wort Skill.
 ---
 
 # Alpha-Code — die Projektmethode
@@ -47,15 +47,16 @@ geschrieben, `werkzeuge/` läuft dort.
 | --- | --- | --- | --- |
 | Einstieg | `CLAUDE.md` | [`vorlagen/CLAUDE.md`](vorlagen/CLAUDE.md) | kurz; Regeln, Prüfbefehl, Wegweiser in Fragen — samt „In dreißig Sekunden" und **„Ausdrücklich nicht gefordert"** (verhindert erfundene Anforderungen) |
 | Karte | `docs/WEGWEISER.md` | [`vorlagen/WEGWEISER.md`](vorlagen/WEGWEISER.md) | Systeme, wer redet mit wem und warum, „wo fasse ich an" |
-| Regeln | `docs/REGELN.md` | [`vorlagen/REGELN.md`](vorlagen/REGELN.md) | die fünfzehn Regeln + Systemtabelle (Tags, Zweignamen) |
+| Regeln | `docs/REGELN.md` | [`vorlagen/REGELN.md`](vorlagen/REGELN.md) | die sechzehn Regeln + Systemtabelle (Tags, Zweignamen) |
 | Fehlerbuch | `docs/FEHLERBUCH.md` | [`vorlagen/FEHLERBUCH.md`](vorlagen/FEHLERBUCH.md) | **vorbefüllt** mit 18 übertragbaren Fällen |
 | Workclaim | `WORKCLAIM.md` | [`vorlagen/WORKCLAIM.md`](vorlagen/WORKCLAIM.md) | wer arbeitet woran; fremde Bereiche sind gesperrt |
 | Changelog | `CHANGELOG.md` | [`vorlagen/CHANGELOG.md`](vorlagen/CHANGELOG.md) | jede Änderung, oben, mit Warum und Messung |
 | Agentenprofil | `.claude/PROJEKTPROFIL.md` | [`vorlagen/PROJEKTPROFIL.md`](vorlagen/PROJEKTPROFIL.md) | was in jeden Subagenten-Auftrag gehört |
-| Prüfkette | `werkzeuge/pruefe-alles.mjs` + sieben Wächter (plus einer mit Konfiguration) | [`werkzeuge/`](werkzeuge/) | siehe unten |
-| Einstellung | `alpha-code.json` | erzeugt | Quellordner, Endungen, Hauptzweig, Zeilengrenze, Altlasten-Datei — und, wenn gewollt, die Sprachtrennung |
+| Prüfkette | `werkzeuge/pruefe-alles.mjs` + sieben Wächter (plus zwei mit Konfiguration) | [`werkzeuge/`](werkzeuge/) | siehe unten |
+| Einstellung | `alpha-code.json` | erzeugt | Quellordner, Endungen, Hauptzweig, Zeilengrenze, Altlasten-Datei — und, wenn gewollt, Sprachtrennung und Vorgangs-Tracker |
+| Vorgänge | GitHub Issues | [`werkzeuge/vorgaenge.mjs`](werkzeuge/vorgaenge.mjs) | legt Phasen, Schritte, Fehler und Entscheidungen an und verkettet sie |
 
-Zwei weitere Vorlagen werden **nur bei Bedarf** kopiert
+Vier weitere Vorlagen werden **nur bei Bedarf** kopiert
 ([`einrichten.mjs`](einrichten.mjs) legt sie nicht automatisch an):
 
 | Vorlage | wann |
@@ -63,6 +64,7 @@ Zwei weitere Vorlagen werden **nur bei Bedarf** kopiert
 | [`vorlagen/ALTLASTEN.md`](vorlagen/ALTLASTEN.md) → `docs/ALTLASTEN.md` | beim Nachrüsten, wenn Dateien über der Zeilengrenze bestehen — mit **gemessenen** Zeilenzahlen als Baseline |
 | [`vorlagen/PROJEKTGRENZE.md`](vorlagen/PROJEKTGRENZE.md) → `docs/PROJEKTGRENZE.md` | sobald das Projekt einen Nachbarn hat: zweites Repository, gemeinsame Datenbank, gemeinsamer Rechner. Geteilte Ressourcen bekommen einen eigenen Wächter — die Warnung dahinter ist echt: Eine gemeinsame Firestore-Regeldatei hätte am 02.09.2026 fast ein zweites Projekt abgeschaltet |
 | [`vorlagen/WORTLISTE.md`](vorlagen/WORTLISTE.md) → `docs/WORTLISTE.md` | sobald das Projekt seine Sprachtrennung erzwingen soll (Regel 15) — dann zusätzlich einen `sprache`-Block in `alpha-code.json` |
+| [`vorlagen/ROADMAP.md`](vorlagen/ROADMAP.md) → `docs/ROADMAP.md` | sobald das Projekt einen Vorgangs-Tracker führt (Regel 16) — dann zusätzlich einen `vorgaenge`-Block in `alpha-code.json` |
 
 Die sieben mitgelieferten Wächter laufen in **jedem** Projekt, egal
 welcher Technik (sie sind Node, brauchen aber nur Dateien und Git):
@@ -75,11 +77,12 @@ Systemtabelle) · `pruefe-verweise` (kein Doku-Verweis ins Leere) ·
 Altlasten wachsen nie) · `pruefe-doku-status` (kein Dokument behauptet
 einen Zustand).
 
-Ein achter läuft **nur mit Konfiguration**: `pruefe-sprache` erzwingt
-die Sprachtrennung, die in `alpha-code.json` steht — ohne
-`sprache`-Block sagt er, dass er übersprungen wurde, statt still grün
-zu melden. Und **außerhalb** der Kette: `pruefe-freigabe`, die
-Freigabeliste vor einer Veröffentlichung, siehe unten.
+**Zwei weitere laufen nur mit Konfiguration** und sagen ohne sie, dass
+sie übersprungen wurden, statt still grün zu melden:
+`pruefe-sprache` (Sprachtrennung, Regel 15) und `pruefe-vorgaenge`
+(Fahrplan, Vorgänge und ihre Verweise, Regel 16). Und **außerhalb**
+der Kette: `pruefe-freigabe`, die Freigabeliste vor einer
+Veröffentlichung, siehe unten.
 
 ## Modus A · Neues Projekt
 
@@ -128,7 +131,7 @@ Bestehendes überschreiben.**
 1. **Bestandsaufnahme, rein lesend.** Was gibt es schon — README,
    Changelog, Doku, Prüfungen, Kopfkommentare? Mit Befehlen zählen,
    nicht schätzen. Was davon widerspricht dem Code? Jeden Fund notieren.
-   **Dateien über 500 Zeilen messen** und mit ihren Zeilenzahlen in
+   **Dateien über der Zeilengrenze messen** und mit ihren Zeilenzahlen in
    `docs/ALTLASTEN.md` aufnehmen (Vorlage liegt bei) — sie werden
    **nicht** sofort geteilt; die Grenze ist ein Ratchet, kein Vorwand
    für einen riskanten Komplettumbau. Alte Übergabe- und Kontextdateien
@@ -225,6 +228,64 @@ datiert: dann ist sie in einem Jahr nicht falsch, sondern alt.
 Hat das Projekt keinen Tracker (rein lokal, kein Hosting), gehört der
 Stand in **eine** benannte Datei — nie verstreut. Der Wächter prüft
 `docs/`, nicht diese eine Datei.
+
+## Vorgänge — der Fahrplan wird zu Issues (Regel 16)
+
+Sobald ein `vorgaenge`-Block in `alpha-code.json` steht, werden **drei
+Dinge** zu Vorgängen: der Fahrplan, jeder Fehlerbericht, jede offene
+Problematik. Nichts davon bleibt ein Absatz in einem Dokument.
+
+| Form | Label | Eltern | trägt |
+| --- | --- | --- | --- |
+| **Phase** | `track` | keins | das Abnahmekriterium aus `docs/ROADMAP.md` |
+| **Schritt** | `schritt` | Phase | **ein** Fertig-Kriterium |
+| **Fehler** | `fehler` | frei | das Vier-Felder-Muster des Fehlerbuchs |
+| **Entscheidung** | `entscheidung` | **keins** | Frage, Optionen, Empfehlung |
+
+**Große Vorgänge werden geteilt.** Eine Phase ist ein Sammelvorgang und
+enthält selbst keine Arbeit — die Arbeit sind ihre Schritte. Lassen sich
+für einen Schritt zwei Fertig-Kriterien nennen, sind es zwei Schritte:
+sonst gibt es keinen Zeitpunkt, an dem man ihn guten Gewissens schließt.
+
+```bash
+node werkzeuge/vorgaenge.mjs roadmap              # zeigt, was fehlt
+node werkzeuge/vorgaenge.mjs roadmap --wirklich   # legt an und verkettet
+node werkzeuge/vorgaenge.mjs fehler "Titel" --datei bericht.md
+node werkzeuge/vorgaenge.mjs entscheidung "Titel" --datei frage.md
+node werkzeuge/vorgaenge.mjs bericht 42 --datei abschluss.md
+node werkzeuge/vorgaenge.mjs stand                # die Übersicht als Abfrage
+```
+
+Ohne `--wirklich` läuft alles trocken — Vorgänge anzulegen erzeugt
+Benachrichtigungen und lässt sich nicht spurlos zurücknehmen. Der
+Zugang kommt aus `GITHUB_TOKEN`, `gh auth token` oder dem
+Anmeldespeicher von Git selbst (`git credential`); ein `gh` muss also
+nicht installiert sein.
+
+**Jede Verbindung wird zweimal geschrieben**, sonst ist sie von einer
+Seite unsichtbar: `Teil von #12` im Kind, `- [ ] #13` in der
+Aufgabenliste des Elternteils (daraus rechnet GitHub den Fortschritt),
+`Begründung: docs/ROADMAP.md` im Vorgang, `Vorgang: #12` im Dokument,
+`(#13)` am Ende des Commit-Betreffs.
+
+**Zwei Grenzen, die man leicht übersieht:**
+
+- **Eine Entscheidung hängt an keiner Phase.** Sie hat eine andere
+  Lebensdauer als die Arbeit, die auf sie wartet — als Absatz in einem
+  Phasen-Vorgang verschwände sie mit dessen Abschluss, ohne beantwortet
+  zu sein.
+- **Der Fehler geht durch beide Bücher, nacheinander:** erst der Vorgang
+  (was ist kaputt, seit wann, woran erkannt), nach der Behebung der Fall
+  im Fehlerbuch (woran ich es früher merke). Wer nur eines führt,
+  verliert entweder den Stand oder die Lehre.
+
+**Die Kette prüft ohne Netz.** `pruefe-vorgaenge` sieht in der Kette
+nur nach, was in den Dateien steht — jede Phase und jeder Schritt mit
+Nummer, keine Nummer zweimal, kein Stand in der Roadmap. Erst
+`--online` fragt GitHub, ob es die Vorgänge gibt und die Verweise
+stimmen; das läuft von Hand, vor einem Merge. Eine Prüfkette, die ein
+fremdes Haus braucht, wird rot, wenn dieses Haus langsam ist — und
+gewöhnt einem so das Übergehen an.
 
 ## Vor einer Veröffentlichung
 

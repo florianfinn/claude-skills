@@ -65,7 +65,7 @@ if (!existsSync(einstellung)) {
     quellordner: ["."],
     endungen: [".js", ".mjs"],
     ausnahmen: ["node_modules", ".git", "vendor", "dist", "build", "daten", "docs"],
-    zeilengrenze: 500
+    zeilengrenze: 1000
     /* Für die Sprachtrennung zusätzlich einen `sprache`-Block setzen
        und `vorlagen/WORTLISTE.md` nach `docs/` kopieren — siehe
        docs/REGELN.md, Regel 15. Ohne den Block läuft die Prüfung
@@ -81,4 +81,5 @@ console.log("Nächste Schritte stehen in SKILL.md: Platzhalter füllen, " +
   "Systemtabelle, Tags, dann die Kette.");
 console.log("Bei Bedarf zusätzlich: vorlagen/ALTLASTEN.md (Nachrüsten), " +
   "vorlagen/PROJEKTGRENZE.md (Nachbarprojekt),\n  vorlagen/WORTLISTE.md " +
-  "(Sprachtrennung — dann auch `sprache` in alpha-code.json setzen).");
+  "(Sprachtrennung — dann auch `sprache` in alpha-code.json setzen),\n  " +
+  "vorlagen/ROADMAP.md (Vorgangs-Tracker — dann auch `vorgaenge` setzen).");

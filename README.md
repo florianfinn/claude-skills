@@ -91,8 +91,9 @@ strukturiert oder veröffentlicht werden soll. Der Skill stellt ein Gerüst auf 
 Wegweiser, Regeln, Fehlerbuch, Workclaim, Changelog — und legt eine Prüfkette
 dazu, die nicht den Code prüft, sondern die **Arbeitsweise**: nie auf `main`,
 nichts ohne Changelog-Eintrag, jede Quelldatei mit Funktions-Tag, kein
-Doku-Verweis ins Leere, keine Großdatei, die weiter wächst, kein Geheimnis im
-Arbeitsstand — und **kein Dokument, das einen Zustand behauptet**. Vor einer
+Doku-Verweis ins Leere, keine Datei über 1.000 Zeilen, kein Geheimnis im
+Arbeitsstand — und **kein Dokument, das einen Zustand behauptet**; der lebt
+als Vorgang im Tracker. Vor einer
 Veröffentlichung läuft zusätzlich eine Freigabeliste, die auch die gesamte
 Git-Historie durchsucht.
 
@@ -101,10 +102,14 @@ Anders als die beiden anderen Skills bringt dieser **ausführbare Beilagen** mit
 - **`einrichten.mjs`** — kopiert Vorlagen und Wächter ins Projekt, erkennt die
   Zeilenenden am Bestand und überschreibt **nie** etwas. Nachrüsten heißt
   einarbeiten, nicht ersetzen.
-- **`werkzeuge/`** — sieben Wächter plus die Kette darüber, dazu ein achter,
-  der nur mit Konfiguration läuft. Sie sind Node, brauchen aber nur Dateien
-  und Git und laufen deshalb auch über einem Godot-, Python- oder
-  Nur-Doku-Projekt.
+- **`werkzeuge/`** — sieben Wächter plus die Kette darüber, dazu zwei, die
+  nur mit Konfiguration laufen (Sprachtrennung, Vorgänge). Sie sind Node,
+  brauchen aber nur Dateien und Git und laufen deshalb auch über einem
+  Godot-, Python- oder Nur-Doku-Projekt.
+- **`vorgaenge.mjs`** — macht aus dem Fahrplan verkettete GitHub-Issues:
+  Phasen als Sammelvorgänge, Schritte als Kinder, dazu Fehlerberichte und
+  offene Entscheidungen. Jede Verbindung wird in beide Richtungen
+  geschrieben; ohne `--wirklich` läuft alles trocken.
 - **`vorlagen/`** — die Dokumente, darunter ein **vorbefülltes Fehlerbuch** mit
   18 übertragbaren Fällen. Sie haben anderswo schon einmal Zeit gekostet; das
   neue Projekt muss sie nicht ein zweites Mal bezahlen.

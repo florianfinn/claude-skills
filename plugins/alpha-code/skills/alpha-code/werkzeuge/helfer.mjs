@@ -36,11 +36,13 @@ export function liesEinstellung() {
     /* Die Baseline-Tabelle der Großdateien. Ein nachgerüstetes Projekt
        darf sie unter seinem bestehenden Namen weiterführen. */
     altlasten: "docs/ALTLASTEN.md",
-    /* Ab wann eine Datei zu groß ist. 500 ist der Standard, weil eine
-       Datei dieser Länge noch in einem Stück gelesen werden kann.
-       Projekte mit anderer Bauart setzen die Zahl selbst — sie gehört
-       an **eine** Stelle und nicht in den Wächter einbetoniert. */
-    zeilengrenze: 500
+    /* Ab wann eine Datei zu groß ist. **1.000** ist der Standard
+       (Ansage vom 04.09.2026). Wird die Grenze gerissen, wird die Datei
+       **geteilt** — nicht geduldet und nicht angehoben; die neuen Teile
+       nennen einander in ihrer Kopfnotiz (Regel 10). Projekte mit
+       anderer Bauart setzen die Zahl selbst — sie gehört an **eine**
+       Stelle und nicht in den Wächter einbetoniert. */
+    zeilengrenze: 1000
     /* `sprache` gibt es bewusst nicht als Standard: Welche Sprache
        Bezeichner tragen und welche die Texte, ist eine Entscheidung
        des Projekts. Ohne den Block läuft `pruefe-sprache.mjs` nicht
