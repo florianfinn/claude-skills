@@ -92,7 +92,28 @@ if (!existsSync(einstellung)) {
   }, null, 2).replace(/\n/g, ende) + ende);
   console.log("  angelegt: alpha-code.json");
   kopiert++;
-} else { console.log("  übersprungen (existiert): alpha-code.json"); uebersprungen++; }
+} else {
+  /* ⚠️ Beim Nachrüsten ist die Einstellung schon da — und genau dann
+     würde ein reines Überspringen den `vorgaenge`-Block **nie**
+     eintragen: Der ganze Modus B liefe für Vorgänge ins Leere. Also
+     werden **fehlende Schlüssel ergänzt**, und nur die. Ein
+     bestehender Wert wird nie angefasst — auch keine strengere
+     Zeilengrenze, die ein Projekt bewusst gesetzt hat. */
+  const alt = JSON.parse(readFileSync(einstellung, "utf8"));
+  const fehlt = [];
+  if (REPO && !alt.vorgaenge) {
+    alt.vorgaenge = { art: "github", repo: REPO, sammel_label: "track", roadmap: "docs/ROADMAP.md" };
+    fehlt.push("vorgaenge");
+  }
+  if (alt.zeilengrenze === undefined) { alt.zeilengrenze = 1000; fehlt.push("zeilengrenze"); }
+  if (fehlt.length) {
+    writeFileSync(einstellung, JSON.stringify(alt, null, 2).replace(/\n/g, ende) + ende);
+    console.log("  ergänzt in alpha-code.json: " + fehlt.join(", "));
+  } else {
+    console.log("  übersprungen (existiert): alpha-code.json");
+  }
+  uebersprungen++;
+}
 
 console.log(`\n${kopiert} Datei(en) angelegt, ${uebersprungen} übersprungen, ` +
   `Zeilenenden ${crlf ? "CRLF" : "LF"}.`);
