@@ -1,5 +1,9 @@
 # Die Auftragsvorlage
 
+Zwei Fassungen: die **volle** für Bauagenten, die Dateien ändern und
+committen, und die **Kurzvorlage für Scouts** am Ende dieser Datei, für Agenten,
+die nur suchen, zählen und melden.
+
 Was ein Subagent mitbekommt. Platzhalter in `<spitzen Klammern>` aus dem
 Projektprofil ersetzen, den Rest wörtlich stehen lassen.
 
@@ -15,16 +19,15 @@ Du baust <Etappe/Teilaufgabe>. Die Begründung und die Dateiliste stehen in
 
 ## Basis
 
-Du arbeitest in deinem eigenen Worktree unter <worktree-pfad> — nicht im
-Hauptcheckout. Bist du das nicht, sag es zurück, bevor du irgendetwas tust:
-ein `reset --hard` im Hauptcheckout trifft fremden, ungesicherten Stand.
+Du arbeitest in deinem eigenen Worktree unter <worktree-pfad> auf dem Stand
+<basis-sha> — nicht im Hauptcheckout. Prüfe beides, bevor du irgendetwas tust:
 
-Setze deinen Stand zuerst um:
+    git rev-parse --show-toplevel   # muss <worktree-pfad> sein
+    git rev-parse HEAD              # muss <basis-sha> sein
 
-    git fetch --all && git reset --hard <basis-sha>
-
-Prüfe mit `git log --oneline -1`, dass du auf <basis-sha> stehst. Deine Arbeit
-beginnt erst danach.
+Stimmt eines nicht, **stopp und melde es** — kein `checkout`, kein
+`reset --hard`, kein `fetch`. Ein Reset im falschen Checkout trifft fremden,
+ungesicherten Stand. Deine Arbeit beginnt erst, wenn beides stimmt.
 
 ## Auftrag
 
@@ -117,3 +120,38 @@ Der Auftrag beschreibt das **Ziel** und verschweigt den **Rahmen**. Der Agent
 baut dann etwas Richtiges an der falschen Stelle, auf dem falschen Stand, in
 der falschen Schreibweise — und das fällt erst beim Zusammenführen auf, wenn
 drei weitere Agenten schon darauf aufgebaut haben.
+
+## Kurzvorlage für Scouts
+
+Für Aufträge, die nur lesen: suchen, zählen, Bestand kartieren, Totcode finden.
+Nimm dafür einen **nur lesenden** Agententyp (in Claude Code `Explore`). Kein
+Worktree, keine Konventionen, keine Wächter — der Scout ändert nichts. Was er
+stattdessen zwingend braucht: den **Suchraum** und den **Rohbefehl als Beleg**.
+Ohne beides liefert er falsche Negative, die wie Fakten aussehen
+(field-notes, Vorfall 10).
+
+```
+Du suchst <was genau>, du änderst nichts.
+
+## Suchraum
+
+Der ganze Baum ab <wurzel>, ausdrücklich auch <docker/, ci/, scripts/,
+Infrastruktur-Konfiguration, …>. Ausgenommen nur: <node_modules/, dist/, …>.
+
+## Frage
+
+<Die eine Frage, präzise. Z. B.: Welche der folgenden Klassen werden nirgends
+außerhalb ihrer Definition referenziert? Liste: …>
+
+## Rückmeldung
+
+Zu jeder Aussage der Befehl, der sie belegt, und seine Ausgabe (gekürzt auf die
+relevanten Zeilen). Keine Aussage ohne Befehl:
+
+- „existiert / existiert nicht" → `ls` oder `find` mit Ausgabe
+- „wird benutzt / ist tot" → `grep -rn` über den ganzen Suchraum mit Ausgabe
+  oder der leeren Ausgabe samt Exit-Code
+- Zahlen → der Befehl, der sie erzeugt hat (`grep -c`, `wc -l`)
+
+Was du nicht prüfen konntest, nennst du als ungeprüft. Keine Vermutungen.
+```
