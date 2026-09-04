@@ -95,23 +95,40 @@ zeilen.forEach((zeile, i) => {
   if (imBlock) return;
   const p = zeile.match(/^##\s+(.+?)\s*$/);
   const s = zeile.match(/^###\s+(.+?)\s*$/);
-  const v = zeile.match(/^\s*Vorgang:\s*#(\d+)/i);
-  if (p) { phasen.push({ titel: p[1], zeile: i + 1, nummer: null, schritte: [] }); return; }
+  const v = zeile.match(/^\s*Vorgang:\s*(?:#(\d+)|(keiner))/i);
+  if (p) { phasen.push({ titel: p[1], zeile: i + 1, nummer: null, prosa: false, schritte: [] }); return; }
   if (!phasen.length) return;
   const aktuell = phasen[phasen.length - 1];
-  if (s) { aktuell.schritte.push({ titel: s[1], zeile: i + 1, nummer: null }); return; }
+  if (s) { aktuell.schritte.push({ titel: s[1], zeile: i + 1, nummer: null, prosa: false }); return; }
   if (v) {
     const ziel = aktuell.schritte.length ? aktuell.schritte[aktuell.schritte.length - 1] : aktuell;
-    if (ziel.nummer !== null)
-      console.log(`    ${ROADMAP}:${i + 1}  zweite Vorgangsnummer für „${ziel.titel}"`);
-    ziel.nummer = parseInt(v[1], 10);
+    /* `Vorgang: keiner` nimmt einen Abschnitt ausdrücklich aus.
+
+       ⚠️ **Warum ausdrücklich und nicht geraten:** Eine gewachsene
+       Roadmap besteht nicht nur aus Phasen. Scotophobias hat 35
+       `##`-Abschnitte, davon fünf reine Prosa („Die kurze Antwort",
+       „Verbindliche Dokumentgrenze") — gemessen am 05.09.2026. Wer
+       daraus rät, welche ein Vorgang werden sollen, liegt bei jedem
+       Dokument anders falsch. Eine Zeile im Dokument kostet einmal
+       zehn Sekunden und ist danach für immer eindeutig. */
+    if (ziel.nummer !== null || ziel.prosa)
+      console.log(`    ${ROADMAP}:${i + 1}  zweite Vorgangszeile für „${ziel.titel}"`);
+    if (v[2]) ziel.prosa = true; else ziel.nummer = parseInt(v[1], 10);
   }
 });
 
+/* Prosa-Abschnitte zählen nirgends mit — weder als fehlend noch als
+   doppelt. Ihre Zahl wird trotzdem genannt: Ein Dokument, in dem
+   plötzlich alles Prosa ist, hätte sich damit stillgelegt. */
+const prosaZahl = phasen.filter((p) => p.prosa).length
+  + phasen.reduce((n, p) => n + p.schritte.filter((s) => s.prosa).length, 0);
+for (const p of phasen) p.schritte = p.schritte.filter((s) => !s.prosa);
+const echte = phasen.filter((p) => !p.prosa);
+
 /* ── 1 und 2 · jede Phase und jeder Schritt hat einen Vorgang ─────── */
-const ohnePhase = phasen.filter((p) => p.nummer === null);
+const ohnePhase = echte.filter((p) => p.nummer === null);
 const ohneSchritt = [];
-for (const p of phasen) for (const s of p.schritte) if (s.nummer === null) ohneSchritt.push({ p, s });
+for (const p of echte) for (const s of p.schritte) if (s.nummer === null) ohneSchritt.push({ p, s });
 
 for (const p of ohnePhase) console.log(`    ${ROADMAP}:${p.zeile}  Phase ohne Vorgang: ${p.titel}`);
 for (const { p, s } of ohneSchritt) console.log(`    ${ROADMAP}:${s.zeile}  Schritt ohne Vorgang: ${s.titel} (in ${p.titel})`);
@@ -119,7 +136,7 @@ for (const { p, s } of ohneSchritt) console.log(`    ${ROADMAP}:${s.zeile}  Schr
 /* ── 3 · keine Nummer zweimal ─────────────────────────────────────── */
 const gesehen = new Map();
 let doppelt = 0;
-for (const p of phasen) {
+for (const p of echte) {
   for (const eintrag of [p, ...p.schritte]) {
     if (eintrag.nummer === null) continue;
     if (gesehen.has(eintrag.nummer)) {
@@ -149,11 +166,16 @@ zeilen.forEach((zeile, i) => {
   }
 });
 
-const schritte = phasen.reduce((n, p) => n + p.schritte.length, 0);
-console.log(`  ${phasen.length} Phase(n), ${schritte} Schritt(e), ${gesehen.size} Vorgangsnummer(n)`);
+const schritte = echte.reduce((n, p) => n + p.schritte.length, 0);
+console.log(`  ${echte.length} Phase(n), ${schritte} Schritt(e), ${gesehen.size} Vorgangsnummer(n)` +
+  (prosaZahl ? `, ${prosaZahl} als Prosa ausgenommen` : ""));
 
-melde(phasen.length > 0, `${ROADMAP} nennt Phasen`,
-  phasen.length === 0 ? "keine `##`-Überschrift gefunden — die Prüfung kann nichts fangen" : "");
+melde(echte.length > 0, `${ROADMAP} nennt Phasen`,
+  echte.length === 0
+    ? (prosaZahl
+        ? `alle ${prosaZahl} Abschnitte sind als Prosa ausgenommen — die Prüfung kann nichts fangen`
+        : "keine `##`-Überschrift gefunden — die Prüfung kann nichts fangen")
+    : "");
 melde(ohnePhase.length === 0, "jede Phase hat einen Vorgang",
   ohnePhase.length ? `${ohnePhase.length} ohne — anlegen mit \`node werkzeuge/vorgaenge.mjs roadmap --wirklich\`` : "");
 melde(ohneSchritt.length === 0, "jeder Schritt hat einen Vorgang",
@@ -175,7 +197,7 @@ if (online) {
   const LABEL = { phase: konfig.sammel_label || "track", schritt: "schritt" };
   let fehlend = 0, falschesLabel = 0, ohneEltern = 0;
 
-  for (const p of phasen) {
+  for (const p of echte) {
     if (p.nummer === null) continue;
     let vorgang;
     try { vorgang = await api(`/repos/${repo}/issues/${p.nummer}`, { token }); }
