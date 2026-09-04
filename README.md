@@ -47,9 +47,10 @@ Drei Beilagen:
 - **`references/project-profile.md`** — ein Blatt, das einmal je Repo
   ausgefüllt wird (Standardbranch, Prüfbefehle, Worktree-Einrichtung,
   Konventionen, Wächtertests, stille Fallen). Jeder Auftrag zieht daraus.
-- **`references/field-notes.md`** — woher jede Regel stammt. Achtzehn Vorfälle
-  aus zwei Vorgängen — einer Nacht mit neun Agentenläufen und einem Vorgang
-  über 12 Pakete in zwei Repos —, je mit der Regel, die daraus wurde.
+- **`references/field-notes.md`** — woher jede Regel stammt. Zwanzig Vorfälle
+  aus echten Vorgängen — einer Nacht mit neun Agentenläufen, einem Vorgang über
+  12 Pakete in zwei Repos und Nachträgen aus früheren Läufen —, je mit der
+  Regel, die daraus wurde.
 
 Der Kern in drei Sätzen:
 

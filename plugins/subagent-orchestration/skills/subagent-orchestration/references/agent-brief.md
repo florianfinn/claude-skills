@@ -100,16 +100,23 @@ Satz, ohne dass jemand deine Rückmeldung liest. Dagegen:
 - Nach JEDEM Baustein schreibst du deinen Stand in `<rückmeldedatei>` fort:
   was fertig ist, die Zahlen dazu, was offen ist, was als Nächstes kommt. Diese
   Datei ist die Rückmeldung — nicht dein Schlusstext.
-- Nach JEDEM Baustein committest du den Zwischenstand auf deinem Branch
-  (Betreff `Zwischenstand: <was fertig ist>`). Nicht committete Arbeit ist beim
-  Abriss verloren, und der Leitstand muss sie fremd committen.
+- **Committen ist eine laufende Handlung, keine abschließende.** Nach JEDEM
+  Baustein committest du den Zwischenstand auf deinem Branch (Betreff
+  `Zwischenstand: <was fertig ist>`), auch unfertig. Was beim Abriss nicht
+  committet ist, ist verloren, und der Lauf ist nicht fortsetzbar.
+- Du stagst **nur deine eigenen Pfade**, einzeln benannt. Kein `git add -A`: es
+  nimmt Bauabfall und im geteilten Baum fremde Arbeit mit.
+- Die Bausteine oben stehen nach Wert sortiert. Halte dich daran, statt das
+  Vorbereitende zuerst fertigzumachen — reißt der Lauf ab, zählt nur, was schon
+  steht.
 - Wird das Budget knapp, hörst du VON DIR AUS auf: committen,
   Rückmeldedatei abschließen, melden was offen ist. Ein sauber abgebrochener
   Lauf kostet weniger als ein abgerissener ohne Stand.
 
 ## Lesedisziplin
 
-Züge gehen beim Lesen verloren, nicht beim Schreiben. `grep -n <muster>
+Züge gehen beim Lesen verloren, nicht beim Schreiben. Was in diesem Auftrag
+steht, schlägst du nicht noch einmal nach. `grep -n <muster>
 <datei>` statt die Datei zu öffnen; große Test- und Bestandsdateien liest du
 nie vollständig, sondern nur die Stellen, die dein Auftrag betrifft.
 
@@ -145,6 +152,26 @@ abgeholt.
 | Bestand löschen | Der Nachweis, dass niemand mehr darauf zugreift — der Befehl gehört in den Commit-Body, nicht nur ins Ergebnis. |
 | Messen | Der Vergleichsstand als SHA und der Messbefehl, damit die Zahl reproduzierbar ist. |
 | Doku | Ob das Projekt Statusangaben in der Doku verbietet. Ein „ist live" veraltet still. |
+
+## Zusatzblock: geteilter Arbeitsbaum
+
+Nur für den Ausnahmefall, dass ein Agent **kein** eigenes Worktree bekommen kann
+und im Baum des Leitstands läuft. Dann gehört dieser Block wörtlich in den
+Auftrag — und der Schnitt muss auf disjunkte Dateimengen halten, denn eine
+geteilte Datei erzeugt hier keine Konflikte, sondern stille gegenseitige
+Überschreibung (field-notes, Vorfall 9).
+
+```
+Du läufst im geteilten Arbeitsbaum: andere Agenten schreiben gerade im selben
+Verzeichnis.
+
+- Kein `git reset --hard`, kein `git checkout -- .`, kein `git stash`, kein
+  `git clean`, kein `git add -A`. Du stagst deine Pfade einzeln.
+- Ein roter Prüflauf ist NICHT automatisch deiner. Prüfe erst, ob die
+  betroffene Datei überhaupt dir gehört, bevor du suchst.
+- Fremde unversionierte Dateien im Status sind fremde Arbeit. Nicht anfassen,
+  nicht committen, nicht aufräumen.
+```
 
 ## Häufigster Fehler beim Schreiben eines Auftrags
 

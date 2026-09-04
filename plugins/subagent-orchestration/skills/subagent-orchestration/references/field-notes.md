@@ -3,7 +3,9 @@
 Alle Warnungen im Skill stammen aus zwei Vorgängen. Die Vorfälle 1 bis 10 aus
 einer Nacht mit neun Agentenläufen an einem Frontend-Umbau: drei Etappen, zwölf
 Dateien, drei Änderungssätze, Abnahme im Browser. Die Vorfälle 11 bis 18 aus
-einem Vorgang über 12 Pakete in zwei Repos. Nichts davon ist abgeleitet — jeder
+einem Vorgang über 12 Pakete in zwei Repos, 19 und 20 aus früheren Vorgängen
+nachgetragen — die Nummern folgen der Reihenfolge des Eintragens, nicht der
+Zeit. Nichts davon ist abgeleitet — jeder
 Punkt hat Nacharbeit gekostet, und die Nacharbeit war jedes Mal teurer als die
 Zeile im Auftrag, die sie verhindert hätte.
 
@@ -138,6 +140,19 @@ Auftrag ist damit ganz gefallen.
 richtigen Stand landet, sieht wie ein normaler Lauf aus. Der Unterschied
 zwischen „im eigenen Worktree" und „im geteilten Hauptcheckout" steht in
 keiner Ausgabe, die der Agent von sich aus meldet.
+
+**Nachtrag aus einem zweiten Lauf im geteilten Baum:** Bei vier parallelen
+Paketen standen fünf `reset: moving to <basis>` im Reflog — von vier Agenten
+plus dem Leitstand. Es ging nur ohne Verlust aus, weil alle Resets zeitlich vor
+der ersten Änderung lagen. Zweimal fegte außerdem ein `git add -A` fremde,
+unversionierte Dateien in einen fremden Änderungssatz; beide Male fiel es dem
+Agenten selbst auf und wurde per `reset --soft` berichtigt. Gehalten hat am Ende
+nicht die Isolation, sondern der **Schnitt**: disjunkte Dateimengen. Bei einer
+geteilten Datei hätte es keine sichtbaren Konflikte gegeben, sondern stille
+gegenseitige Überschreibung. Zwei Folgeregeln: kein `git add -A`, nur die
+eigenen Pfade einzeln stagen — auch im eigenen Worktree, wo sonst Bauabfall
+mitgeht. Und: im geteilten Baum ist ein roter Prüflauf **nicht automatisch der
+eigene**; das hat mehrfach zu Fehlersuche am falschen Ort geführt.
 
 ## 10. Die unbelegte Bestandsaussage
 
@@ -301,6 +316,46 @@ den ganzen Text. Kriterien werden vor dem Auftrag am Bestand gegengeprüft. Das
 Verfahren im Lauf hat funktioniert und bleibt: Der Agent meldet ein falsch
 gefasstes Kriterium als Befund und prüft es trotzdem wie geschrieben —
 nachverhandelt wird nicht.
+
+## 19. Das Budget, das der eigene Auftrag sprengt
+
+**Was passierte:** Die Rollen standen auf einem Zugbudget von 45. Der Auftrag,
+den der Skill selbst vorschreibt, ist länger: Stand prüfen, Abhängigkeiten
+installieren, bauen, gegenprüfen, lint/test/build als getrennte Läufe mit
+echten Exit-Codes, committen, Rückmeldung. In einem Vorgang liefen **drei von
+vier** Paketen bei genau 45 Zügen an — eines mit bereits grünem Build, eines
+beim letzten von sechs Auftragspunkten. In einem früheren Lauf liefen zwei
+Agenten ins Budget, **ohne eine einzige Zeile zu bauen**: sie waren beim
+Pflichtlesen. Ein Paket verbrannte 62 Züge mit Nachschlagen im Wörterbuch des
+Projekts und änderte keine einzige Datei.
+
+**Die Regel:** Die Zahl der Züge folgt der Länge der vorgeschriebenen Kette,
+nicht der Schwierigkeit der Aufgabe — also ist das Budget eine Stellschraube
+bei der Besetzung, neben Typ, Modell und Zuschnitt. Wo das Werkzeug es kennt,
+wird es für Bau- und Umbauaufträge angehoben, statt den Auftrag zu kürzen. Der
+wirksamere Hebel ist aber der Auftrag selbst: **was der Leitstand entscheiden
+kann, entscheidet er und schreibt das Ergebnis hinein.** Jede Nachschlagearbeit,
+die im Auftrag stehen könnte, bezahlt der Agent aus seinem Budget — und der
+Leitstand bezahlt sie noch einmal, wenn der Lauf daran abreißt.
+
+## 20. Die Arbeit, die nie existiert hat
+
+**Was passierte:** Drei Agenten liefen ins Zugbudget, alle drei mit
+unversionierter Arbeit im Baum, einer davon mit bereits grünem Build. Sie waren
+nur zu retten, weil per `SendMessage` nachgesteuert wurde und die erste Zeile
+jeder Nachricht „committe sofort" lautete. Ein vierter Agent wurde nach einem
+Fehlschlag abgezogen: seine gesamte Bauarbeit war weg, weil sie nie committet
+worden war. Erhalten blieb nur, was er auf Nachfrage als Datei abgelegt hatte.
+
+**Die Regel:** Committen ist eine **laufende** Handlung, keine abschließende —
+nach jedem abgeschlossenen Schritt, auch unfertig. Beim Nachsteuern steht
+„committe sofort" in der ersten Zeile, vor jeder inhaltlichen Anweisung: ein
+Agent, der eine Korrektur bekommt, fängt sonst an zu arbeiten statt zu sichern.
+Und die Bausteine stehen im Auftrag **nach Wert sortiert**, damit ein Abbruch
+das Wichtigste fertig vorfindet und nicht das Vorbereitende.
+
+**Zusammenhang mit Vorfall 19:** Ein höheres Budget verringert die Häufigkeit,
+beseitigt die Fehlerklasse aber nicht. Beide Regeln gelten, nicht eine.
 
 ## Was gut funktioniert hat
 

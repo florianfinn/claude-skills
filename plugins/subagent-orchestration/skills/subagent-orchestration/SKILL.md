@@ -93,6 +93,16 @@ Das Modell folgt der **Fehlerklasse**, nicht der Textmenge:
 | Fläche umstellen, Bestand löschen mit Nachweis, Logik debuggen | mittel (Sonnet) | Ein Test fängt den Fehler, aber der Agent muss den Code erst verstehen. |
 | Suchen, zählen, Marken nachziehen, Doku im vorgegebenen Ton | leicht (Haiku) | Feste Regel anwenden, kein Urteil. Ein Fehler fällt sofort auf. |
 
+⚠️ **Das Zugbudget ist die vierte Stellschraube**, neben Typ, Modell und
+Zuschnitt (Vorfälle 11, 19). Die Zahl der Züge folgt der Länge der
+vorgeschriebenen Kette, nicht der Schwierigkeit der Aufgabe: Stand prüfen,
+Abhängigkeiten installieren, bauen, gegenprüfen, drei Prüfläufe, committen,
+melden. Kennt dein Werkzeug ein Budget je Rolle, hebe es für Bau- und
+Umbauaufträge an, statt den Auftrag zu kürzen — in Claude Code überschreibt eine
+gleichnamige Rollendatei in `.claude/agents/` die des Plugins: Original
+kopieren, nur das Budget ändern, damit die Disziplin im Rollenprompt erhalten
+bleibt. Das Verzeichnis muss beim Sitzungsstart schon existieren.
+
 ⚠️ **Ein Scout-Auftrag ohne festgelegten Suchraum liefert falsche Negative, die
 wie Fakten aussehen** (Vorfall 10). Nenne den Suchraum vollständig — auch
 `docker/`, `ci/`, `scripts/` — und verlange zu jeder Bestandsaussage den
@@ -130,9 +140,18 @@ Bauauftrag gehören:
    (Vorfall 11). Bauaufträge tragen zusätzlich die Pflicht zum
    **Zwischencommit** je Baustein und die **Lesedisziplin** (`grep -n` statt
    ganzer Datei). Beides kostet wenige Züge und rettet den Stand beim Abriss.
+6. **Die Bausteine nach Wert sortiert**, nicht nach Bequemlichkeit. Ein Abbruch
+   soll das Wichtigste fertig vorfinden und nicht das Vorbereitende
+   (Vorfall 20).
 
-Dazu: Rückmeldung in **Zahlen**, und was er nicht tut (mergen, deployen,
+Dazu: Rückmeldung in **Zahlen**, dass er nur **eigene Pfade** stagt (nie
+`git add -A`, Vorfall 9), und was er nicht tut (mergen, deployen,
 Wächtermarken senken).
+
+⚠️ **Was du entscheiden kannst, entscheidest du und schreibst das Ergebnis in
+den Auftrag** (Vorfall 19). Jede Nachschlagearbeit, die im Auftrag stehen
+könnte, bezahlt der Agent aus seinem Zugbudget — ein Paket verbrannte 62 Züge im
+Wörterbuch des Projekts und änderte dabei keine einzige Datei.
 
 ⚠️ **Abnahmekriterien mit wörtlichem Grep prüfst du am Kriterium selbst**,
 bevor es in den Auftrag geht (Vorfall 18): ein Wort trifft auch Prosa,
@@ -144,7 +163,10 @@ Befund; nachverhandelt wird es nicht.
 - Unabhängige Agenten startest du **in einem Aufruf**, im Hintergrund. Ketten
   Glied für Glied, jedes auf der SHA des Vorgängers.
 - Nachsteuern per `SendMessage`, **nicht** per neuem Agenten — der fängt kalt
-  an und leitet denselben Kontext noch einmal her.
+  an und leitet denselben Kontext noch einmal her. ⚠️ **Die erste Zeile jeder
+  Nachricht an einen laufenden Agenten lautet „committe sofort"**, vor jeder
+  inhaltlichen Anweisung (Vorfall 20). Wer eine Korrektur bekommt, fängt sonst
+  an zu arbeiten, statt zu sichern.
 - ⚠️ **Der Abriss am Zuglimit ist der Regelfall, nicht die Ausnahme**: rund
   jeder zweite Lauf endete so, und die Benachrichtigung trägt dann nur den
   letzten Gedanken, keine Zahlen (Vorfall 11). Der Standardweg danach:
