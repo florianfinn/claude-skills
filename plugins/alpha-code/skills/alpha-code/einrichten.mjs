@@ -14,6 +14,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { spawnSync } from "node:child_process";
 
 const HIER = fileURLToPath(new URL(".", import.meta.url));
 const ziel = process.argv[2];
@@ -40,6 +41,19 @@ const PLAN = [
   ["vorlagen/WEGWEISER.md", "docs/WEGWEISER.md"],
   ["vorlagen/PROJEKTPROFIL.md", ".claude/PROJEKTPROFIL.md"]
 ];
+
+/* Hat das Projekt ein GitHub-Repository, gehört der Fahrplan dazu —
+   Vorgänge sind dann keine Kür, sondern Regel 16. Die **Vorlage** wird
+   angelegt und der Schalter gesetzt; **Vorgänge selbst legt dieses
+   Skript nie an**. Das wirkt nach außen, erzeugt Benachrichtigungen und
+   gehört hinter ein ausdrückliches Ja (Regel 3). */
+const fernstelle = spawnSync("git", ["-C", ziel, "remote", "get-url", "origin"],
+  { encoding: "utf8" });
+const treffer = fernstelle.status === 0
+  ? (fernstelle.stdout || "").match(/github\.com[/:]([^/]+)\/(.+?)(?:\.git)?\s*$/)
+  : null;
+const REPO = treffer ? `${treffer[1]}/${treffer[2]}` : null;
+if (REPO) PLAN.push(["vorlagen/ROADMAP.md", "docs/ROADMAP.md"]);
 for (const w of readdirSync(join(HIER, "werkzeuge")))
   PLAN.push(["werkzeuge/" + w, "werkzeuge/" + w]);
 
@@ -65,7 +79,12 @@ if (!existsSync(einstellung)) {
     quellordner: ["."],
     endungen: [".js", ".mjs"],
     ausnahmen: ["node_modules", ".git", "vendor", "dist", "build", "daten", "docs"],
-    zeilengrenze: 1000
+    zeilengrenze: 1000,
+    /* Nur gesetzt, wenn ein GitHub-Repository gefunden wurde. Der Block
+       schaltet `pruefe-vorgaenge.mjs` scharf: Er meldet von da an jede
+       Phase ohne Vorgang. Angelegt wird nichts — das tut `vorgaenge.mjs`
+       auf ausdrückliches Ja (Regel 3). */
+    ...(REPO ? { vorgaenge: { art: "github", repo: REPO, sammel_label: "track", roadmap: "docs/ROADMAP.md" } } : {})
     /* Für die Sprachtrennung zusätzlich einen `sprache`-Block setzen
        und `vorlagen/WORTLISTE.md` nach `docs/` kopieren — siehe
        docs/REGELN.md, Regel 15. Ohne den Block läuft die Prüfung
@@ -79,7 +98,15 @@ console.log(`\n${kopiert} Datei(en) angelegt, ${uebersprungen} übersprungen, ` 
   `Zeilenenden ${crlf ? "CRLF" : "LF"}.`);
 console.log("Nächste Schritte stehen in SKILL.md: Platzhalter füllen, " +
   "Systemtabelle, Tags, dann die Kette.");
-console.log("Bei Bedarf zusätzlich: vorlagen/ALTLASTEN.md (Nachrüsten), " +
-  "vorlagen/PROJEKTGRENZE.md (Nachbarprojekt),\n  vorlagen/WORTLISTE.md " +
-  "(Sprachtrennung — dann auch `sprache` in alpha-code.json setzen),\n  " +
-  "vorlagen/ROADMAP.md (Vorgangs-Tracker — dann auch `vorgaenge` setzen).");
+if (REPO) {
+  console.log("\nVorgänge: Repository " + REPO + " erkannt — docs/ROADMAP.md und der");
+  console.log("  `vorgaenge`-Block sind angelegt. Fahrplan füllen, dann:");
+  console.log("    node werkzeuge/vorgaenge.mjs roadmap              zeigt, was fehlt");
+  console.log("    node werkzeuge/vorgaenge.mjs roadmap --wirklich   legt an (braucht ein Ja)");
+} else {
+  console.log("\nKein GitHub-Repository gefunden — ohne Vorgangs-Tracker gilt Regel 13");
+  console.log("  mit einer benannten Standdatei, nie verstreut.");
+}
+console.log("\nBei Bedarf zusätzlich: vorlagen/ALTLASTEN.md (Nachrüsten), " +
+  "vorlagen/PROJEKTGRENZE.md\n  (Nachbarprojekt), vorlagen/WORTLISTE.md " +
+  "(Sprachtrennung — dann auch `sprache` setzen).");

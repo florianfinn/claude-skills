@@ -112,7 +112,25 @@ Veröffentlichung, siehe unten.
 6. **`docs/WEGWEISER.md` füllen**, soweit es schon etwas zu kartieren
    gibt — jede Aussage aus dem Code belegt, keine veraltenden Zahlen
    hinein (die führen andere Dateien).
-7. **Die Kette zuerst rot, dann grün.** Einmal absichtlich brechen
+7. **Vorgänge einrichten** — **kein Zusatzpunkt, sondern Regel 16.**
+   Hat das Projekt ein GitHub-Repository, hat `einrichten.mjs`
+   `docs/ROADMAP.md` und den `vorgaenge`-Block schon angelegt. Dann:
+   - **Fahrplan füllen** (`##` Phase, `###` Schritt, je ein
+     Fertig-Kriterium) — aus dem, was der Auftraggeber vorhat, in
+     seinen Worten. Solange Platzhalter drinstehen, meldet der Wächter
+     „angelegt, noch nicht gefüllt" und ist grün.
+   - **Trockenlauf zeigen:** `node werkzeuge/vorgaenge.mjs roadmap`
+     druckt, was angelegt würde — diese Liste bekommt der Auftraggeber
+     zu sehen, **bevor** irgendetwas entsteht.
+   - **Erst auf sein Ja:** `… roadmap --wirklich`. Vorgänge anzulegen
+     wirkt nach außen, erzeugt Benachrichtigungen und lässt sich nicht
+     spurlos zurücknehmen (Regel 3).
+   - **Die Nummern zurück ins Dokument:** je Phase und Schritt eine
+     Zeile `Vorgang: #N`. Danach ist die Prüfung scharf.
+
+   Ohne GitHub-Repository gilt Regel 13 mit **einer** benannten
+   Standdatei — nie verstreut.
+8. **Die Kette zuerst rot, dann grün.** Einmal absichtlich brechen
    (einer Datei den Tag nehmen → `pruefe-tags` muss anschlagen; ihn
    zurückgeben), dann:
    ```bash
@@ -161,8 +179,23 @@ Bestehendes überschreiben.**
    Eingaben → gleichem Ergebnis belegen; wo es eine Oberfläche gibt,
    im Browser durchklicken. Was dabei an echten Fehlern auffällt, wird
    **gemeldet, nicht nebenbei gefixt**.
-7. Rot-Beweis, Kette, Changelog-Eintrag, Commit, Auftraggeber fragen —
-   wie Modus A, Schritt 7.
+7. **Vorgänge nachrüsten — und zuerst nachsehen, was es schon gibt.**
+   Hier ist der Unterschied zu Modus A am größten: Ein gewachsenes
+   Projekt hat oft schon Issues, und wer blind anlegt, erzeugt zu jedem
+   ein zweites.
+   - `node werkzeuge/vorgaenge.mjs stand` **zuerst** — er zeigt auch
+     die Vorgänge ohne Form-Label, also genau die, die es vor
+     Alpha-Code schon gab.
+   - Bestehende Vorgänge bekommen ihr Label, statt ersetzt zu werden.
+     Ein Issue, an dem eine Unterhaltung hängt, ist mehr wert als ein
+     sauber formatiertes neues.
+   - Was in der Roadmap steht und schon einen Vorgang hat, bekommt
+     seine `Vorgang: #N`-Zeile — **von Hand, aus dem Bestand.** Erst
+     was danach ohne Nummer bleibt, wird angelegt.
+   - Dann wie Modus A, Schritt 7: Trockenlauf zeigen, Ja abwarten,
+     `--wirklich`.
+8. Rot-Beweis, Kette, Changelog-Eintrag, Commit, Auftraggeber fragen —
+   wie Modus A, Schritt 8.
 
 ## Fachprüfungen — der Teil, der je Projekt entsteht
 
