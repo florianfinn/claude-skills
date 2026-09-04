@@ -127,10 +127,11 @@ stand ohnehin schon auf der verlangten SHA — es ging nichts verloren, aber nur
 durch Zufall.
 
 **Die Regel:** Jedes Baupaket bekommt sein **eigenes** Worktree, angelegt vom
-Organisator (`git worktree add <pfad> <sha>`), nicht nur eine Basis-SHA zum
-Selbst-Zurücksetzen. Der Auftrag nennt den Worktree-Pfad wörtlich. Ein
-`reset --hard` im Auftrag ist nur sicher, wenn seine Isolation vorher geprüft
-ist — nicht angenommen.
+Organisator — über die Worktree-Isolation des Agent-Werkzeugs, wo es sie gibt,
+sonst per `git worktree add <pfad> <sha>` — nicht nur eine Basis-SHA zum
+Selbst-Zurücksetzen. Der Auftrag nennt den Worktree-Pfad wörtlich, und der
+Agent prüft Pfad und SHA, statt etwas zurückzusetzen. Ein `reset --hard` im
+Auftrag ist damit ganz gefallen.
 
 **Warum es nicht auffällt:** Ein `reset --hard`, der zufällig auf dem
 richtigen Stand landet, sieht wie ein normaler Lauf aus. Der Unterschied

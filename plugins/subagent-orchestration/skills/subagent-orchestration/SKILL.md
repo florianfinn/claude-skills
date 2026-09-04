@@ -16,12 +16,19 @@ Verteile nur, wenn **beides** zutrifft:
 
 1. Der Auftraggeber hat es verlangt — oder die Aufgabe berührt mehrere Flächen,
    die einander nicht anfassen.
-2. Mindestens drei Agenten können **gleichzeitig** laufen.
+2. Es lohnt sich gegen die Kosten: jeder Agent beginnt ohne deinen Verlauf, und
+   du liest am Ende jeden Diff. Die Schwelle hängt von der Arbeit ab:
+   - **Bauarbeit** (Diffs, die du prüfen musst): ab **drei** Agenten, die
+     gleichzeitig laufen. Bei zweien liest du zwei Diffs und sparst kaum Zeit.
+   - **Bau plus unabhängige Prüfung**: schon **zwei** — ein Agent baut, einer
+     prüft ohne dessen Kontext. Das kaufst du dir nicht mit Zeit, sondern mit
+     einem zweiten Blick, den du selbst nicht hast.
+   - **Scouts** (nur lesen, Zahlen zurück): schon **einer**, sobald die Suche
+     deinen Kontext mehr füllen würde als seine Rückmeldung.
 
-Verteilen kostet: jeder Agent beginnt ohne deinen Verlauf, und du liest am Ende
-jeden Diff. Für eine Datei, für eine explorative Suche und für alles, wo der
-Schnitt noch nicht feststeht, ist der Alleingang schneller. **Ein unklarer
-Schnitt ist kein Grund zu verteilen, sondern der Grund, es nicht zu tun.**
+Für eine Datei und für alles, wo der Schnitt noch nicht feststeht, ist der
+Alleingang schneller. **Ein unklarer Schnitt ist kein Grund zu verteilen,
+sondern der Grund, es nicht zu tun.**
 
 ## Deine Rolle
 
@@ -73,7 +80,7 @@ Das Modell folgt der **Fehlerklasse**, nicht der Textmenge:
 
 | Arbeit | Modell | Warum |
 | --- | --- | --- |
-| Neue Bauart, Nebenläufigkeit, Zustand, Sicherheit | stark (Opus) | Fehler bleiben **still**: Tests grün, Verhalten falsch. |
+| Neue Bauart, Nebenläufigkeit, Zustand, Sicherheit | stark (Opus oder höher) | Fehler bleiben **still**: Tests grün, Verhalten falsch. |
 | Fläche umstellen, Bestand löschen mit Nachweis, Logik debuggen | mittel (Sonnet) | Ein Test fängt den Fehler, aber der Agent muss den Code erst verstehen. |
 | Suchen, zählen, Marken nachziehen, Doku im vorgegebenen Ton | leicht (Haiku) | Feste Regel anwenden, kein Urteil. Ein Fehler fällt sofort auf. |
 
