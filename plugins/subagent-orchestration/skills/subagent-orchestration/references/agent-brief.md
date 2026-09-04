@@ -1,8 +1,9 @@
 # Die Auftragsvorlage
 
-Zwei Fassungen: die **volle** für Bauagenten, die Dateien ändern und
-committen, und die **Kurzvorlage für Scouts** am Ende dieser Datei, für Agenten,
-die nur suchen, zählen und melden.
+Drei Fassungen: die **volle** für Bauagenten, die Dateien ändern und committen,
+die **Kurzvorlage für Scouts**, die nur suchen, zählen und melden, und die
+**Kurzvorlage für Prüfaufträge** für den unabhängigen Blick auf einen fertigen
+Stand. Beide Kurzfassungen stehen am Ende dieser Datei.
 
 Was ein Subagent mitbekommt. Platzhalter in `<spitzen Klammern>` aus dem
 Projektprofil ersetzen, den Rest wörtlich stehen lassen.
@@ -59,6 +60,10 @@ muss. Beispiel aus einem deutschsprachigen Repo:>
 - Commit: Conventional Commits, deutscher Betreff, `(#<vorgang>)` am Ende. Der
   Body nennt, was raus ist, was bewusst verloren geht, die Messwerte und die
   Testzahlen.
+- Commit-Betreff und PR-Titel schreibst du in eine UTF-8-Datei und übergibst
+  sie per `git commit -F <datei>` bzw. `--body-file`. Inline in einer Bash-Zeile
+  kippen Umlaute still zu `RÃ¼ck` / `â€”`, und der Squash-Merge übernimmt das
+  ungeprüft.
 - Jede Aussage über Größe oder Bestand trägt die Zahl UND den Befehl, der sie
   erzeugt hat.
 
@@ -82,6 +87,32 @@ Marken verfallen lautlos: nichts wird rot, wenn der Bestand über sie
 hinauswächst. Stimmt eine Zahl nicht mehr, korrigierst du sie und nennst beide
 Werte in der Rückmeldung.
 
+Ein roter Wächter, dessen Ursache in DEINEN Dateien liegt, ist dein Auftrag —
+auch wenn der Wächter selbst fremdes Gebiet ist. Erst wenn die Ursache
+nachweislich außerhalb deiner Dateien liegt, ist er ein Befund für die
+Rückmeldung.
+
+## Zugbudget
+
+Dein Lauf hat ein Zugbudget, und er endet daran ohne Vorwarnung — mitten im
+Satz, ohne dass jemand deine Rückmeldung liest. Dagegen:
+
+- Nach JEDEM Baustein schreibst du deinen Stand in `<rückmeldedatei>` fort:
+  was fertig ist, die Zahlen dazu, was offen ist, was als Nächstes kommt. Diese
+  Datei ist die Rückmeldung — nicht dein Schlusstext.
+- Nach JEDEM Baustein committest du den Zwischenstand auf deinem Branch
+  (Betreff `Zwischenstand: <was fertig ist>`). Nicht committete Arbeit ist beim
+  Abriss verloren, und der Leitstand muss sie fremd committen.
+- Wird das Budget knapp, hörst du VON DIR AUS auf: committen,
+  Rückmeldedatei abschließen, melden was offen ist. Ein sauber abgebrochener
+  Lauf kostet weniger als ein abgerissener ohne Stand.
+
+## Lesedisziplin
+
+Züge gehen beim Lesen verloren, nicht beim Schreiben. `grep -n <muster>
+<datei>` statt die Datei zu öffnen; große Test- und Bestandsdateien liest du
+nie vollständig, sondern nur die Stellen, die dein Auftrag betrifft.
+
 ## Prüfen, bevor du fertig meldest
 
     <Prüfbefehle des Projekts, z. B. lint / test / build>
@@ -91,7 +122,8 @@ und sieht dabei grün aus.
 
 ## Rückmeldung
 
-Antworte in Zahlen, nicht in Prosa:
+Sie steht in `<rückmeldedatei>` und wächst mit der Arbeit. Antworte in Zahlen,
+nicht in Prosa:
 
 - Zeilen raus / rein je Datei
 - Wächtermarken vorher → nachher
@@ -130,6 +162,9 @@ stattdessen zwingend braucht: den **Suchraum** und den **Rohbefehl als Beleg**.
 Ohne beides liefert er falsche Negative, die wie Fakten aussehen
 (field-notes, Vorfall 10).
 
+Höchstens **fünf** Suchpunkte je Auftrag. Darüber endet der Lauf am Zugbudget,
+bevor die Antwort geschrieben ist (Vorfall 11) — dann wird geschnitten.
+
 ```
 Du suchst <was genau>, du änderst nichts.
 
@@ -145,8 +180,10 @@ außerhalb ihrer Definition referenziert? Liste: …>
 
 ## Rückmeldung
 
-Zu jeder Aussage der Befehl, der sie belegt, und seine Ausgabe (gekürzt auf die
-relevanten Zeilen). Keine Aussage ohne Befehl:
+Du schreibst sie fortlaufend nach `<rückmeldedatei>`: jede beantwortete Frage
+sofort per `>>` dorthin, nicht erst am Ende. Zu jeder Aussage der Befehl, der
+sie belegt, und seine Ausgabe (gekürzt auf die relevanten Zeilen). Keine
+Aussage ohne Befehl:
 
 - „existiert / existiert nicht" → `ls` oder `find` mit Ausgabe
 - „wird benutzt / ist tot" → `grep -rn` über den ganzen Suchraum mit Ausgabe
@@ -154,4 +191,49 @@ relevanten Zeilen). Keine Aussage ohne Befehl:
 - Zahlen → der Befehl, der sie erzeugt hat (`grep -c`, `wc -l`)
 
 Was du nicht prüfen konntest, nennst du als ungeprüft. Keine Vermutungen.
+```
+
+## Kurzvorlage für Prüfaufträge
+
+Für den unabhängigen Blick auf einen fertigen Stand: Prüfkette fahren,
+gemeldete Zahlen gegenzählen, mit Mutationen belegen, dass die Tests überhaupt
+greifen. Der Prüfer ändert nichts dauerhaft und committet nicht.
+
+Höchstens **sechs** Kriterien und **ein** Durchlauf der Prüfkette je Auftrag.
+Größere Prüfaufträge endeten dreimal am Zugbudget, ohne ein einziges Urteil
+abzugeben, obwohl die Läufe auf Platte lagen (field-notes, Vorfall 11).
+
+```
+Du prüfst <Paket> auf dem Stand <basis-sha> im Worktree <worktree-pfad>. Du
+änderst nichts dauerhaft, du committest nicht, du mergst nicht.
+
+## Kriterien
+
+<Höchstens sechs, je als Ja/Nein-Frage mit dem Befehl, der sie entscheidet.>
+
+## Prüflauf
+
+<Prüfbefehle>, EINMAL, und zwar im Worktree — nicht in einer Kopie und nicht in
+einem Temp-Verzeichnis. Tests, die `git ls-files`, `core.hooksPath` oder sonst
+den Arbeitsbaum lesen, werden außerhalb des Worktrees falsch rot.
+
+Fang den echten Exit-Code: `<befehl> > lauf.txt 2>&1; echo "code=$?"; tail -25
+lauf.txt`.
+
+## Mutationsproben
+
+Zu <Kriterium>: ändere GENAU EINE Datei im Worktree so, dass der Test fallen
+MUSS, lass nur den betroffenen Test laufen und stelle das Original danach mit
+`git show HEAD:<pfad> > <pfad>` zurück. Bleibt der Test grün, ist das dein
+wichtigster Befund.
+
+## Rückmeldung
+
+Jedes Urteil schreibst du SOFORT nach seiner Prüfung per `>>` nach
+<rückmeldedatei> — nicht erst am Ende. Je Kriterium: Urteil (erfüllt / nicht
+erfüllt / ungeprüft), der Befehl, seine Ausgabe (gekürzt), der echte Exit-Code.
+
+Ein Kriterium, das du für falsch gefasst hältst (ein Grep auf ein Wort trifft
+auch Prosa und Image-Namen), meldest du als Befund und prüfst es trotzdem wie
+geschrieben. Nachverhandelt wird nicht.
 ```
