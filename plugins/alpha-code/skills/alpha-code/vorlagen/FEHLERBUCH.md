@@ -122,6 +122,23 @@ nimmt vorher das Zitierte heraus — Backticks, Anführungszeichen,
 Codeblöcke, und bei Quelltext die Kommentare. Faustregel: **Wer eine
 Regel maschinell prüft, prüft zuerst, ob die Regel selbst durchfällt.**
 
+**Dritter Vorfall am selben Tag, andere Ausprägung:** Ein Wächter fand
+ein Muster in **seiner eigenen Datei** — weil der Kommentar, der den
+behobenen Fehlalarm erklärte, den Fehlalarm wörtlich zitierte. Für
+Prüfungen, die Muster *suchen* statt Regeln zu prüfen, greift das
+Herausnehmen des Zitierten nicht: Dort ist das Muster selbst der
+Inhalt. Deshalb gilt dort die umgekehrte Regel — **den Fall
+beschreiben, statt ihn hinzuschreiben.** Ein Wächter, der sich selbst
+ausnimmt, hätte stattdessen ein Loch, in dem ein echtes Geheimnis
+liegen könnte.
+
+**Und ein vierter, eine Ebene tiefer:** Dieselbe Prüfung schlug gegen
+ihre eigene **Vorlage** an — das Wort „fertig" stand im Suchmuster,
+und „Fertig, wenn:" ist das Abnahmekriterium, das die Vorlage genau
+dort verlangt. Eine Bedingung ist keine Behauptung. **Wer ein Wort
+verbietet, prüft die eigenen Vorlagen dagegen**, bevor er es
+aufnimmt.
+
 ---
 
 ## C · Werkzeugfallen dieser Umgebung (Windows, Git-Bash, Node)

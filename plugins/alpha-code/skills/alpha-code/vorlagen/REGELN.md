@@ -6,7 +6,9 @@ Regel 9 bis 12 kamen später dazu — aus dem Nachrüsten einer
 gewachsenen Webapp im Wirkbetrieb (02.09.2026). Regel 13 bis 15 aus
 einem Regelsatz, der sich in einem Projekt mit zwei Agenten und echten
 Nutzern bewährt hat (04.09.2026): Trennung von Begründung und Stand,
-kein Zustand in der Doku, erzwungene Sprachtrennung.
+kein Zustand in der Doku, erzwungene Sprachtrennung. Regel 16 kam am
+selben Tag dazu: Fahrplan, Fehlerberichte und offene Problematiken
+werden Vorgänge und in Unter-Vorgänge geteilt.
 
 ## 1 · Niemals direkt auf `main`
 
@@ -91,13 +93,28 @@ nicht überbaut.** Jeder Abschluss nennt auch, was **bewusst nicht
 geändert** wurde, und bei allem, was ein Produktivsystem berührt, den
 Rückrollweg.
 
-## 10 · Kleine Dateien als Ratchet
+## 10 · Keine Datei über 1.000 Zeilen
 
-Neue oder herausgelöste Quelldateien bleiben unter der **Zeilengrenze**
-(`alpha-code.json` → `zeilengrenze`, Standard **500**). Bestehende
-Großdateien sind dokumentierte Altlasten in `docs/ALTLASTEN.md`: Sie
-wachsen **nie** wieder, und beim nächsten fachlichen Eingriff wird der
-berührte Teil zuerst herausgelöst. Die Grenze ist ein Ratchet, kein
+**Keine Datei wächst unbemerkt über 1.000 Zeilen** (`alpha-code.json` →
+`zeilengrenze`). Wird die Grenze erreicht, wird die Datei **geteilt** —
+nicht geduldet, nicht begründet, und die Grenze wird nicht angehoben.
+
+**Beim Teilen gilt dreierlei:**
+
+1. Jeder neue Teil bekommt seine **Kopfnotiz** nach Regel 6: Was ·
+   Warum · „Arbeitet zusammen mit" · Tag.
+2. Die Teile **nennen einander namentlich** in dieser Zusammenarbeit.
+   Zwei Dateien, die voneinander nichts wissen, sind keine Aufteilung,
+   sondern zwei Hälften ohne Naht — wer die eine liest, ahnt die andere
+   nicht.
+3. Der Schnitt folgt dem **Thema**, nicht der Zeilenzahl. Wer bei Zeile
+   1.000 trennt, erzeugt zwei unverständliche Dateien statt einer langen.
+
+Bestehende Großdateien sind dokumentierte Altlasten in
+`docs/ALTLASTEN.md`: Sie wachsen **nie** wieder, und beim nächsten
+fachlichen Eingriff wird der berührte Teil zuerst herausgelöst. Das ist
+der einzige Fall, in dem eine Datei über der Grenze stehen bleiben darf
+— beim Nachrüsten eines gewachsenen Projekts wäre alles andere ein
 Vorwand für einen riskanten Komplettumbau.
 
 Zwei Zusätze, beide teuer gelernt:
@@ -200,6 +217,63 @@ Zwei Punkte, die dazugehören:
   Text, der fest in der Oberfläche steht, ist ein Fehler und kein
   Zwischenstand: **nachträglich herausgelöst wird er nie vollständig.**
 
+## 16 · Vorgänge werden angelegt, geteilt und verwiesen
+
+Regel 13 sagt, **wo** der Stand lebt. Diese Regel sagt, **in welcher
+Form** — sobald das Projekt einen Vorgangs-Tracker hat (`vorgaenge` in
+`alpha-code.json`).
+
+**Drei Dinge werden zu Vorgängen:** der Fahrplan, jeder Fehlerbericht,
+jede offene Problematik. Nichts davon bleibt ein Absatz in einem
+Dokument.
+
+| Form | Label | Eltern | trägt |
+| --- | --- | --- | --- |
+| **Phase** | `track` | keins | das Abnahmekriterium aus `docs/ROADMAP.md` |
+| **Schritt** | `schritt` | Phase | **ein** Fertig-Kriterium |
+| **Fehler** | `fehler` | frei | das Vier-Felder-Muster des Fehlerbuchs |
+| **Entscheidung** | `entscheidung` | **keins** | Frage, Optionen, Empfehlung |
+
+**Große Vorgänge werden geteilt.** Eine Phase ist ein Sammelvorgang und
+enthält selbst keine Arbeit — die Arbeit sind ihre Schritte, und jeder
+hat genau ein Fertig-Kriterium. Lassen sich für einen Schritt zwei
+nennen, sind es zwei Schritte: Sonst gibt es keinen Zeitpunkt, an dem
+man ihn guten Gewissens schließen kann.
+
+**Jede Verbindung wird zweimal geschrieben**, sonst ist sie von einer
+Seite unsichtbar:
+
+| von | nach | wie |
+| --- | --- | --- |
+| Kind | Eltern | die Zeile `Teil von #12` im Rumpf |
+| Eltern | Kind | ein Punkt der Aufgabenliste `- [ ] #13` |
+| Vorgang | Begründung | `Begründung: docs/ROADMAP.md` |
+| Dokument | Vorgang | die Zeile `Vorgang: #12` unter der Überschrift |
+| Commit | Vorgang | `(#13)` am Ende des Betreffs |
+
+**Eine Entscheidung hängt an keiner Phase.** Sie hat eine andere
+Lebensdauer als die Arbeit, die auf sie wartet — als Absatz in einem
+Phasen-Vorgang verschwände sie mit dessen Abschluss, ohne beantwortet zu
+sein.
+
+**Der Fehler geht durch beide Bücher, nacheinander:** erst der Vorgang
+(was ist kaputt, seit wann, woran erkannt), nach der Behebung der Fall
+im Fehlerbuch (woran ich es früher merke). Wer nur eines führt, verliert
+entweder den Stand oder die Lehre.
+
+**Jeder Abschluss trägt seinen Bericht** in den Vorgang: was gemessen
+wurde, was bewusst **nicht** geändert wurde, und bei allem, was ein
+Produktivsystem berührt, den Rückrollweg.
+
+```bash
+node werkzeuge/vorgaenge.mjs roadmap              # was fehlt
+node werkzeuge/vorgaenge.mjs roadmap --wirklich   # anlegen
+node werkzeuge/vorgaenge.mjs stand                # die Übersicht
+```
+
+Ohne `--wirklich` läuft alles trocken: Vorgänge anzulegen erzeugt
+Benachrichtigungen und lässt sich nicht spurlos zurücknehmen.
+
 ## Was davon die Maschine prüft
 
 | Regel | Wächter |
@@ -211,6 +285,13 @@ Zwei Punkte, die dazugehören:
 | 11 (Formate und Geheimnismuster) | `werkzeuge/pruefe-geheimnisse.mjs` |
 | 14 (kein Zustand in der Doku) | `werkzeuge/pruefe-doku-status.mjs` |
 | 15 (Sprachtrennung, Umlaute) | `werkzeuge/pruefe-sprache.mjs` — nur mit `sprache` in `alpha-code.json` |
+| 16 (Vorgang je Phase und Schritt, Verweise) | `werkzeuge/pruefe-vorgaenge.mjs` — nur mit `vorgaenge`; `--online` prüft zusätzlich bei GitHub nach |
 | Verweise in der Doku | `werkzeuge/pruefe-verweise.mjs` |
 | vor jeder Veröffentlichung zusätzlich | `werkzeuge/pruefe-freigabe.mjs` (von Hand, samt Git-Historie) |
 | 2, 3, 7, 8, 9, 12, 13 | kann nur ein Mensch beurteilen |
+
+**Warum die Vorgangsprüfung in der Kette ohne Netz läuft:** Eine
+Prüfkette, die ein fremdes Haus braucht, wird rot, wenn GitHub langsam
+ist — und weil das oft passiert, gewöhnt man sich das Übergehen an.
+Dann ist sie gar nichts mehr wert. In der Kette wird geprüft, was in
+den Dateien steht; `--online` läuft von Hand, vor einem Merge.
