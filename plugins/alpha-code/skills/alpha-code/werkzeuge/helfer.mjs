@@ -35,7 +35,16 @@ export function liesEinstellung() {
     ausnahmen: ["node_modules", ".git", "vendor", "dist", "build", "daten"],
     /* Die Baseline-Tabelle der Großdateien. Ein nachgerüstetes Projekt
        darf sie unter seinem bestehenden Namen weiterführen. */
-    altlasten: "docs/ALTLASTEN.md"
+    altlasten: "docs/ALTLASTEN.md",
+    /* Ab wann eine Datei zu groß ist. 500 ist der Standard, weil eine
+       Datei dieser Länge noch in einem Stück gelesen werden kann.
+       Projekte mit anderer Bauart setzen die Zahl selbst — sie gehört
+       an **eine** Stelle und nicht in den Wächter einbetoniert. */
+    zeilengrenze: 500
+    /* `sprache` gibt es bewusst nicht als Standard: Welche Sprache
+       Bezeichner tragen und welche die Texte, ist eine Entscheidung
+       des Projekts. Ohne den Block läuft `pruefe-sprache.mjs` nicht
+       und sagt das auch. Aufbau siehe dort. */
   };
   const pfad = join(WURZEL, "alpha-code.json");
   if (!existsSync(pfad)) return standard;

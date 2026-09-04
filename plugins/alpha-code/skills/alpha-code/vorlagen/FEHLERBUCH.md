@@ -105,6 +105,23 @@ Verdacht **gegen die Messung**. Jede Inventur trägt eine Gegenprobe mit
 einem Namen, dessen Ergebnis bekannt ist — findet sie ihn nicht, bricht
 sie ab, statt eine schöne Liste zu drucken.
 
+### B4 · Die Prüfung hält ihre eigene Begründung für den Fehler *(Startkapital)*
+
+**Was ich tat:** Eine Prüfung geschrieben, die verbotene Wörter in der
+Doku findet („ist live", „erledigt"), und sie laufen lassen.
+**Was herauskam:** Sie meldete ausgerechnet `docs/REGELN.md` — die
+Datei, in der steht, dass diese Wörter dort nicht stehen dürfen.
+Derselbe Fehler war Wochen vorher schon einmal da: Ein Wächter gegen
+zwei Funktionsaufrufe fand sie in dem Kommentar, der erklärt, warum
+sie entfernt wurden.
+**Warum:** Eine Textsuche unterscheidet nicht zwischen **nennen** und
+**behaupten**. Jede Regel, die ein Wort verbietet, muss dieses Wort
+aufschreiben, um sich zu erklären.
+**Woran ich es früher merke:** Jede Prüfung, die nach Wörtern sucht,
+nimmt vorher das Zitierte heraus — Backticks, Anführungszeichen,
+Codeblöcke, und bei Quelltext die Kommentare. Faustregel: **Wer eine
+Regel maschinell prüft, prüft zuerst, ob die Regel selbst durchfällt.**
+
 ---
 
 ## C · Werkzeugfallen dieser Umgebung (Windows, Git-Bash, Node)

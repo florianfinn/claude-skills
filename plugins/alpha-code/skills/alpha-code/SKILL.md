@@ -1,6 +1,6 @@
 ---
 name: alpha-code
-description: Ein Projekt nach der Alpha-Code-Methode einrichten oder ein bestehendes nachrüsten — Wegweiser, Funktions-Tags an jeder Datei, Prüfkette mit Wächtern, vorbefülltes Fehlerbuch, Workclaim gegen parallele Sitzungen, Changelog-Pflicht, Altlasten-Ratchet für Großdateien, Geheimnisprüfung samt Git-Historie vor jeder Veröffentlichung. Benutzen, sobald jemand ein neues Projekt anlegt, ein bestehendes „aufräumen", „strukturieren", „sortieren", „klar Schiff machen" oder „nachrüsten" will, ein Repository veröffentlichen oder öffentlich schalten möchte, nach Wegweiser, Wächtern, Prüfkette, Fehlerbuch oder Workclaim fragt — oder „Alpha-Code" sagt, auch ohne das Wort Skill.
+description: Ein Projekt nach der Alpha-Code-Methode einrichten oder ein bestehendes nachrüsten — Wegweiser, Funktions-Tags an jeder Datei, Prüfkette mit Wächtern, vorbefülltes Fehlerbuch, Workclaim gegen parallele Sitzungen, Changelog-Pflicht, Altlasten-Ratchet für Großdateien, Geheimnisprüfung samt Git-Historie vor jeder Veröffentlichung. Benutzen, sobald jemand ein neues Projekt anlegt, ein bestehendes „aufräumen", „strukturieren", „sortieren", „klar Schiff machen" oder „nachrüsten" will, ein Repository veröffentlichen oder öffentlich schalten möchte, nach Wegweiser, Wächtern, Prüfkette, Fehlerbuch, Workclaim oder der Trennung von Begründung und Stand fragt — oder „Alpha-Code" sagt, auch ohne das Wort Skill.
 ---
 
 # Alpha-Code — die Projektmethode
@@ -28,8 +28,13 @@ Dokumente sind der billige Teil.
    andere.
 4. **Geprüft wird der Fall, der ohne die Arbeit falsch wäre** — nicht
    der, der ohnehin gewinnt.
+5. **Kein Dokument behauptet einen Zustand.** „Ist live", „noch
+   offen", „erledigt" veralten lautlos: Nichts wird rot, niemand
+   merkt es, und das Dokument wird trotzdem geglaubt. Doku trägt die
+   **Begründung**; der Stand lebt dort, wo er beim Ändern der
+   Wirklichkeit mitgeändert wird.
 
-Wer nur die Dateien anlegt, ohne diese vier Sätze zu leben, hat
+Wer nur die Dateien anlegt, ohne diese fünf Sätze zu leben, hat
 Alpha-Code nicht angewendet.
 
 ## Was das Gerüst enthält
@@ -42,31 +47,38 @@ geschrieben, `werkzeuge/` läuft dort.
 | --- | --- | --- | --- |
 | Einstieg | `CLAUDE.md` | [`vorlagen/CLAUDE.md`](vorlagen/CLAUDE.md) | kurz; Regeln, Prüfbefehl, Wegweiser in Fragen — samt „In dreißig Sekunden" und **„Ausdrücklich nicht gefordert"** (verhindert erfundene Anforderungen) |
 | Karte | `docs/WEGWEISER.md` | [`vorlagen/WEGWEISER.md`](vorlagen/WEGWEISER.md) | Systeme, wer redet mit wem und warum, „wo fasse ich an" |
-| Regeln | `docs/REGELN.md` | [`vorlagen/REGELN.md`](vorlagen/REGELN.md) | die zwölf Regeln + Systemtabelle (Tags, Zweignamen) |
-| Fehlerbuch | `docs/FEHLERBUCH.md` | [`vorlagen/FEHLERBUCH.md`](vorlagen/FEHLERBUCH.md) | **vorbefüllt** mit 17 übertragbaren Fällen |
+| Regeln | `docs/REGELN.md` | [`vorlagen/REGELN.md`](vorlagen/REGELN.md) | die fünfzehn Regeln + Systemtabelle (Tags, Zweignamen) |
+| Fehlerbuch | `docs/FEHLERBUCH.md` | [`vorlagen/FEHLERBUCH.md`](vorlagen/FEHLERBUCH.md) | **vorbefüllt** mit 18 übertragbaren Fällen |
 | Workclaim | `WORKCLAIM.md` | [`vorlagen/WORKCLAIM.md`](vorlagen/WORKCLAIM.md) | wer arbeitet woran; fremde Bereiche sind gesperrt |
 | Changelog | `CHANGELOG.md` | [`vorlagen/CHANGELOG.md`](vorlagen/CHANGELOG.md) | jede Änderung, oben, mit Warum und Messung |
 | Agentenprofil | `.claude/PROJEKTPROFIL.md` | [`vorlagen/PROJEKTPROFIL.md`](vorlagen/PROJEKTPROFIL.md) | was in jeden Subagenten-Auftrag gehört |
-| Prüfkette | `werkzeuge/pruefe-alles.mjs` + sechs Wächter | [`werkzeuge/`](werkzeuge/) | siehe unten |
-| Einstellung | `alpha-code.json` | erzeugt | Quellordner, Endungen, Hauptzweig, Altlasten-Datei für die Wächter |
+| Prüfkette | `werkzeuge/pruefe-alles.mjs` + sieben Wächter (plus einer mit Konfiguration) | [`werkzeuge/`](werkzeuge/) | siehe unten |
+| Einstellung | `alpha-code.json` | erzeugt | Quellordner, Endungen, Hauptzweig, Zeilengrenze, Altlasten-Datei — und, wenn gewollt, die Sprachtrennung |
 
 Zwei weitere Vorlagen werden **nur bei Bedarf** kopiert
 ([`einrichten.mjs`](einrichten.mjs) legt sie nicht automatisch an):
 
 | Vorlage | wann |
 | --- | --- |
-| [`vorlagen/ALTLASTEN.md`](vorlagen/ALTLASTEN.md) → `docs/ALTLASTEN.md` | beim Nachrüsten, wenn Dateien über 500 Zeilen bestehen — mit **gemessenen** Zeilenzahlen als Baseline |
+| [`vorlagen/ALTLASTEN.md`](vorlagen/ALTLASTEN.md) → `docs/ALTLASTEN.md` | beim Nachrüsten, wenn Dateien über der Zeilengrenze bestehen — mit **gemessenen** Zeilenzahlen als Baseline |
 | [`vorlagen/PROJEKTGRENZE.md`](vorlagen/PROJEKTGRENZE.md) → `docs/PROJEKTGRENZE.md` | sobald das Projekt einen Nachbarn hat: zweites Repository, gemeinsame Datenbank, gemeinsamer Rechner. Geteilte Ressourcen bekommen einen eigenen Wächter — die Warnung dahinter ist echt: Eine gemeinsame Firestore-Regeldatei hätte am 02.09.2026 fast ein zweites Projekt abgeschaltet |
+| [`vorlagen/WORTLISTE.md`](vorlagen/WORTLISTE.md) → `docs/WORTLISTE.md` | sobald das Projekt seine Sprachtrennung erzwingen soll (Regel 15) — dann zusätzlich einen `sprache`-Block in `alpha-code.json` |
 
-Die sechs mitgelieferten Wächter laufen in **jedem** Projekt, egal
+Die sieben mitgelieferten Wächter laufen in **jedem** Projekt, egal
 welcher Technik (sie sind Node, brauchen aber nur Dateien und Git):
 `pruefe-arbeitsweise` (nie auf `main`, Changelog-Pflicht) ·
 `pruefe-tags` (jede Quelldatei trägt `[Aufgabe: <Tag>]` aus der
 Systemtabelle) · `pruefe-verweise` (kein Doku-Verweis ins Leere) ·
 `pruefe-workclaim` (die Anspruchstabelle ist da und vollständig) ·
 `pruefe-geheimnisse` (keine verbotenen Formate, keine Geheimnismuster) ·
-`pruefe-altlasten` (neue Dateien < 500 Zeilen, geführte Altlasten
-wachsen nie). Dazu **außerhalb** der Kette: `pruefe-freigabe` — die
+`pruefe-altlasten` (neue Dateien unter der Zeilengrenze, geführte
+Altlasten wachsen nie) · `pruefe-doku-status` (kein Dokument behauptet
+einen Zustand).
+
+Ein achter läuft **nur mit Konfiguration**: `pruefe-sprache` erzwingt
+die Sprachtrennung, die in `alpha-code.json` steht — ohne
+`sprache`-Block sagt er, dass er übersprungen wurde, statt still grün
+zu melden. Und **außerhalb** der Kette: `pruefe-freigabe`, die
 Freigabeliste vor einer Veröffentlichung, siehe unten.
 
 ## Modus A · Neues Projekt
@@ -104,9 +116,9 @@ Freigabeliste vor einer Veröffentlichung, siehe unten.
    node werkzeuge/pruefe-alles.mjs
    ```
    Erst wenn alles grün ist und der Rot-Beweis erbracht war, gilt die
-   Einrichtung als fertig. Committen (`einrichtung: Alpha-Code-Geruest`,
-   Betreff ohne Umlaute) — und den Auftraggeber fragen, ob es nach
-   `main` soll (Regel 3).
+   Einrichtung als fertig. Committen (`einrichtung: Alpha-Code-Gerüst` — Conventional
+   Commits, deutscher Betreff **mit** richtigen Umlauten, Regel 15) und
+   den Auftraggeber fragen, ob es nach `main` soll (Regel 3).
 
 ## Modus B · Bestehendes Projekt nachrüsten
 
@@ -179,6 +191,40 @@ automatisch auf. Regeln dabei:
   sie im Alltag erleben*, und ein zweites `CHANGELOG-TECHNIK.md` trägt
   die Messungen. Ohne echte Nutzer bleibt es bei einem Changelog —
   zwei Protokolle ohne Leser sind Pflege ohne Ertrag.
+
+## Wo der Stand lebt — und wo nicht
+
+Die häufigste Art, wie ein Repository unehrlich wird, ist kein Fehler
+im Code: Es ist ein Dokument, das seit vier Monaten „noch offen" sagt.
+Deshalb sind **Begründung und Stand zwei Dinge** (Regel 13/14):
+
+| | gehört hin | Beispiel |
+| --- | --- | --- |
+| **Begründung** | Doku (`docs/`) | Zielbild, Messungen, verworfene Alternativen, das Abnahmekriterium |
+| **Stand** | Vorgangs-Tracker | „Phase 2 läuft", „blockiert durch #14" |
+| **Verlauf** | `CHANGELOG.md` | was wann geändert wurde, mit Messung |
+| **Abgeschlossenes** | `docs/history/` | dort **darf** Status stehen — es behauptet nicht mehr, die Gegenwart zu sein |
+
+Drei Punkte, die man leicht übersieht:
+
+1. **Der Vorgang einer Phase existiert, bevor die Phase beginnt.**
+   Sonst wandert der Stand in der Zwischenzeit doch wieder in
+   Commit-Texte und Dokumente — und von dort holt ihn niemand zurück.
+2. **Eine offene Entscheidung ist ein eigener Vorgang**, kein Absatz
+   in einem Phasen-Vorgang: Sie hat eine **andere Lebensdauer** als
+   die Arbeit, die auf sie wartet, und überlebt sie oft.
+3. **Eine gepflegte Übersichtsdatei ist selbst wieder Doku**, die
+   veraltet. Wo es einen Tracker gibt, ist die Übersicht eine
+   **Abfrage** (`gh issue list --label track --state open`).
+
+**Ein datierter Vermerk ist die Ausnahme und bleibt** — „gemessen am
+12.03.2026" behauptet nichts über jetzt; das Datum legt ihn trocken.
+Wer eine Zustandsaussage in einem Dokument braucht, schreibt sie
+datiert: dann ist sie in einem Jahr nicht falsch, sondern alt.
+
+Hat das Projekt keinen Tracker (rein lokal, kein Hosting), gehört der
+Stand in **eine** benannte Datei — nie verstreut. Der Wächter prüft
+`docs/`, nicht diese eine Datei.
 
 ## Vor einer Veröffentlichung
 

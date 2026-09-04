@@ -3,7 +3,10 @@
 Diese Regeln gelten ausnahmslos — in jedem Alpha-Code-Projekt gleich.
 Die mechanisch prüfbaren laufen in `werkzeuge/pruefe-alles.mjs` mit.
 Regel 9 bis 12 kamen später dazu — aus dem Nachrüsten einer
-gewachsenen Webapp im Wirkbetrieb (02.09.2026).
+gewachsenen Webapp im Wirkbetrieb (02.09.2026). Regel 13 bis 15 aus
+einem Regelsatz, der sich in einem Projekt mit zwei Agenten und echten
+Nutzern bewährt hat (04.09.2026): Trennung von Begründung und Stand,
+kein Zustand in der Doku, erzwungene Sprachtrennung.
 
 ## 1 · Niemals direkt auf `main`
 
@@ -63,12 +66,21 @@ Tabelle in Regel 2.
 In `docs/FEHLERBUCH.md`, nach dem dortigen Vier-Felder-Muster — nicht
 am Ende der Arbeit, denn dann fehlt der Zustand, der ihn erklärt.
 
-## 8 · Jede Zahl ist gemessen
+## 8 · Jede Zahl ist gemessen — und der Messweg steht dabei
 
 Nicht geschätzt, nicht aus einem Kommentar übernommen, nicht aus dem
-Gedächtnis. Wenn im Changelog eine Zahl steht, gibt es den Befehl, der
-sie nachrechnet. Eine Zahl, die aus einer Liste folgt, wird berechnet
-oder verweist auf die eine Stelle, die sie führt — nie danebengeschrieben.
+Gedächtnis. Jede Aussage über **Größe, Tempo oder Bestand** trägt die
+Zahl **und den Weg, auf dem sie entstanden ist** — der Befehl, das
+Werkzeug, der Lauf. Eine Zahl ohne Messweg kann niemand nachprüfen und
+niemand widerlegen; sie ist eine Behauptung in Zahlenform.
+
+Eine Zahl, die aus einer Liste folgt, wird berechnet oder verweist auf
+die eine Stelle, die sie führt — nie danebengeschrieben.
+
+Und: **„Das war vorher auch schon so" ist ohne Beleg keine Aussage.**
+Wer den alten Zustand anführt, misst ihn — aus `git show`, aus einer
+Sicherung, aus dem laufenden System. Sonst wird aus einer Erinnerung
+eine Tatsache.
 
 ## 9 · Exakter Umfang
 
@@ -81,11 +93,25 @@ Rückrollweg.
 
 ## 10 · Kleine Dateien als Ratchet
 
-Neue oder herausgelöste Quelldateien bleiben unter **500 Zeilen**.
-Bestehende Großdateien sind dokumentierte Altlasten in
-`docs/ALTLASTEN.md`: Sie wachsen **nie** wieder, und beim nächsten
-fachlichen Eingriff wird der berührte Teil zuerst herausgelöst. Die
-Grenze ist ein Ratchet, kein Vorwand für einen riskanten Komplettumbau.
+Neue oder herausgelöste Quelldateien bleiben unter der **Zeilengrenze**
+(`alpha-code.json` → `zeilengrenze`, Standard **500**). Bestehende
+Großdateien sind dokumentierte Altlasten in `docs/ALTLASTEN.md`: Sie
+wachsen **nie** wieder, und beim nächsten fachlichen Eingriff wird der
+berührte Teil zuerst herausgelöst. Die Grenze ist ein Ratchet, kein
+Vorwand für einen riskanten Komplettumbau.
+
+Zwei Zusätze, beide teuer gelernt:
+
+- **Eine hereinkopierte Datei ist keine Altlast.** Die Liste ist für
+  das, was beim Nachrüsten schon da war. Was später aus einem anderen
+  Projekt übernommen wird und die Grenze **schon beim Ankommen** reißt,
+  wird **beim Kopieren** aufgeteilt — nicht danach. „Danach" kommt nie,
+  und die Altlastenliste wäre genau der Ort, an dem das begründet
+  aussieht.
+- **Neues kommt in einen thematischen Ordner**, nicht in eine
+  wachsende Sammeldatei. Eine Datei namens `utils`, `helpers` oder
+  `common` ist keine Fläche, sondern ein Sammelbecken: Sie hat kein
+  Thema, also auch keinen Grund, jemals aufzuhören zu wachsen.
 
 ## 11 · Nichts Verbotenes im Repository
 
@@ -104,6 +130,76 @@ erlaubte Verbindung ein **versionierter, lesender Vertrag** ist — nie
 kopierter Quelltext, nie geteilte Tokens. Geteilte Ressourcen (etwa
 eine gemeinsame Regeldatei) bekommen einen eigenen Wächter.
 
+## 13 · Begründung und Stand sind zwei Dinge
+
+**Doku trägt die Begründung**: Zielbild, Messungen, verworfene
+Alternativen, das Abnahmekriterium. **Der Stand lebt woanders** — dort,
+wo er beim Ändern der Wirklichkeit mitgeändert wird:
+
+- Gibt es einen **Vorgangs-Tracker** (GitHub Issues, Jira …), gehört
+  der Stand dorthin. Eine Übersicht ist dann eine **Abfrage**
+  (`gh issue list --label track --state open`), keine gepflegte Datei —
+  eine gepflegte Übersicht ist selbst wieder Doku, die veraltet.
+- Gibt es keinen, gehört er in **eine** benannte Datei, nie verstreut.
+
+Drei Folgerungen, die man leicht übersieht:
+
+1. **Ein Vorgang für eine Phase existiert, _bevor_ die Phase beginnt** —
+   nicht erst, wenn sie endet. Sonst wandert der Stand in der
+   Zwischenzeit doch wieder dorthin, wo er nicht hingehört: in
+   Commit-Texte und Dokumente.
+2. **Eine offene Entscheidung ist ein eigener Vorgang**, kein Absatz
+   in einem Phasen-Vorgang. Sie hat eine **andere Lebensdauer** als die
+   Arbeit, die auf ihr wartet — und überlebt sie oft.
+3. **Weichen Vorgang und Dokument voneinander ab, gilt das Dokument.**
+   Dort steht die Begründung; im Vorgang steht nur der Stand.
+
+Abgeschlossene Pläne wandern nach `docs/history/` — **dort darf Status
+stehen**, weil sie nicht mehr behaupten, die Gegenwart zu beschreiben.
+
+## 14 · Kein Dokument behauptet einen Zustand
+
+„Ist live", „noch offen", „erledigt", „nächster Schritt" — und ein
+**Häkchen an einem Plan-Schritt** ist dieselbe Aussage in kürzerer
+Form. Alle fallen unter dieselbe Regel, und der Grund ist immer
+derselbe: **Sie veralten lautlos.** Nichts wird rot, niemand merkt es,
+und das Dokument sagt weiter, was einmal galt — und wird geglaubt,
+weil es im Repository steht.
+
+**Ein datierter Vermerk ist dagegen ein Nachweis und bleibt.**
+„Gemessen am 12.03.2026", „abgerufen am …" behaupten nichts über
+jetzt; das Datum legt sie trocken. Wer eine Zustandsaussage braucht,
+schreibt sie datiert — dann ist sie in einem Jahr nicht falsch,
+sondern alt.
+
+`werkzeuge/pruefe-doku-status.mjs` erzwingt das für `docs/`.
+
+## 15 · Die Sprachtrennung wird festgelegt und erzwungen
+
+Fast jedes Projekt trennt irgendwann zwischen **Bezeichnern**
+(Variablen, Funktionen, Datei- und Zweignamen) und **Texten**
+(Kommentare, Doku, Nutzertexte). Der Fehler ist nie die Wahl — der
+Fehler ist, sie **nicht zu erzwingen**: Ein einziges fremdsprachiges
+`pruefeBenutzer()` zwischen dreihundert Namen fällt niemandem auf, und
+beim zweiten wird es zur Gewohnheit.
+
+Deshalb: Die Wahl steht in `alpha-code.json` (`sprache`), und
+`werkzeuge/pruefe-sprache.mjs` hält sie über `docs/WORTLISTE.md`.
+**Die Liste ist nie vollständig, und das ist die Bauart** — wer ein
+durchgerutschtes Wort findet, trägt es ein; dann kommt genau dieses
+nie wieder durch.
+
+Zwei Punkte, die dazugehören:
+
+- **Umlaute und ß werden richtig gesetzt** — in Kommentaren, Doku und
+  Nutzertexten, und auch im Commit-Betreff. `ae/oe/ue/ss` ist keine
+  Schreibweise, sondern eine Notlösung aus der Zeit der 7-Bit-Terminals.
+  *(Wo eine Werkzeugkette daran nachweislich scheitert, wird der
+  Nachweis notiert — nicht die Regel aufgeweicht.)*
+- **Nutzertexte stehen nicht im Code**, sondern in Sprachdateien. Ein
+  Text, der fest in der Oberfläche steht, ist ein Fehler und kein
+  Zwischenstand: **nachträglich herausgelöst wird er nie vollständig.**
+
 ## Was davon die Maschine prüft
 
 | Regel | Wächter |
@@ -113,6 +209,8 @@ eine gemeinsame Regeldatei) bekommen einen eigenen Wächter.
 | 6 (Tag vorhanden und zugelassen) | `werkzeuge/pruefe-tags.mjs` |
 | 10 (Grenze und Ratchet) | `werkzeuge/pruefe-altlasten.mjs` |
 | 11 (Formate und Geheimnismuster) | `werkzeuge/pruefe-geheimnisse.mjs` |
+| 14 (kein Zustand in der Doku) | `werkzeuge/pruefe-doku-status.mjs` |
+| 15 (Sprachtrennung, Umlaute) | `werkzeuge/pruefe-sprache.mjs` — nur mit `sprache` in `alpha-code.json` |
 | Verweise in der Doku | `werkzeuge/pruefe-verweise.mjs` |
 | vor jeder Veröffentlichung zusätzlich | `werkzeuge/pruefe-freigabe.mjs` (von Hand, samt Git-Historie) |
-| 2, 3, 7, 8, 9, 12 | kann nur ein Mensch beurteilen |
+| 2, 3, 7, 8, 9, 12, 13 | kann nur ein Mensch beurteilen |

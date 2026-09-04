@@ -40,6 +40,10 @@ der Kette mit.
 4. **Alles steht im Changelog.** Jede einzelne Änderung, genau, oben.
 5. **Workclaim:** [WORKCLAIM.md](WORKCLAIM.md) erst lesen, dann
    eintragen, dann schreiben. Fremde Bereiche sind gesperrt.
+6. **Doku trägt die Begründung, nicht den Stand.** Kein „ist live",
+   kein „erledigt", kein Häkchen an einem Plan-Schritt — das veraltet
+   lautlos. Zustandsaussagen gehören in den Vorgangs-Tracker; im
+   Dokument stehen sie nur **datiert** („gemessen am …").
 
 ```bash
 node werkzeuge/pruefe-alles.mjs      # die ganze Prüfkette
@@ -61,6 +65,7 @@ sich wiederholen, und woran man sie erkennt, **bevor** man hineinläuft.
 | Welche Regeln gelten, welche Tags und Zweignamen gibt es? | [docs/REGELN.md](docs/REGELN.md) |
 | Welche Fehler wiederholen sich? | [docs/FEHLERBUCH.md](docs/FEHLERBUCH.md) |
 | Wie verteile ich Arbeit auf Agenten? | `.claude/PROJEKTPROFIL.md` |
+| **Wie ist der Stand von X?** | **nicht hier** — im Vorgangs-Tracker (Regel 13) |
 
 ---
 

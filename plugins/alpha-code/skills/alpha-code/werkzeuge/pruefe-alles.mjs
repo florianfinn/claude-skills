@@ -16,7 +16,9 @@
    | `pruefe-verweise.mjs` | kein Markdown-Verweis zeigt ins Leere | ein Wegweiser auf eine Datei, die es nicht mehr gibt — er wird geglaubt |
    | `pruefe-workclaim.mjs` | WORKCLAIM.md ist da, lesbar, jeder Anspruch vollständig | zwei Sitzungen im selben Checkout, Konfliktmarker in sieben Dateien |
    | `pruefe-geheimnisse.mjs` | kein verbotenes Format, kein Geheimnismuster im Arbeitsstand | der Schlüssel, der „nur kurz zum Testen" eingetragen wurde |
-   | `pruefe-altlasten.mjs` | neue Dateien < 500 Zeilen; geführte Altlasten wachsen nie | die Altlast, die „nur diesmal" um dreißig Zeilen wächst |
+   | `pruefe-altlasten.mjs` | neue Dateien unter der Zeilengrenze; geführte Altlasten wachsen nie | die Altlast, die „nur diesmal" um dreißig Zeilen wächst |
+   | `pruefe-doku-status.mjs` | kein Dokument behauptet einen Zustand | das „noch offen", das seit vier Monaten falsch ist und das jeder glaubt |
+   | `pruefe-sprache.mjs` | die gewählte Sprachtrennung, über eine Wortliste | der eine deutsche Bezeichner zwischen 300 englischen |
    | `pruefe-arbeitsweise.mjs` | nie auf dem Hauptzweig, nichts ohne Changelog-Eintrag | genau die zwei Regeln, die man beim Arbeiten vergisst |
 
    **Nicht in der Kette:** `pruefe-freigabe.mjs` — die Freigabeliste
