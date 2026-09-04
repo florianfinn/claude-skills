@@ -40,13 +40,14 @@ prüfen, zusammenführen, abnehmen, berichten.
 
 Drei Beilagen:
 
-- **`references/agent-brief.md`** — die Auftragsvorlage zum Ausfüllen. Ein
+- **`references/agent-brief.md`** — die Auftragsvorlage zum Ausfüllen, in
+  zwei Fassungen: voll für Bauagenten, kurz für nur lesende Scouts. Ein
   Auftrag ist selbsttragend; der Agent hat weder deinen Verlauf noch den
   Vorgang gelesen.
 - **`references/project-profile.md`** — ein Blatt, das einmal je Repo
   ausgefüllt wird (Standardbranch, Prüfbefehle, Konventionen, Wächtertests,
   stille Fallen). Jeder Auftrag zieht daraus.
-- **`references/field-notes.md`** — woher jede Regel stammt. Acht Vorfälle aus
+- **`references/field-notes.md`** — woher jede Regel stammt. Zehn Vorfälle aus
   einer Nacht mit neun Agentenläufen, je mit der Regel, die daraus wurde.
 
 Der Kern in drei Sätzen:

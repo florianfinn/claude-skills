@@ -18,9 +18,11 @@ existierte — er baute etwas Richtiges an einer Stelle, die es nicht mehr gab.
 Zwei mussten ihren Stand nachträglich per `reset --hard` umsetzen und ihre
 Arbeit wiederholen.
 
-**Die Regel:** Der Basis-Commit als SHA plus `git fetch --all && git reset
---hard <sha>` steht in **jedem** Auftrag, auch wenn du glaubst, der Agent stünde
-richtig.
+**Die Regel:** Der Basis-Commit als SHA steht in **jedem** Auftrag, auch wenn
+du glaubst, der Agent stünde richtig, und der Agent prüft ihn mit
+`git rev-parse HEAD`, bevor er anfängt. Die erste Fassung dieser Regel ließ den
+Agenten selbst per `reset --hard` umsetzen — das fiel mit Vorfall 9: das
+Worktree legt der Organisator an, der Agent setzt nichts zurück.
 
 **Warum es nicht auffällt:** Der Agent meldet grüne Tests. Sie sind auf seinem
 Stand auch grün.
@@ -125,10 +127,11 @@ stand ohnehin schon auf der verlangten SHA — es ging nichts verloren, aber nur
 durch Zufall.
 
 **Die Regel:** Jedes Baupaket bekommt sein **eigenes** Worktree, angelegt vom
-Organisator (`git worktree add <pfad> <sha>`), nicht nur eine Basis-SHA zum
-Selbst-Zurücksetzen. Der Auftrag nennt den Worktree-Pfad wörtlich. Ein
-`reset --hard` im Auftrag ist nur sicher, wenn seine Isolation vorher geprüft
-ist — nicht angenommen.
+Organisator — über die Worktree-Isolation des Agent-Werkzeugs, wo es sie gibt,
+sonst per `git worktree add <pfad> <sha>` — nicht nur eine Basis-SHA zum
+Selbst-Zurücksetzen. Der Auftrag nennt den Worktree-Pfad wörtlich, und der
+Agent prüft Pfad und SHA, statt etwas zurückzusetzen. Ein `reset --hard` im
+Auftrag ist damit ganz gefallen.
 
 **Warum es nicht auffällt:** Ein `reset --hard`, der zufällig auf dem
 richtigen Stand landet, sieht wie ein normaler Lauf aus. Der Unterschied
