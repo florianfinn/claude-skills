@@ -1,10 +1,11 @@
 # Woher die Regeln kommen
 
-Alle Warnungen im Skill stammen aus zwei Vorgängen. Die Vorfälle 1 bis 10 aus
+Alle Warnungen im Skill stammen aus drei Vorgängen. Die Vorfälle 1 bis 10 aus
 einer Nacht mit neun Agentenläufen an einem Frontend-Umbau: drei Etappen, zwölf
 Dateien, drei Änderungssätze, Abnahme im Browser. Die Vorfälle 11 bis 18 aus
 einem Vorgang über 12 Pakete in zwei Repos, 19 und 20 aus früheren Vorgängen
-nachgetragen — die Nummern folgen der Reihenfolge des Eintragens, nicht der
+nachgetragen, 21 bis 23 aus einem Vertragsabgleich zwischen zwei Repos mit fünf
+Läufen — die Nummern folgen der Reihenfolge des Eintragens, nicht der
 Zeit. Nichts davon ist abgeleitet — jeder
 Punkt hat Nacharbeit gekostet, und die Nacharbeit war jedes Mal teurer als die
 Zeile im Auftrag, die sie verhindert hätte.
@@ -357,6 +358,95 @@ das Wichtigste fertig vorfindet und nicht das Vorbereitende.
 **Zusammenhang mit Vorfall 19:** Ein höheres Budget verringert die Häufigkeit,
 beseitigt die Fehlerklasse aber nicht. Beide Regeln gelten, nicht eine.
 
+## Dritter Vorgang: ein Paket, zwei Repos, fünf Läufe, kein Abriss
+
+Die Vorfälle 21 bis 23 stammen aus einem einzelnen Paket mit der Fassung 0.3.0
+des Skills: ein Vertrag zwischen zwei Repos nachgezogen, 21 Dateien, ein
+Änderungssatz gemerged. Fünf Agentenläufe — zwei Scouts, zwei Bauagenten, ein
+Prüfer.
+
+⚠️ **Null Abrisse am Zuglimit**, gegen „rund jeder zweite Lauf" aus Vorfall 11.
+Der Unterschied lag nicht am Budget, das war unverändert, sondern daran, dass
+die Aufträge die Messungen schon **enthielten**: der Leitstand hatte alle 30
+Anker selbst gegen das Nachbarrepo gemessen und als Tabelle in den Bauauftrag
+gelegt, statt den Agenten messen zu lassen. Das ist Vorfall 19, angewandt statt
+nachgelesen — und es ist der bislang stärkste Beleg dafür, dass die
+Abrisshäufigkeit an der Vorarbeit hängt und nicht am Modell.
+
+## 21. Der Wächter, der in dieser Umgebung nie grün werden kann
+
+**Was passierte:** Der Push scheiterte viermal in Folge. Der Fehltext lautete
+`failed to push some refs to …` — die Form, in der auch ein Netzwerkfehler
+erscheint. Also lief die vorgesehene Wiederholung mit Backoff durch, 2s, 4s,
+8s, 16s, und scheiterte jedes Mal. Erst der Blick in den `pre-push`-Haken zeigte
+die Ursache: er fährt die volle Prüfkette, und zwei Tests fallen in dieser
+Umgebung aus einem strukturellen Grund — sie binden auf IPv6, das die
+Cloud-Maschine nicht hat.
+
+**Warum das teuer war:** Der Haken kann dort für **keinen** Commit grün werden,
+auch nicht für den unveränderten Standardbranch. Keine Wiederholung konnte je
+helfen. Die vier Anläufe waren nicht nur verloren, sie sahen aus wie ein
+Infrastrukturproblem und lenkten von der Ursache weg.
+
+**Regel:** Ein fehlgeschlagener Push wird **einmal** gelesen, bevor er
+wiederholt wird. Wiederholen ist nur bei einem belegten Netzwerkfehler richtig;
+ein Haken, der die Prüfkette fährt, scheitert deterministisch. Und: bevor
+`--no-verify` fällt, wird die Kette von Hand gefahren, ihre echten Exit-Codes
+kommen in den Änderungstext, und im PR steht, dass der Haken auf einer
+tauglichen Maschine nachzufahren ist. Ein `--no-verify` ohne diese Kette bleibt
+das Abschalten der einzigen Schranke.
+
+**Übertragbar:** Zum Projektprofil gehört nicht nur, welche Tests in dieser
+Umgebung fallen, sondern **was das für den Push bedeutet**. Das eine ohne das
+andere ist die Hälfte, und die fehlende Hälfte kostet einen Anlauf.
+
+## 22. Der Messweg, den der Leitstand gehen kann und der Agent nicht
+
+**Was passierte:** Der Bauauftrag nannte als Messweg `git -C <nachbarrepo> show
+<sha>:<datei>`. Der Leitstand hatte diesen Weg selbst benutzt, um die Tabelle im
+Auftrag zu erzeugen. Beim Agenten verweigerte die Worktree-Isolation **jeden**
+git-Aufruf auf jenes Verzeichnis — `git -C` genauso wie `cd && git`. Er merkte
+es erst mitten in der Arbeit und wich auf das Lesen der Dateien aus.
+
+**Warum das gefährlich ist:** Es ging hier gut, weil der Agent selbst umschwenkte
+und es meldete. Ein Agent, der stattdessen die Zahlen aus dem Auftrag ungeprüft
+übernimmt, liefert eine Arbeit, deren Gegenprobe nie gelaufen ist — und niemand
+sieht es, weil das Ergebnis richtig aussieht.
+
+**Regel:** Der Leitstand hat Zugriffe, die der Agent nicht hat. **Jeder Messweg
+im Auftrag wird daraufhin geprüft, ob der Agent ihn überhaupt gehen kann** —
+Nachbarrepos, Netz, Anmeldedaten, Werkzeuge. Wo er es nicht kann, nennt der
+Auftrag den Weg, den er gehen kann, und dazu, woran der Stand der fremden Quelle
+zu belegen ist. Und der Agent bekommt ausdrücklich gesagt, dass die Zahlen im
+Auftrag Vorgabe sind, die Gegenprobe am Ende aber trotzdem Pflicht.
+
+## 23. Zwei Wächter, die einander ausschlossen
+
+**Was passierte:** Beim Zuschnitt fiel auf, dass ein Wächter jede getrackte
+Datei liest und dort eine Fassungsangabe auf einem einheitlichen Stand verlangt.
+Zwei dieser Angaben standen in **angewandten Datenbank-Migrationen**, die ein
+anderer Mechanismus per Prüfsumme einfriert. Ein geänderter **Kommentar** in
+einer davon hätte jede bestehende Installation beim Start anhalten lassen.
+
+**Warum das kein Testproblem war:** Beide Wächter waren einzeln richtig. Zusammen
+waren sie unerfüllbar, sobald die Fassung wechselt — und gemerkt hatte es
+niemand, weil sie seit Einführung des einen Wächters nicht gewechselt hatte. Der
+Fund kam aus der Messung vor dem Schneiden, nicht aus einem roten Lauf. Wäre er
+erst beim Bauen aufgefallen, hätte der naheliegende Ausweg (Kommentar
+mitziehen) einen Ausfall im Betrieb erzeugt, den keine Prüfkette gefangen hätte.
+
+**Regel:** Vor dem Schneiden prüfen, ob der Änderungssatz eine Datei berührt, die
+ein **anderer** Mechanismus als unveränderlich führt — Migrationen,
+Archivstücke, Prüfsummen, Sperrdateien. Das ist die Fortsetzung von Vorfall 5
+(„der Schnitt folgt den Wächtern") um einen Fall, den man nicht sieht, indem man
+die Tests liest: die zweite Regel steht gar nicht im Testverzeichnis.
+
+**Und der Ausweg gehört dem Auftraggeber, nicht dem Agenten.** Er lief hier auf
+eine Ausnahme im Wächter hinaus und damit auf eine **gesenkte Marke** — zulässig
+allein deshalb, weil sich die Zählweise änderte und nicht weil ein Fall riss.
+Der Unterschied gehört als Satz neben die Marke, sonst liest der Nächste sie als
+Erlaubnis.
+
 ## Was gut funktioniert hat
 
 - **Modellwahl nach Fehlerklasse.** Die Arbeiten mit stillen Fehlerklassen
@@ -389,8 +479,41 @@ Aus dem zweiten Vorgang dazugekommen:
   Auftrag stand, fiel bei mindestens einem Agenten aus (Umlaute, Zwischencommit,
   fremder Wächter).
 
+Aus dem dritten Vorgang dazugekommen:
+
+- ⚠️ **Der Prüfer hat gefunden, was drei andere übersahen.** Zwei Bauagenten und
+  der Leitstand hielten das Paket für fertig; die Prüfkette war grün, die
+  Abnahme lief mit Rückgabecode 0. Der Prüfer fand **fünf falsche Zahlen** in
+  der Begründung — die Datei zählte ihren eigenen Bestand falsch, unter anderem
+  „53 Anker in 24 Dateien" statt 58 Vorkommen auf 53 Zeilen in 25 Dateien.
+  Der Grund, aus dem es niemandem auffiel: die neue Zeilenzahl **glich zufällig
+  der alten Vorkommenzahl**, die Stelle sah also richtig aus. Das ist die
+  Fehlerklasse, gegen die kein grüner Lauf hilft, und der Beleg dafür, dass sich
+  die Prüferrolle schon bei zwei Läufen lohnt.
+- **Der Leitstand misst, der Agent trägt ein.** Alle Zeilennummern gegen das
+  Nachbarrepo waren vor dem ersten Bauauftrag gemessen und lagen als Tabelle
+  darin. Kein Lauf riss ab (gegen rund die Hälfte im zweiten Vorgang), und der
+  Bauagent verbrauchte seine Züge auf Bauen statt auf Nachschlagen.
+- **Der benannte Befund statt der stillen Entscheidung.** Der Auftrag verlangte
+  ausdrücklich, ein mehrdeutiges Suchmuster **entweder** zu schärfen **oder** zu
+  begründen — „nicht stillschweigend so lassen". Der Agent schärfte es und
+  begründete zusätzlich eine Stelle, an der er bewusst auf einen Anker
+  verzichtete, weil zwei Fundstellen zeichengleich sind. Beides wäre ohne die
+  Zeile im Auftrag unsichtbar geblieben.
+- **Die Gegenprobe gegen die alte Basis.** Vor dem Nachziehen wurde gemessen,
+  dass alle Anker gegen den **alten** Stand noch trafen. Damit stand fest, dass
+  ein Fassungswechsel ansteht und keine Fehlerbehebung — und der Auftrag konnte
+  sagen „du trägst ein, du misst nicht neu", ohne zu raten.
+
 ## Offen
 
+- ⚠️ **Ob eine Marke sinken darf, ist die eine Regel, die ein Agent nicht allein
+  entscheiden kann.** Im dritten Vorgang war die Senkung richtig (geänderte
+  Zählweise) und wurde vom Leitstand vorentschieden und in den Auftrag
+  geschrieben. Ungeprüft ist, ob ein Agent den Unterschied zwischen „Zählweise
+  geändert" und „Fall gerissen" ohne diese Vorentscheidung zuverlässig trifft.
+  Bis dahin gilt: **der Leitstand entscheidet jede Senkung, der Agent führt sie
+  aus.**
 - **Leichte Modellstufe (Haiku) bei sauber gefasstem Auftrag.** Der erste
   Einsatz (Vorfall 10) war ein Rückläufer mit einem Loch im Auftrag: kein
   festgelegter Suchraum, kein verlangter Rohbefehl als Beleg. Im zweiten
