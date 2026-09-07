@@ -22,7 +22,11 @@ Verteile nur, wenn **beides** zutrifft:
      gleichzeitig laufen. Bei zweien liest du zwei Diffs und sparst kaum Zeit.
    - **Bau plus unabhängige Prüfung**: schon **zwei** — ein Agent baut, einer
      prüft ohne dessen Kontext. Das kaufst du dir nicht mit Zeit, sondern mit
-     einem zweiten Blick, den du selbst nicht hast.
+     einem zweiten Blick, den du selbst nicht hast. ⚠️ Gemessen: in einem Paket
+     mit grüner Kette und Abnahme per Rückgabecode 0 fand der Prüfer **fünf
+     falsche Zahlen**, die zwei Bauagenten und der Leitstand übersehen hatten —
+     eine davon sah richtig aus, weil die neue Zeilenzahl zufällig der alten
+     Vorkommenzahl glich (Vorfall 21–23).
    - **Scouts** (nur lesen, Zahlen zurück): schon **einer**, sobald die Suche
      deinen Kontext mehr füllen würde als seine Rückmeldung.
 
@@ -151,7 +155,25 @@ Wächtermarken senken).
 ⚠️ **Was du entscheiden kannst, entscheidest du und schreibst das Ergebnis in
 den Auftrag** (Vorfall 19). Jede Nachschlagearbeit, die im Auftrag stehen
 könnte, bezahlt der Agent aus seinem Zugbudget — ein Paket verbrannte 62 Züge im
-Wörterbuch des Projekts und änderte dabei keine einzige Datei.
+Wörterbuch des Projekts und änderte dabei keine einzige Datei. Umgekehrt: ein
+Vorgang, dessen Messungen vollständig im Auftrag standen, hatte in fünf Läufen
+**keinen einzigen Abriss** (Vorfall 21–23).
+
+⚠️ **Prüfe jeden Messweg daraufhin, ob der Agent ihn überhaupt gehen kann**
+(Vorfall 22). Du hast Zugriffe, die er nicht hat: ein Nachbarrepo, das Netz,
+Anmeldedaten, Werkzeuge. Ein Auftrag, der `git` auf ein zweites Repo
+vorschreibt, ist in einem isolierten Worktree nicht ausführbar — und der Agent
+merkt es erst mittendrin. Nenne den Weg, den **er** gehen kann, und woran der
+Stand der fremden Quelle zu belegen ist. Dass die Zahlen im Auftrag Vorgabe
+sind, die Gegenprobe am Ende aber trotzdem Pflicht, gehört ausdrücklich hinein.
+
+⚠️ **Prüfe vor dem Schneiden, ob der Änderungssatz eine Datei berührt, die ein
+ANDERER Mechanismus als unveränderlich führt** (Vorfall 23) — Migrationen,
+Archivstücke, Prüfsummen, Sperrdateien. Zwei Wächter können einzeln richtig und
+zusammen unerfüllbar sein, und das sieht man nicht, indem man die Tests liest:
+die zweite Regel steht oft gar nicht im Testverzeichnis. Der naheliegende
+Ausweg des Bauagenten wäre in einem gemessenen Fall ein Ausfall im Betrieb
+gewesen, den keine Prüfkette gefangen hätte.
 
 ⚠️ **Abnahmekriterien mit wörtlichem Grep prüfst du am Kriterium selbst**,
 bevor es in den Auftrag geht (Vorfall 18): ein Wort trifft auch Prosa,
@@ -224,6 +246,15 @@ Titel gegenlesen und nach dem Commit `git log --format=%s -1 | od -c`.
 mit `assert gefunden > 0` fällt **per Bauart**, sobald der Übergang zu Ende ist;
 seine Löschung kann dann nicht in einen eigenen Änderungssatz. Prüfe vor dem
 Schnitt, welcher Wächter bei welcher Kombination kippt.
+
+⚠️ **Ein fehlgeschlagener Push wird gelesen, bevor er wiederholt wird**
+(Vorfall 21). Ein Haken, der vor dem Push die Prüfkette fährt, scheitert
+deterministisch — und sein Fehltext sieht aus wie ein Netzwerkfehler. Vier
+Anläufe mit Backoff gingen so verloren, während der Haken in jener Umgebung für
+**keinen** Commit grün werden konnte. Wiederholen ist nur bei einem belegten
+Netzwerkfehler richtig. Muss der Haken fallen, fährst du die Kette vorher von
+Hand, legst ihre echten Exit-Codes in den Änderungstext und schreibst in den
+PR, dass sie auf einer tauglichen Maschine nachzufahren ist.
 
 ## 7. Abnehmen
 
