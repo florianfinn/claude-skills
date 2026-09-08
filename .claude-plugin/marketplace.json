@@ -26,6 +26,13 @@
       "source": "./plugins/alpha-code",
       "category": "workflow",
       "homepage": "https://github.com/florianfinn/claude-skills/tree/master/plugins/alpha-code"
+    },
+    {
+      "name": "klartext",
+      "description": "Änderungstexte auf Klartext ziehen: Commit-Texte, PR-Beschreibungen, Changelog-Abschnitte und Doku gegen neun gemessene Formen prüfen — Konjunktiv als Motiv, Verneinung ohne Zahl, Schlussformeln, erfundener Kontrast, zerhackte Prosa, Nominalketten, Zahl ohne Messweg, Umlaut-Umschreibung, Mojibake. Jede Änderung wird als Vergleich vorgelegt und erst nach Bestätigung umgesetzt; die Ausnahmen stehen neben jeder Regel.",
+      "source": "./plugins/klartext",
+      "category": "workflow",
+      "homepage": "https://github.com/florianfinn/claude-skills/tree/master/plugins/klartext"
     }
   ]
 }

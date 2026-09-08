@@ -17,6 +17,7 @@ Vorsätzen: was drinsteht, ist einmal schiefgegangen.
 /plugin install subagent-orchestration@flofi-skills
 /plugin install grill-me@flofi-skills
 /plugin install alpha-code@flofi-skills
+/plugin install klartext@flofi-skills
 ```
 
 Danach ist der Skill in jedem Projekt verfügbar. Zum Aktualisieren genügt
@@ -33,6 +34,7 @@ Alternativ ohne Plugin-Mechanik: den Ordner
 | [`subagent-orchestration`](plugins/subagent-orchestration) | Arbeit auf mehrere zugeschnittene Subagenten aufteilen und wieder zusammenführen. |
 | [`grill-me`](plugins/grill-me) | Ein Vorhaben stresstesten, bevor es gebaut wird — Weiche für Weiche, mit Empfehlung. |
 | [`alpha-code`](plugins/alpha-code) | Ein Projekt so einrichten oder nachrüsten, dass Fehler auffallen, bevor sie auf `main` landen. (von [Kimpaliz](https://github.com/Kimpaliz)) |
+| [`klartext`](plugins/klartext) | Änderungstexte auf Klartext ziehen — neun gemessene Formen, jede mit ihrer Ausnahme, Vorschlag als Vergleich. |
 
 ### subagent-orchestration
 
@@ -89,6 +91,31 @@ Der Kern in drei Sätzen:
 3. **Eine Frage, ein Aufruf, warten.** Das Fragewerkzeug erlaubt vier Fragen auf
    einmal — genau das ist die Falle: dann sieht niemand mehr, wie Frage 3 von
    Antwort 1 abhängt.
+
+### klartext
+
+Greift bei „/klartext", „mach den Text klarer", „lies meinen PR gegen" oder
+„schreib den Commit-Text" — und beim Schreiben eines Änderungstextes auch dann,
+wenn niemand danach gefragt hat. Er prüft Commit-Texte, PR-Beschreibungen,
+Changelog-Abschnitte und Doku gegen neun Formen, die zwischen dem Leser und der
+Frage stehen, die er hat: was ist passiert, und was muss ich noch selbst prüfen?
+
+Der Kern in drei Sätzen:
+
+1. **Zu jeder Regel steht der Fall, in dem sie nicht gilt.** Die verbotene und
+   die gebotene Form haben denselben Satzbau: „hätte den Hub angehalten" ist ein
+   Beleg, „fiele in einen default-Zweig" ist Spekulation. Wer nur die Muster
+   löscht, entfernt genau die Sätze, an denen ein Prüfer den Umfang der Arbeit
+   misst.
+2. **Das Werkzeug zählt, das Modell entscheidet.**
+   `werkzeuge/pruefe-text.mjs` meldet jede der neun Formen mit Zeilennummer —
+   auch die mit null Treffern — und verurteilt keine einzige Zeile.
+3. **Jede Änderung kommt als Vergleich, mit einem Abschnitt „Bleibt stehen".**
+   Umgesetzt wird erst nach Bestätigung. Bei einem gemergten Commit sagt der
+   Skill, dass der Text endgültig ist, statt Historie umzuschreiben.
+
+Die Hausregel des Projekts (`AGENTS.md`, `CLAUDE.md`, `CONTRIBUTING.md`) schlägt
+die Regel des Skills, und er sagt, welche er deshalb übergeht.
 
 ### alpha-code (von [Kimpaliz](https://github.com/Kimpaliz))
 
