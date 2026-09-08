@@ -16,6 +16,13 @@ Ein „erledigt" hier veraltet lautlos; ein geschlossener Vorgang nicht.
 | `## Titel` | eine **Phase** — wird ein Sammelvorgang mit Label `track` |
 | `### Titel` | ein **Schritt** darunter — wird ein Kind-Vorgang |
 | `Vorgang: #12` | die Nummer, sobald der Vorgang angelegt ist |
+| `Vorgang: keiner` | **dieser Abschnitt ist Prosa** und wird nie ein Vorgang |
+
+**`Vorgang: keiner` ist der wichtigste Eintrag beim Nachrüsten.** Eine
+gewachsene Roadmap besteht nicht nur aus Phasen: Sie hat Vorworte,
+Begriffsklärungen, „die kurze Antwort". Ohne diese Zeile würde für jeden
+davon ein Issue entstehen. Geraten wird nichts — wer ausnimmt, schreibt
+es hin, einmal, und danach ist es für immer eindeutig.
 
 Die Nummer schreibt niemand von Hand: `node werkzeuge/vorgaenge.mjs
 roadmap` zeigt erst, was fehlt; mit `--wirklich` legt es die Vorgänge an
