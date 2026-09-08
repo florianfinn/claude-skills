@@ -1,0 +1,11 @@
+{
+  "name": "klartext",
+  "description": "Änderungstexte auf Klartext ziehen: Commit-Texte, PR-Beschreibungen, Changelog-Abschnitte und Doku gegen neun gemessene Formen prüfen — Konjunktiv als Motiv, Verneinung ohne Zahl, Schlussformeln, erfundener Kontrast, zerhackte Prosa, Nominalketten, Zahl ohne Messweg, Umlaut-Umschreibung, Mojibake. Jede Änderung wird als Vergleich vorgelegt und erst nach Bestätigung umgesetzt; die Ausnahmen stehen neben jeder Regel.",
+  "version": "0.1.0",
+  "author": {
+    "name": "florianfinn"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/florianfinn/claude-skills",
+  "keywords": ["writing", "commit-messages", "pull-requests", "review", "german", "workflow"]
+}
