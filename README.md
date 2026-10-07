@@ -47,16 +47,23 @@ Drei Beilagen:
 - **`references/agent-brief.md`** — die Auftragsvorlage zum Ausfüllen, in
   drei Fassungen: voll für Bauagenten, kurz für nur lesende Scouts, kurz für
   Prüfaufträge. Ein Auftrag ist selbsttragend; der Agent hat weder deinen
-  Verlauf noch den Vorgang gelesen.
+  Verlauf noch den Vorgang gelesen. Bau- und Prüfaufträge nennen Basis-SHA,
+  Vertrags-Owner, Prüfmatrix, Fehlerklasse und Rot-Belege.
 - **`references/project-profile.md`** — ein Blatt, das einmal je Repo
   ausgefüllt wird (Standardbranch, Prüfbefehle, Worktree-Einrichtung,
   Konventionen, Wächtertests, stille Fallen). Jeder Auftrag zieht daraus.
-- **`references/field-notes.md`** — woher jede Regel stammt. Zwanzig Vorfälle
+- **`references/field-notes.md`** — woher jede Regel stammt. Dreißig Vorfälle
   aus echten Vorgängen — einer Nacht mit neun Agentenläufen, einem Vorgang über
-  12 Pakete in zwei Repos und Nachträgen aus früheren Läufen —, je mit der
-  Regel, die daraus wurde.
+  12 Pakete in zwei Repos, einem Vertragsabgleich und einer Effizienzprüfung
+  bei docklet hub sowie Nachträgen aus früheren Läufen —, je mit der Regel,
+  die daraus wurde.
 
-Der Kern in drei Sätzen:
+Fassung **0.5.0** ergänzt gemeinsame Grundlagen vor Parallelität,
+Fehlerklassen statt Einzelfixes, vollständige Vorberichte im Folgereview und
+den Betrieb in **T3 Code / Codex**: Anbieterwahl, lokale Arbeitercommits,
+Limitreserve und Wiederanlauf per Heartbeat zur Resetzeit.
+
+Der Kern:
 
 1. **Eine Datei gehört genau einem Agenten.** Zwei Agenten in derselben Datei
    erzeugen Konflikte, die du hinterher von Hand auflöst.
