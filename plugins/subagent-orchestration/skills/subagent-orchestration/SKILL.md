@@ -61,6 +61,13 @@ Der Schnitt steht **schriftlich, bevor der erste Agent läuft**.
   Fläche an.
 - Abhängiges läuft **nacheinander**, Unabhängiges parallel. Schreibe Ketten und
   Gabeln auf, bevor du startest.
+- ⚠️ **Gemeinsame Grundlagen werden vor abhängigen Arbeitern geprüft und
+  gemergt** (Vorfall 27): Entscheidungen, Werkzeugfixes, Vertrag samt Version,
+  Hash, Routen, Exporten und Fixtures. Lege **Basis-SHA, Vertrags-Owner und
+  Merge-Reihenfolge** schriftlich fest. Nur die Versionsnummer einem Owner zu
+  geben genügt nicht. Steht der Vertrag erst durch die Umsetzung fest, müssen
+  die betroffenen Pakete vor ihrem abschließenden Review auf demselben
+  integrierten Stand stehen. Freie Plätze ändern die Reihenfolge nicht.
 - **Ein Agent bekommt eine Etappe.** Zwei Etappen in einem Diff lassen sich
   hinterher nicht mehr in zwei Änderungssätze schneiden.
 - ⚠️ **Ein Paket, das das Zugbudget des Agenten sprengt, endet ohne
@@ -133,7 +140,7 @@ Bauauftrag gehören:
    Konventionsdatei und halten sie trotzdem nicht ein (Vorfall 2).
 3. ⚠️ **Die stillen Fallen der Fläche namentlich** — jede Fehlerklasse, die die
    Tests nicht fangen. Was ein Test fängt, muss nicht hinein; was grün
-   durchkommt, unbedingt.
+   durchkommt, unbedingt (Vorfall 4).
 4. **Auftrag und Nicht-Auftrag.** Welche Dateien er anfasst, welche anderen
    Agenten gehören. Wer „im Vorbeigehen" aufräumt, kostet dich den Schnitt.
    Umgekehrt gilt: ein roter Wächter, dessen Ursache in **seinen** Dateien
@@ -147,6 +154,14 @@ Bauauftrag gehören:
 6. **Die Bausteine nach Wert sortiert**, nicht nach Bequemlichkeit. Ein Abbruch
    soll das Wichtigste fertig vorfinden und nicht das Vorbereitende
    (Vorfall 20).
+7. ⚠️ **Prüfmatrix und Rot-Belege gehören schon in den Erstauftrag**
+   (Vorfälle 24–26): anwendbare Kombinationen aus Modus, Eigentum, Zielzustand,
+   Aktion, Fehlerstufe und Transport; dazu Längengrenzen, Wiederanlauf,
+   Persistenz und Wachstum, soweit betroffen. Ausschlüsse begründen.
+   Verlange Mutationen, die den behaupteten Schutz entfernen und den Test rot
+   machen, samt Befehl und echtem Exit-Code. Warte-, Stream- und Retrytests
+   bekommen kurze, fallbezogene Timeouts; der Transporttest erreicht den
+   tatsächlichen Transport. Eine Testzahl belegt keine Abdeckung.
 
 Dazu: Rückmeldung in **Zahlen**, dass er nur **eigene Pfade** stagt (nie
 `git add -A`, Vorfall 9), und was er nicht tut (mergen, deployen,
@@ -184,9 +199,9 @@ Befund; nachverhandelt wird es nicht.
 
 - Unabhängige Agenten startest du **in einem Aufruf**, im Hintergrund. Ketten
   Glied für Glied, jedes auf der SHA des Vorgängers.
-- Nachsteuern per `SendMessage`, **nicht** per neuem Agenten — der fängt kalt
-  an und leitet denselben Kontext noch einmal her. ⚠️ **Die erste Zeile jeder
-  Nachricht an einen laufenden Agenten lautet „committe sofort"**, vor jeder
+- In Claude Code: Nachsteuern per `SendMessage`, **nicht** per neuem Agenten —
+  der fängt kalt an und leitet denselben Kontext noch einmal her. ⚠️ **Die erste
+  Zeile jeder Nachricht an einen laufenden Agenten lautet „committe sofort"**, vor jeder
   inhaltlichen Anweisung (Vorfall 20). Wer eine Korrektur bekommt, fängt sonst
   an zu arbeiten, statt zu sichern.
 - ⚠️ **Der Abriss am Zuglimit ist der Regelfall, nicht die Ausnahme**: rund
@@ -196,9 +211,11 @@ Befund; nachverhandelt wird es nicht.
   „vom Leitstand unverändert committet"), dann einen frischen Agenten mit einem
   Stand-Absatz im Auftrag ansetzen — Rückmeldedatei und Zwischencommits sagen
   dir, was hineingehört.
-- ⚠️ **Nach einem Sitzungslimit (`429`) sind alle laufenden Agenten tot und
-  `SendMessage` bleibt bis Sitzungsende weg** (Vorfall 12). Nachsteuern ist dann
-  keine Option mehr; es bleibt der Standardweg oben.
+- ⚠️ **Im Claude-Code-Lauf aus Vorfall 12 waren nach einem Sitzungslimit (`429`)
+  alle laufenden Agenten tot und `SendMessage` blieb bis Sitzungsende weg**.
+  In diesem Fall ist Nachsteuern keine Option mehr; es bleibt der Standardweg
+  oben. Für T3 siehe den Abschnitt
+  „T3 Code / Codex“.
 - **Die Wellenbreite begrenzt auch dein Kontingent.** Drei gleichzeitige Läufe
   auf dem starken Modell plus einer auf dem mittleren haben das Sitzungslimit
   gerissen.
@@ -230,10 +247,29 @@ Lies den **Diff**, nicht den Bericht.
   Prüfkette** auf dem Paketstand (Vorfall 13). Ein Nachtrag von 57 Zeilen lief
   nur seinen Einzeltest und ließ einen Wächter rot zurück, bis das nächste Paket
   darauf aufsetzte.
+- ⚠️ **Die erste Korrektur deckt die Fehlerklasse ab**, nicht nur die
+  Fundstelle (Vorfall 24). Bei fehlendem Audit, ungefangenem Fehler, falschem
+  Timeout oder unbegrenztem Wachstum werden alle vergleichbaren Pfade geprüft.
+  Der Fixbericht nennt Klasse, verwandte Stellen und Rot-Belege. Scheitert die
+  erste Korrektur an derselben Klasse, folgt sofort ein **Ursachenplan**, bevor
+  weitergebaut wird; eine Zwei-Runden-Grenze ist die äußerste Grenze.
+- ⚠️ **Ein Folgereview erhält den vollständigen Vorbericht und den Diff seit
+  dessen geprüftem Stand** (Vorfall 30). Nenne beide Head-SHAs, Befundkennungen,
+  Antworten, Entscheidungen und offene Einwände. Ein dauerhafter, für den
+  Prüfer lesbarer Verweis spart Wiederholung; er ersetzt keine fehlenden Teile
+  durch eine Kurzfassung. Der Prüfer liest den Vorbericht vollständig.
 
 ## 6. Zusammenführen und in Änderungssätze schneiden
 
 Ein Integrationsbranch, `git cherry-pick` in Abhängigkeitsreihenfolge.
+
+⚠️ **Spekulative Integration auf ungeprüften Basen bleibt begrenzt**
+(Vorfall 28). Während einer Anbieterpause bevorzugt unabhängige Tests,
+Fixtures, Layout und Adapter gegen stabile Schnittstellen vorbereiten. Einen
+vollständigen Vorgriff nur mit festgelegter Schnittstelle und begründetem
+Zeitgewinn beginnen; Risiko und verworfene Altstände festhalten. Bekannte
+Basis-Konflikte werden vor dem nächsten Review aufgelöst. Veröffentlichte
+Historie wird nicht rebased oder force-gepusht.
 
 ⚠️ **Betreffs und PR-Titel nie inline** (Vorfall 15). Zweimal landete ein
 doppelt kodierter Betreff auf dem Standardbranch (`â€” A4 des RÃ¼ckbaus`) —
@@ -268,3 +304,11 @@ PR, dass sie auf einer tauglichen Maschine nachzufahren ist.
 
 Je Agent: Typ, Modell, Auftrag, Ergebnis in Zahlen. Dazu die Summe und die
 offenen Punkte — **als Frage, nicht als Vermutung**.
+
+## T3 Code / Codex
+
+Bei T3-Delegation, Claude-OAuth-Nutzungsabfragen oder Wiederanlauf per Scheduler
+lies [`references/t3-codex.md`](references/t3-codex.md).
+Nutze den aktuellen Werkzeugkatalog, eigene delegierte Review-Runden und geprüfte Worktrees.
+Arbeiter committen lokal; Integration und Push bleiben beim Koordinator nach Projektfreigabe.
+Plane Claude-Budget mit Reserve; schütze Tokens auch in Prozessargumenten (Vorfälle 29, 31).

@@ -1,14 +1,16 @@
 # Woher die Regeln kommen
 
-Alle Warnungen im Skill stammen aus drei Vorgängen. Die Vorfälle 1 bis 10 aus
+Alle Warnungen im Skill stammen aus vier ausgewerteten Vorgängen und
+Nachträgen. Die Vorfälle 1 bis 10 aus
 einer Nacht mit neun Agentenläufen an einem Frontend-Umbau: drei Etappen, zwölf
 Dateien, drei Änderungssätze, Abnahme im Browser. Die Vorfälle 11 bis 18 aus
 einem Vorgang über 12 Pakete in zwei Repos, 19 und 20 aus früheren Vorgängen
 nachgetragen, 21 bis 23 aus einem Vertragsabgleich zwischen zwei Repos mit fünf
-Läufen — die Nummern folgen der Reihenfolge des Eintragens, nicht der
-Zeit. Nichts davon ist abgeleitet — jeder
-Punkt hat Nacharbeit gekostet, und die Nacharbeit war jedes Mal teurer als die
-Zeile im Auftrag, die sie verhindert hätte.
+Läufen, 24 bis 30 aus einer Effizienzprüfung der Mehrarbeiterarbeit an docklet
+hub und 31 aus der anschließenden Prüfung der Nutzungsabfrage — die Nummern
+folgen der Reihenfolge des Eintragens, nicht der Zeit.
+Jeder Punkt entstand aus einem belegten Ablauf. Wo Aufwand nur geschätzt oder
+eine Folge nicht nachgewiesen ist, steht es beim Vorfall.
 
 Diese Datei ist der Beleg. Wer eine Regel im Skill für übertrieben hält, liest
 hier nach, was ohne sie passiert ist.
@@ -446,6 +448,186 @@ eine Ausnahme im Wächter hinaus und damit auf eine **gesenkte Marke** — zulä
 allein deshalb, weil sich die Zählweise änderte und nicht weil ein Fall riss.
 Der Unterschied gehört als Satz neben die Marke, sonst liest der Nächste sie als
 Erlaubnis.
+
+## Vierter Vorgang: docklet hub, 27 PR-Reviews in rund 21 Stunden
+
+Die Vorfälle 24 bis 30 stammen aus der Effizienzprüfung vom 7. Oktober 2026
+für Meilenstein 27. Gezählt wurden 27 Reviews je PR in 25 Review-Aufträgen,
+45 T3-Delegationen und sieben native Reviewer-Aufträge. Die T3-Kinder liefen
+zusammen rund 424 Minuten — summierte Laufzeit einschließlich Werkzeug- und
+Testwartezeit, keine Kalenderdauer. Die Auswertung endete beim mergebereiten
+Abschlussstand, nicht bei einer praktischen Release-Abnahme.
+
+Die Zahlen wurden aus Koordinator-Aktivität, Kind-Aufträgen und ihren
+Start-/Endzeiten sowie öffentlichen PR-Belegen gezählt. Private Rohberichte
+bleiben außerhalb des Repos; hier stehen nur bereinigte Angaben. Tokenzahlen
+und Geldkosten lagen nicht vor. Limit-Prozentwerte ersetzen keine
+Tokenabrechnung.
+
+## 24. Fünf Reviews für Fundstellen derselben Fehlerklasse
+
+**Was passierte:** [docklet hub #162](https://github.com/florianfinn/docklet-hub/pull/162#issuecomment-6027467536)
+brauchte **fünf Review-Runden**. Nach dem ersten Fix fehlte das Audit im neuen
+Vorab-Lesepfad, nach dem zweiten weiter in der Stack-Vorbereitung. Die
+Korrekturen reparierten einzelne Containerstellen; erst der spätere Auftrag
+verlangte die Prüfung aller vergleichbaren Pfade. Eine gemeinsame Fehlergrenze
+beendete diese Schleife. Danach verdrängten lange Diagnosen noch den
+Delegationsnachweis aus dem auf **240 Zeichen** gekürzten Audit-Grund.
+
+Die spätere Matrix enthielt **624 Kombinationen**, davon 438 anwendbare und
+186 begründet ausgeschlossene Fälle. Sie prüfte zunächst nur kurze Diagnosen.
+Die Fallzahl war richtig, die Abdeckung der Längengrenze fehlte trotzdem.
+
+**Die Regel:** Prüfmatrix schon im Erstauftrag festlegen; die erste Korrektur
+deckt die **Fehlerklasse** mit allen vergleichbaren Pfaden und Grenzwerten ab.
+Scheitert diese Korrektur wieder an derselben Klasse, folgt sofort ein
+Ursachenplan. Eine Zwei-Runden-Grenze ist die äußerste Grenze, kein Grund, bis
+dahin mit Einzelfixes weiterzumachen.
+
+**Was nicht daraus folgt:** Die echten Audit-Blocker waren nicht optional.
+Die Effizienzprüfung schätzt zwei bis drei vermeidbare Runden; sie belegt
+keine Erlaubnis, den Review abzukürzen.
+
+## 25. Der Backoff-Test, den die Mutation nicht erreichte
+
+**Was passierte:** [docklet hub #165](https://github.com/florianfinn/docklet-hub/pull/165#issuecomment-6031691191)
+brauchte **drei Runden**. In Runde 2 blieben die Tests beim Entfernen des
+Backoff-Wachstums oder des Zurücksetzens grün: Mock-Timer erreichten die benannte
+ESM-Bindung nicht, der Test wartete in Echtzeit. Bei 13 dokumentierten
+Mutationen hing ein weiterer Fall bis zum äußeren Timeout von **300 Sekunden**.
+Der Review lief 17 Minuten.
+
+Mit injizierbarer Wartefunktion und direkter Prüfung der Folge
+**1/2/4/8/16/30 Sekunden** samt Reset bestand Runde 3.
+
+**Die Regel:** Der Erstauftrag verlangt einen **Rot-Beleg** für Wachstum und
+Reset, nicht nur Tests mit diesen Namen. Die Mutation muss die tatsächliche
+Bindung erreichen. Warte- und Retryfälle bekommen kurze, fallbezogene
+Timeouts; ein langer äußerer Jobtimeout schützt die Prüfkette nicht genug.
+
+**Warum es nicht auffällt:** Ein grüner Test mit gemockter Uhr sieht wie eine
+Zeitprüfung aus, obwohl der relevante Pfad von dieser Uhr nichts erfährt.
+
+## 26. Gepufferte Bytes wurden als gesendet gemeldet
+
+**Was passierte:** [docklet hub #166](https://github.com/florianfinn/docklet-hub/pull/166#issuecomment-6035535106)
+brauchte **drei Runden**. Der erste Review fand eine Headerfrist von
+**300 Sekunden**, die lange Aktionen als unerreichbaren Agenten meldete. Der
+Ersatztransport wertete `socket.bytesWritten` als Sendenachweis. Dort standen
+aber schon vor `connect` gepufferte Bytes: eine verweigerte Verbindung wurde
+als „Ausgang unbekannt“ statt „Agent nicht erreichbar“ gemeldet.
+
+Erst die Gegenprobe mit dem tatsächlichen Transport belegte die Korrektur;
+**15 von 19 Regressionstests** fielen mit der alten Logik.
+
+**Die Regel:** Die Prüfmatrix unterscheidet vor Connect, nach Senden,
+unterbrochene Antwort, TLS, Keep-alive und lange Fristen. Transporttests
+erreichen den tatsächlichen Transport; ihre Rot-Belege stehen schon im
+Erstauftrag. Lokales Puffern belegt keine Übertragung.
+
+## 27. Ein Versions-Owner ohne gemeinsame Vertragsgrundlage
+
+**Was passierte:** Ein Arbeiter durfte den Vertrag auf **Version 12** heben,
+ein anderer nicht — der zweite ergänzte aber Vertragsrouten. Die lokale
+Anhebung samt falschem Hash erzeugte **21 rote Servertests**, weil die Fixtures
+noch Version 11 führten. Zunächst wurde Last vermutet, dann die Versionsursache
+gefunden. Hash, Versionstabelle und Exporte mussten mehrfach zusammengeführt
+werden; die angekündigte Merge-Reihenfolge wechselte nach Fertigstellungszeit.
+
+Drei Arbeiter waren außerdem vor Integration des Werkzeugfixes
+[#155](https://github.com/florianfinn/docklet-hub/pull/155) gestartet; alle drei
+meldeten dessen bereits bearbeiteten Historienfehler erneut. Die zugehörigen
+Entscheidungen waren erst rund 15 Minuten nach Arbeiterstart geprüft und
+gemergt. Bei [#167](https://github.com/florianfinn/docklet-hub/pull/167#issuecomment-6035755484)
+bestand Runde 2; Runde 3 wurde erst durch den neuen Integrationsstand nach
+#166 erforderlich.
+
+**Die Regel:** Gemeinsame **Entscheidungen, Werkzeugfixes, Vertrag und Fixtures**
+werden vor abhängiger Parallelität geprüft und gemergt. Basis-SHA,
+Vertrags-Owner und Merge-Reihenfolge stehen vorher fest. Version, Hash, Routen,
+Exporte und Fixtures bilden eine Grenze; Eigentum allein an der Versionsnummer
+genügt nicht. Entsteht der Vertrag erst beim Bauen, stehen alle betroffenen
+Pakete vor dem Abschlussreview auf derselben integrierten Grundlage.
+
+**Was nicht daraus folgt:** Der dritte Review von #167 war kein dritter
+gescheiterter Fix. Für den neuen Head war er nötig; vermeidbar war der
+ungeordnete Integrationsstand, der ihn erzeugte.
+
+## 28. Der Vorgriff endete in sieben Portkonflikten
+
+**Was passierte:** Während einer Claude-Pause baute Codex auf einer ungeprüften
+Basis weiter; die nächste Umsetzung übernahm zusätzlich einen zweiten
+ungeprüften Branch. Nach den Reviews musste die Grundlage neu aufgesetzt
+werden. Der Cherry-Pick-Port von **drei eigenen Commits** brauchte
+**10 Minuten 46 Sekunden** und löste **sieben Dateikonflikte** in Vertrags-,
+Watcher- und Hub-Dateien.
+
+**Die Regel:** Spekulative Integration begrenzen. In Pausen unabhängige Tests,
+Fixtures, Layout und Adapter gegen feste Schnittstellen vorbereiten. Ein
+vollständiger Vorgriff braucht eine ausreichend stabile Schnittstelle und
+einen begründeten Zeitgewinn gegen den erwarteten Portaufwand. Bekannte
+Basis-Konflikte vor dem nächsten Review auflösen.
+
+**Was gut blieb:** Codex arbeitete während der Pause produktiv weiter.
+Veröffentlichte Historie wurde mit Merge-Commits geschützt; ein Force-Push
+oder Rebase geteilter Historie ist in diesem Abschnitt nicht belegt.
+
+## 29. Die Pause reservierte kein Budget und verpasste den Reset
+
+**Was passierte:** Vier Limit-Pausen umfassten **15 Stunden 36 Minuten** in
+**21 Stunden 4 Minuten** Kalenderdauer, rund 74 %. Das war weder eine
+Tokenverbrauchsquote noch reine Leerlaufzeit: Codex arbeitete innerhalb der
+Pausen. Der Nutzungscheck wurde erst nach dem ersten Ausfall eingerichtet;
+zehn abgewiesene Turns sind belegt.
+
+Später pausierten neue Reviews schon bei 71–78 % Nutzung. Laufende Reviewer
+und der Opus-Koordinator verbrauchten aber weiter Budget; Werte stiegen trotz
+Pause auf 83–85 %. Eigene delegierte Threads isolierten den Fehlerpfad, nicht
+das gemeinsame Anbieterbudget. Der erste Wiederanlauf kam **52 Minuten** nach
+dem Reset, zwei weitere jeweils etwa zwei bis drei Minuten später: insgesamt
+rund **57 Minuten** Verzögerung gegenüber drei bekannten Resetzeiten.
+
+**Die Regel:** Nutzung vor Claude-intensiven Schritten prüfen, mit Schwelle
+und Reserve für laufende Reviewer sowie Koordination. Während der Pause keine
+routinemäßigen Opus-Statusrunden. Resetzeit und nächsten Schritt privat
+speichern, Wiederanlauf per T3-Heartbeat zur Resetzeit plus kleinem Puffer
+planen und dann erneut die Nutzung prüfen. Codex darf unabhängig weiterbauen.
+
+**Messgrenze:** Die Prüfung belegt Pausendauer und Verzögerung. Sie liefert
+keine gemessene Tokenersparnis durch einen anderen Koordinator oder ein
+kleineres Reviewmodell.
+
+## 30. Der Folgereview bekam nur die Kurzfassung
+
+**Was passierte:** Mehrere Folgereview-Aufträge enthielten ausdrücklich eine
+„Kurzfassung“ des Vorberichts, etwa **Runde 2 von #167**. Im Abschnitt gab es
+**27 PR-Reviews in 25 Aufträgen**; die Zahl der verkürzten Übergaben wurde
+nicht gesondert gezählt. Ein tatsächlicher Verlust entscheidender Befunde ist
+nicht nachgewiesen. Tests, Grenzen und verworfene Einwände mussten so aber
+gegebenenfalls erneut rekonstruiert werden.
+
+**Die Regel:** Jeder Folgereview bekommt den **vollständigen Vorbericht**,
+Antworten, Entscheidungen, offene Einwände und den Diff seit dem damaligen
+geprüften Head samt beiden SHAs. Den Bericht einmal dauerhaft ablegen und
+einen für den Prüfer lesbaren Verweis übergeben; eine kurze Orientierung darf
+dazukommen, ihn aber nicht ersetzen. Befundkennungen bleiben über Korrektur und
+Nachprüfung erhalten.
+
+**Warum das zugleich sparsamer sein kann:** Ein vollständiger gespeicherter
+Bericht wird einmal übernommen und gezielt gelesen. Eine Kurzfassung spart
+nur dann Kontext, wenn das ausgelassene Wissen später nicht wieder fehlt.
+
+## 31. Der Token stand in den Prozessargumenten
+
+**Was passierte:** Bei docklet hub zeigte eine zu breite Prozessabfrage eines
+Reviewers einen Token in privater Ausgabe. Das Nutzungsskript hatte ihn als
+Kommandozeilenargument übergeben. Danach wurde das Skript auf Übergabe per
+stdin umgestellt. Tokenwerte und Betriebspfade werden hier nicht übernommen.
+
+**Die Regel:** Token nur innerhalb des abfragenden Prozesses verwenden oder
+über stdin bzw. einen Konfigurationskanal übergeben, etwa mit `curl -K -`.
+Niemals als Kommandozeilenargument übergeben: Prozessabfragen können die
+Argumente lesen, auch wenn das Skript selbst keine Credentials ausgibt.
 
 ## Was gut funktioniert hat
 
