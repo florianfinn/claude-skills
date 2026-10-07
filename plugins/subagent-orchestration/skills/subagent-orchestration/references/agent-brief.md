@@ -30,6 +30,18 @@ Stimmt eines nicht, **stopp und melde es** — kein `checkout`, kein
 `reset --hard`, kein `fetch`. Ein Reset im falschen Checkout trifft fremden,
 ungesicherten Stand. Deine Arbeit beginnt erst, wenn beides stimmt.
 
+| Feld | Vorgabe |
+| --- | --- |
+| Basis-SHA | <volle SHA der geprüften und gemergten Grundlage> |
+| Zielbranch | <tatsächlicher Integrationsbranch> |
+| Freigegebene Grundlagen | <Entscheidungen, Werkzeugfixes, Vertrag und Fixtures samt SHA> |
+| Vertrags-Owner | <wer Version, Hash, Routen, Exporte und Fixtures zusammenführt> |
+| Merge-Reihenfolge | <Vorgänger → dieses Paket → Nachfolger> |
+
+Gemeinsame Grundlagen werden vor abhängiger Parallelität geprüft und gemergt.
+Ändere keinen gemeinsam berührten Vertrag außerhalb deiner Zuständigkeit;
+melde eine nötige Änderung an den Vertrags-Owner.
+
 ## Auftrag
 
 <Was zu tun ist, mit vollständiger Dateiliste.>
@@ -45,6 +57,7 @@ Der Diff enthält nichts Fremdes. Diese Dateien fasst du NICHT an:
 
 Fällt dir dort etwas auf, schreib es in die Rückmeldung, nicht in den Diff.
 
+Du committest nur lokal; der Koordinator pusht nach Projektfreigabe.
 Du mergst nicht, du deployst nicht, und du machst keinen Wächtertest „grün",
 indem du seine Marke senkst.
 
@@ -127,6 +140,25 @@ nie vollständig, sondern nur die Stellen, die dein Auftrag betrifft.
 Fang den echten Exit-Code. `… | tail -20; echo $?` meldet den Code von `tail`
 und sieht dabei grün aus.
 
+## Prüfmatrix und Fehlerklasse
+
+| Feld | Vorgabe |
+| --- | --- |
+| Fehlerklasse | <z. B. Audit fehlt, ungefangener Fehler, falscher Timeout, unbegrenztes Wachstum> |
+| Vergleichbare Pfade | <alle betroffenen Stellen der Klasse, nicht nur die Fundstelle> |
+| Prüfmatrix | <anwendbare Kombinationen und begründete Ausschlüsse> |
+| Grenzwerte | <Längengrenzen, Wartezeit, Wachstum, Uhrsprung — soweit betroffen> |
+| Tatsächlicher Transport | <wie der Test die relevante Bindung oder den Transport erreicht> |
+| Rot-Belege | <Mutation → betroffener Test → erwarteter Fehler; Befehl und echter Exit-Code> |
+| Hängegrenze | <kurzer Timeout je Warte-, Stream- oder Retryfall> |
+
+Matrix und Rot-Belege stehen schon im Erstauftrag. Prüfe Modus, Eigentum,
+Zielzustand, Aktion, Fehlerstufe und Transport sowie Wiederanlauf und
+Persistenz, soweit sachlich betroffen. Eine Testzahl ersetzt keine Abdeckung.
+Bei einer Korrektur prüfst du alle vergleichbaren Pfade derselben Fehlerklasse.
+Scheitert die erste Korrektur wieder an ihr, **stopp und melde einen
+Ursachenplan**, bevor du weiterbaust.
+
 ## Rückmeldung
 
 Sie steht in `<rückmeldedatei>` und wächst mit der Arbeit. Antworte in Zahlen,
@@ -135,6 +167,7 @@ nicht in Prosa:
 - Zeilen raus / rein je Datei
 - Wächtermarken vorher → nachher
 - Ergebnis der Prüfläufe mit dem echten Exit-Code
+- Fehlerklasse, abgedeckte Matrix, Ausschlüsse und Rot-Belege samt Exit-Code
 - Was du bewusst NICHT gemacht hast und warum
 - Was dir auf fremdem Gebiet aufgefallen ist
 
@@ -231,8 +264,28 @@ Größere Prüfaufträge endeten dreimal am Zugbudget, ohne ein einziges Urteil
 abzugeben, obwohl die Läufe auf Platte lagen (field-notes, Vorfall 11).
 
 ```
-Du prüfst <Paket> auf dem Stand <basis-sha> im Worktree <worktree-pfad>. Du
+Du prüfst <Paket> auf dem Stand <prüf-head-sha> im Worktree <worktree-pfad>. Du
 änderst nichts dauerhaft, du committest nicht, du mergst nicht.
+
+Prüfe Worktree-Pfad und Prüf-Head mit `git rev-parse --show-toplevel` und
+`git rev-parse HEAD`; bei Abweichung stopp und melde es, ohne zurückzusetzen.
+
+## Grundlage
+
+- Basis-SHA: <volle SHA der integrierten Grundlage>
+- Prüf-Head: <volle SHA des jetzt geprüften Stands>
+- Zielbranch: <tatsächlicher Integrationsbranch>
+- Vertrags-Owner: <Owner der gemeinsamen Vertrags- und Fixture-Grenze>
+- Fehlerklasse und vergleichbare Pfade: <Klasse und vollständiger Suchraum>
+- Prüfmatrix: <anwendbare Fälle, Grenzwerte und begründete Ausschlüsse>
+- Rot-Belege: <Mutation, Test, erwarteter Fehler und kurze Hängegrenze>
+
+Bei einem Folgereview liest du <vollständiger Vorbericht, lesbarer dauerhafter
+Verweis> vollständig. Dazu gehören Antworten, Entscheidungen und offene
+Einwände unter ihren bisherigen Befundkennungen. Prüfe den Diff von
+<damals-geprüfte-head-sha> bis <jetzt-geprüfte-head-sha>; der ursprüngliche
+Prüfauftrag bleibt vollständig erhalten. Eine Kurzfassung ersetzt den Bericht
+nicht. In T3 startet der Koordinator dafür eine neue delegate_task-Runde.
 
 ## Kriterien
 
