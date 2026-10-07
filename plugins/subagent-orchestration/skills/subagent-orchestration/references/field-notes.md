@@ -7,7 +7,8 @@ Dateien, drei Änderungssätze, Abnahme im Browser. Die Vorfälle 11 bis 18 aus
 einem Vorgang über 12 Pakete in zwei Repos, 19 und 20 aus früheren Vorgängen
 nachgetragen, 21 bis 23 aus einem Vertragsabgleich zwischen zwei Repos mit fünf
 Läufen, 24 bis 30 aus einer Effizienzprüfung der Mehrarbeiterarbeit an docklet
-hub — die Nummern folgen der Reihenfolge des Eintragens, nicht der Zeit.
+hub und 31 aus der anschließenden Prüfung der Nutzungsabfrage — die Nummern
+folgen der Reihenfolge des Eintragens, nicht der Zeit.
 Jeder Punkt entstand aus einem belegten Ablauf. Wo Aufwand nur geschätzt oder
 eine Folge nicht nachgewiesen ist, steht es beim Vorfall.
 
@@ -615,6 +616,18 @@ Nachprüfung erhalten.
 **Warum das zugleich sparsamer sein kann:** Ein vollständiger gespeicherter
 Bericht wird einmal übernommen und gezielt gelesen. Eine Kurzfassung spart
 nur dann Kontext, wenn das ausgelassene Wissen später nicht wieder fehlt.
+
+## 31. Der Token stand in den Prozessargumenten
+
+**Was passierte:** Bei docklet hub zeigte eine zu breite Prozessabfrage eines
+Reviewers einen Token in privater Ausgabe. Das Nutzungsskript hatte ihn als
+Kommandozeilenargument übergeben. Danach wurde das Skript auf Übergabe per
+stdin umgestellt. Tokenwerte und Betriebspfade werden hier nicht übernommen.
+
+**Die Regel:** Token nur innerhalb des abfragenden Prozesses verwenden oder
+über stdin bzw. einen Konfigurationskanal übergeben, etwa mit `curl -K -`.
+Niemals als Kommandozeilenargument übergeben: Prozessabfragen können die
+Argumente lesen, auch wenn das Skript selbst keine Credentials ausgibt.
 
 ## Was gut funktioniert hat
 

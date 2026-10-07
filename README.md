@@ -42,7 +42,7 @@ Der Skill greift, sobald Arbeit auf mehrere Agenten verteilt werden soll, und
 führt durch acht Schritte: schneiden, Modell wählen, Auftrag schreiben, führen,
 prüfen, zusammenführen, abnehmen, berichten.
 
-Drei Beilagen:
+Vier Beilagen:
 
 - **`references/agent-brief.md`** — die Auftragsvorlage zum Ausfüllen, in
   drei Fassungen: voll für Bauagenten, kurz für nur lesende Scouts, kurz für
@@ -52,11 +52,14 @@ Drei Beilagen:
 - **`references/project-profile.md`** — ein Blatt, das einmal je Repo
   ausgefüllt wird (Standardbranch, Prüfbefehle, Worktree-Einrichtung,
   Konventionen, Wächtertests, stille Fallen). Jeder Auftrag zieht daraus.
-- **`references/field-notes.md`** — woher jede Regel stammt. Dreißig Vorfälle
+- **`references/field-notes.md`** — woher jede Regel stammt. Einunddreißig Vorfälle
   aus echten Vorgängen — einer Nacht mit neun Agentenläufen, einem Vorgang über
   12 Pakete in zwei Repos, einem Vertragsabgleich und einer Effizienzprüfung
   bei docklet hub sowie Nachträgen aus früheren Läufen —, je mit der Regel,
   die daraus wurde.
+- **`references/t3-codex.md`** — bedingte Betriebsregeln für T3-Delegation,
+  Claude-OAuth-Nutzungsabfragen und Wiederanlauf per Scheduler; einschließlich
+  Schutz vor Tokens in Prozessargumenten.
 
 Fassung **0.5.0** ergänzt gemeinsame Grundlagen vor Parallelität,
 Fehlerklassen statt Einzelfixes, vollständige Vorberichte im Folgereview und
