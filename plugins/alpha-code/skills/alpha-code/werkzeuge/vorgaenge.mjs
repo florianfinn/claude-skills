@@ -112,19 +112,26 @@ function roadmapLesen() {
     if (imBlock) continue;
     const p = zeile.match(/^##\s+(.+?)\s*$/);
     const s = zeile.match(/^###\s+(.+?)\s*$/);
-    const v = zeile.match(/^\s*Vorgang:\s*#(\d+)/i);
-    if (p) { phasen.push({ titel: p[1], nummer: null, schritte: [], zeilen: [] }); continue; }
+    const v = zeile.match(/^\s*Vorgang:\s*(?:#(\d+)|(keiner))/i);
+    if (p) { phasen.push({ titel: p[1], nummer: null, prosa: false, schritte: [], zeilen: [] }); continue; }
     if (!phasen.length) continue;
     const aktuell = phasen[phasen.length - 1];
-    if (s) { aktuell.schritte.push({ titel: s[1], nummer: null, zeilen: [] }); continue; }
+    if (s) { aktuell.schritte.push({ titel: s[1], nummer: null, prosa: false, zeilen: [] }); continue; }
     if (v) {
       const ziel = aktuell.schritte.length ? aktuell.schritte[aktuell.schritte.length - 1] : aktuell;
-      ziel.nummer = parseInt(v[1], 10);
+      /* `Vorgang: keiner` heißt: Das ist Prosa, kein Vorgang. Ohne diese
+         ausdrückliche Ausnahme legte das Werkzeug für jeden erklärenden
+         Abschnitt einer gewachsenen Roadmap ein Issue an — bei
+         Scotophobia wären das fünf von 35 gewesen, gemessen am
+         05.09.2026. Geraten wird nichts; wer ausnimmt, schreibt es hin. */
+      if (v[2]) ziel.prosa = true; else ziel.nummer = parseInt(v[1], 10);
       continue;
     }
     (aktuell.schritte.length ? aktuell.schritte[aktuell.schritte.length - 1] : aktuell).zeilen.push(zeile);
   }
-  return phasen;
+  /* Prosa fliegt raus, bevor irgendetwas angelegt wird. */
+  for (const p of phasen) p.schritte = p.schritte.filter((s) => !s.prosa);
+  return phasen.filter((p) => !p.prosa);
 }
 
 const rumpfBauen = (teile) => teile.filter(Boolean).join("\n\n") + "\n";
