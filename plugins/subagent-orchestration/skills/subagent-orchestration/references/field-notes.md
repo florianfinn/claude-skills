@@ -8,7 +8,8 @@ einem Vorgang über 12 Pakete in zwei Repos, 19 und 20 aus früheren Vorgängen
 nachgetragen, 21 bis 23 aus einem Vertragsabgleich zwischen zwei Repos mit fünf
 Läufen, 24 bis 30 aus einer Effizienzprüfung der Mehrarbeiterarbeit an docklet
 hub und 31 aus der anschließenden Prüfung der Nutzungsabfrage — die Nummern
-folgen der Reihenfolge des Eintragens, nicht der Zeit.
+folgen der Reihenfolge des Eintragens, nicht der Zeit. Vorfall 32 ergänzt die
+Auswertung von Docklet Next M6.
 Jeder Punkt entstand aus einem belegten Ablauf. Wo Aufwand nur geschätzt oder
 eine Folge nicht nachgewiesen ist, steht es beim Vorfall.
 
@@ -686,6 +687,40 @@ Aus dem dritten Vorgang dazugekommen:
   dass alle Anker gegen den **alten** Stand noch trafen. Damit stand fest, dass
   ein Fassungswechsel ansteht und keine Fehlerbehebung — und der Auftrag konnte
   sagen „du trägst ein, du misst nicht neu", ohne zu raten.
+
+## 32. Zu kleine Lieferungen und unvollständige Wirkungsketten
+
+**Was passierte:** In Docklet Next M6 wurden zwölf Schritt-PRs vor dem Abschluss
+integriert. Der Auftraggeber beanstandete nach mindestens zwanzig Stunden die
+vielen kleinen Schritte. Die Aktivitätsprojektion und die Compose-Identität
+benötigten jeweils fünf Review-Runden: ursprüngliche Korrekturen erfassten
+Teilzustände beziehungsweise Backend-/DTO-/UI-Zuordnung zunächst zu eng.
+Ein Scout-Rohbericht überschritt 10.500 Zeilen; ein Folgeauftrag überschritt
+400.000 Bytes durch wiederholten Kontext. Ein erfolgreich beendeter Shell-Push
+hatte keine gesicherte Fortsetzung bis zur nächsten Aktion. Der Auftraggeber
+musste nachfragen.
+
+**Was trotzdem half:** SHA-gebundene Zuständigkeiten, lokale Zwischencommits und
+vollständige Berichte bewahrten Ergebnisse bei Unterbrechungen. Unabhängige
+Reviews fanden Fehler trotz grüner Vorprüfungen. Eine Gegenprobe gegen erneutes
+Senden wurde erst unterscheidend, als der Test auf den Abschluss der asynchronen
+Wirkung wartete. Zusammenhängende spätere Lieferungen behielten lokale
+Checkpoints und die erforderlichen Reviews bei.
+
+**Die Regel:** Dateizahlen sind Budgethinweise, keine Liefer- oder PR-Grenzen.
+Aktuellen Kontext zuerst nennen, vollständige relevante Berichte einmal
+zugänglich machen. Beim ersten Fix die ganze Wirkungskette und verwandte
+Fehlerpfade prüfen. Befunde gebündelt disponieren; nach PASS akzeptierte optionale
+Verbesserungen nachverfolgen. Vor Turn-Ende mit offener Arbeit die app-eigene
+Fortsetzung absichern; nach Abbruch den tatsächlichen Zustand prüfen.
+
+**Belege und Grenzen:** Öffentliche Integration und Reviewdisposition:
+[Abschluss-PR #134](https://github.com/florianfinn/docklet-next/pull/134),
+[Projektidentität #123](https://github.com/florianfinn/docklet-next/pull/123) und
+[Abnahme #104](https://github.com/florianfinn/docklet-next/issues/104).
+Kontextgrößen und Fortsetzungslücke stammen aus der privaten Koordinationsauswertung;
+Betriebsdaten und Originalberichte werden nicht veröffentlicht. Eine vollständige
+Zeit-/Token-/Kostenbilanz fehlt; daraus wird keine Einsparung abgeleitet.
 
 ## Offen
 

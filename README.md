@@ -52,19 +52,22 @@ Vier Beilagen:
 - **`references/project-profile.md`** — ein Blatt, das einmal je Repo
   ausgefüllt wird (Standardbranch, Prüfbefehle, Worktree-Einrichtung,
   Konventionen, Wächtertests, stille Fallen). Jeder Auftrag zieht daraus.
-- **`references/field-notes.md`** — woher jede Regel stammt. Einunddreißig Vorfälle
+- **`references/field-notes.md`** — woher jede Regel stammt. Zweiunddreißig Vorfälle
   aus echten Vorgängen — einer Nacht mit neun Agentenläufen, einem Vorgang über
   12 Pakete in zwei Repos, einem Vertragsabgleich und einer Effizienzprüfung
-  bei docklet hub sowie Nachträgen aus früheren Läufen —, je mit der Regel,
+  bei docklet hub sowie Nachträgen aus früheren Läufen und Docklet Next M6 —, je mit der Regel,
   die daraus wurde.
 - **`references/t3-codex.md`** — bedingte Betriebsregeln für T3-Delegation,
   Claude-OAuth-Nutzungsabfragen und Wiederanlauf per Scheduler; einschließlich
   Schutz vor Tokens in Prozessargumenten.
 
-Fassung **0.5.0** ergänzt gemeinsame Grundlagen vor Parallelität,
-Fehlerklassen statt Einzelfixes, vollständige Vorberichte im Folgereview und
-den Betrieb in **T3 Code / Codex**: Anbieterwahl, lokale Arbeitercommits,
-Limitreserve und Wiederanlauf per Heartbeat zur Resetzeit.
+Fassung **0.6.0** ergänzt die Auswertung von Docklet Next M6:
+zusammenhängende Lieferungen mit lokalen Checkpoints, aktuelle Kontextpakete mit
+vollständig erreichbaren Vorberichten, Prüfung der ganzen Wirkungskette und
+abgesicherte Fortsetzung nach Hintergrundbefehlen. Projektregeln und
+Modell-/Kostenvorgaben haben Vorrang; Dateizahlen sind Budgetheuristiken.
+Die verbindliche Vorgabe zur Nutzung des Skills gehört in die jeweilige
+`AGENTS.md`; der Skill selbst bleibt eine zentrale, projektübergreifende Ablage.
 
 Der Kern:
 
@@ -78,9 +81,9 @@ Der Kern:
    übernehmen kann: Konfliktauflösung, Schnitt, Abnahme, und die Fragen an den
    Auftraggeber.
 4. **Der Abriss am Zuglimit ist der Regelfall.** Rund jeder zweite Lauf endet
-   daran, ohne Rückmeldung. Deshalb wird gegen ihn geschnitten (Deckel je
-   Auftragsart) und gegen ihn gebaut (fortlaufende Rückmeldedatei,
-   Zwischencommit je Baustein).
+   daran, ohne Rückmeldung. Deshalb werden Lieferungen fortsetzbar gebaut: fortlaufende
+   Rückmeldedatei und Zwischencommits je Baustein. Budgetheuristiken ersetzen
+   keinen fachlichen Zuschnitt.
 
 ### grill-me
 

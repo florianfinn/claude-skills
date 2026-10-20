@@ -47,3 +47,24 @@ Projektregeln und die Modellvorgabe des Auftraggebers bleiben verbindlich.
   offene Befunde, nächsten zulässigen Schritt und Resetzeit. Status knapp
   abfragen, vollständige Ergebnisse einmal übernehmen. Betriebspfade und
   Credentials gehören weder ins Repo noch in öffentliche Review-Belege.
+
+## Umgebung und Fortsetzung absichern
+
+Vor dem Start prüfen: tatsächlich eingebundenes Worktree, vollständige Basis-SHA,
+verfügbare native Toolchain, notwendige Umgebungsinitialisierung und Ressourcen.
+Die vorbereitete Umgebung muss für den Kindauftrag erreichbar sein; ein
+angeforderter Pfad im Text ersetzt keine korrekte Werkzeug-/Worktree-Bindung.
+Schwere Prüfläufe bei knappen gemeinsamen Ressourcen serialisieren.
+
+Ein Hintergrundbefehl ist noch keine Fortsetzung des Gesamtauftrags. Vor Turn-Ende
+mit offener Arbeit eine app-eigene Aufgabenbenachrichtigung oder den verfügbaren
+PR-Watch einrichten und ID, nächsten Schritt sowie tatsächlichen Befehlsstatus
+privat festhalten. Endet nur der Push, folgt die erlaubte PR-/Review-Aktion weiter.
+Beim autorisierten Beobachten den App-Watch verwenden; bei Rückgabe an den
+Auftraggeber den Watch nach App-Vorgabe aufheben. Das erteilt keine neue
+Freigabe für Veröffentlichung, Merge oder Deploy.
+
+Nach Unterbrechungen zuerst Taskstatus, Bericht, Worktree/Commits und tatsächliche
+Exit-Codes prüfen. Bei unterbrochenem Push auch den Remote-Ref vergleichen, bevor
+er wiederholt wird. Eine verlorene Antwort bedeutet weder Erfolg noch Fehlschlag;
+mit gespeicherten Task-/Request-IDs weiterarbeiten und keine Doppelaufträge starten.
