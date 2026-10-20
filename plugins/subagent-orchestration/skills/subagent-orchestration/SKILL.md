@@ -378,8 +378,9 @@ mit ihrer Disposition berichten.
 
 ## T3 Code / Codex
 
-Bei T3-Delegation, Claude-OAuth-Nutzungsabfragen oder Wiederanlauf per Scheduler
+Bei T3-Delegation und Fortsetzung nach Hintergrundarbeit oder Unterbrechungen
 lies [`references/t3-codex.md`](references/t3-codex.md).
 Nutze den aktuellen Werkzeugkatalog, eigene delegierte Review-Runden und geprüfte Worktrees.
 Arbeiter committen lokal; Integration und Push bleiben beim Koordinator nach Projektfreigabe.
-Plane Claude-Budget mit Reserve; schütze Tokens auch in Prozessargumenten (Vorfälle 29, 31).
+Beachte Modellkosten und tatsächliche Anbieterfehler; eine Claude-Nutzungsabfrage
+ist keine Startbedingung. Schütze Tokens auch in Prozessargumenten (Vorfall 31).

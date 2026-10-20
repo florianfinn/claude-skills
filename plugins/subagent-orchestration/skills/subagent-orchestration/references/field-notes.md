@@ -598,6 +598,12 @@ planen und dann erneut die Nutzung prüfen. Codex darf unabhängig weiterbauen.
 keine gemessene Tokenersparnis durch einen anderen Koordinator oder ein
 kleineres Reviewmodell.
 
+**Spätere Vorgabe (2026-10-21):** Die verpflichtende Nutzungsabfrage,
+Prozentgrenzen und davon abhängigen Wiederanlaufregeln sind aufgehoben. Nutzung
+wird nach Auftraggebervorgabe als Fair Use behandelt. Dieser Vorfall bleibt
+historischer Beleg, ist keine aktuelle Start- oder Pausenregel. Tatsächliche
+Drosselung wird anhand der Anbieterrückmeldung behandelt.
+
 ## 30. Der Folgereview bekam nur die Kurzfassung
 
 **Was passierte:** Mehrere Folgereview-Aufträge enthielten ausdrücklich eine

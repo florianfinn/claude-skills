@@ -58,8 +58,9 @@ Vier Beilagen:
   bei docklet hub sowie Nachträgen aus früheren Läufen und Docklet Next M6 —, je mit der Regel,
   die daraus wurde.
 - **`references/t3-codex.md`** — bedingte Betriebsregeln für T3-Delegation,
-  Claude-OAuth-Nutzungsabfragen und Wiederanlauf per Scheduler; einschließlich
-  Schutz vor Tokens in Prozessargumenten.
+  Fortsetzung nach Unterbrechungen und Umgang mit tatsächlicher Drosselung;
+  einschließlich Schutz vor Tokens in Prozessargumenten. Eine Claude-Nutzungsabfrage
+  oder feste Prozentgrenze ist keine Startbedingung.
 
 Fassung **0.6.0** ergänzt die Auswertung von Docklet Next M6:
 zusammenhängende Lieferungen mit lokalen Checkpoints, aktuelle Kontextpakete mit
