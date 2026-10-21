@@ -52,7 +52,7 @@ Vier Beilagen:
 - **`references/project-profile.md`** — ein Blatt, das einmal je Repo
   ausgefüllt wird (Standardbranch, Prüfbefehle, Worktree-Einrichtung,
   Konventionen, Wächtertests, stille Fallen). Jeder Auftrag zieht daraus.
-- **`references/field-notes.md`** — woher jede Regel stammt. Zweiunddreißig Vorfälle
+- **`references/field-notes.md`** — woher jede Regel stammt. Dreiunddreißig Vorfälle
   aus echten Vorgängen — einer Nacht mit neun Agentenläufen, einem Vorgang über
   12 Pakete in zwei Repos, einem Vertragsabgleich und einer Effizienzprüfung
   bei docklet hub sowie Nachträgen aus früheren Läufen und Docklet Next M6 und M7 —, je mit der Regel,

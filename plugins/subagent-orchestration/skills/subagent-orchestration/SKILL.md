@@ -293,7 +293,7 @@ Projektregel.
   statt übernehmen.
 - Prüfbefehle laufen auf dem **zusammengeführten** Stand. Was einzeln grün ist,
   kann zusammen rot sein.
-- ⚠️ **Auch der Leitstand arbeitet gleichzeitige Änderungssätze in getrennten
+- ⚠️ **Auch der Leitstand bearbeitet gleichzeitige Änderungssätze in getrennten
   Worktrees** und wechselt während einer laufenden Prüfkette nicht den Branch
   (Vorfall 33).
 - ⚠️ **Prüfläufe laufen im Worktree, nie aus einer Kopie** (Vorfall 14). Tests,
@@ -374,8 +374,8 @@ werden dokumentiert.
   gegen echte Abhängigkeiten**, und Fixtures für fremde Antworten werden gegen
   den echten Erzeuger abgeglichen (Vorfall 33). Reviews und synthetische Tests
   prüfen sonst gegen dieselbe falsche Annahme.
-- **Berichtsaussagen über Abnahmeschritte zitieren die Schrittliste des Prüf-
-  skripts**, nicht das Gedächtnis (Vorfall 33).
+- **Berichtsaussagen über Abnahmeschritte zitieren die Schrittliste des
+  Prüfskripts**, nicht das Gedächtnis (Vorfall 33).
 - ⚠️ **Prüfe den Fall, der ohne den Fix falsch wäre**, nicht den, der ohnehin
   gewinnt (Vorfall 6). Bei sortierten Größen den kleinsten Wert, nicht den
   größten.

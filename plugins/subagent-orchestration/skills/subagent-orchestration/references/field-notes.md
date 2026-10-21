@@ -753,7 +753,7 @@ gefundene Lücke bekam ein eigenes Issue, einen eigenen PR und ein eigenes Revie
 Kandidatenpakets gegen echte Abhängigkeiten. Fixtures für fremde Antworten
 werden gegen den echten Erzeuger abgeglichen. Ein Mutationsbeleg zählt nur mit
 nachweislich gelaufenem Zieltest und fehlschlagender Assertion. Auch der
-Leitstand arbeitet gleichzeitige Änderungssätze in getrennten Worktrees.
+Leitstand bearbeitet gleichzeitige Änderungssätze in getrennten Worktrees.
 Berichtsaussagen über Abnahmeschritte zitieren die Schrittliste des Skripts.
 
 **Belege und Grenzen:** Öffentlich:
