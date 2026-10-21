@@ -9,7 +9,7 @@ nachgetragen, 21 bis 23 aus einem Vertragsabgleich zwischen zwei Repos mit fünf
 Läufen, 24 bis 30 aus einer Effizienzprüfung der Mehrarbeiterarbeit an docklet
 hub und 31 aus der anschließenden Prüfung der Nutzungsabfrage — die Nummern
 folgen der Reihenfolge des Eintragens, nicht der Zeit. Vorfall 32 ergänzt die
-Auswertung von Docklet Next M6.
+Auswertung von Docklet Next M6, Vorfall 33 die von M7.
 Jeder Punkt entstand aus einem belegten Ablauf. Wo Aufwand nur geschätzt oder
 eine Folge nicht nachgewiesen ist, steht es beim Vorfall.
 
@@ -727,6 +727,42 @@ Fortsetzung absichern; nach Abbruch den tatsächlichen Zustand prüfen.
 Kontextgrößen und Fortsetzungslücke stammen aus der privaten Koordinationsauswertung;
 Betriebsdaten und Originalberichte werden nicht veröffentlicht. Eine vollständige
 Zeit-/Token-/Kostenbilanz fehlt; daraus wird keine Einsparung abgeleitet.
+
+## 33. Grüne Reviews, falscher Vertrag
+
+**Was passierte:** In Docklet Next M7 bestand der Abschluss-PR nach vier
+Review-Runden. Die Abnahme des gemergten Pakets in der Sandbox fand danach vier
+echte Fehler, die Tests und Reviews nicht sahen. Jeder ging auf einen falsch
+angenommenen Vertrag in Fixtures zurück: Die Detail-Route sollte Dateiinhalt
+liefern, der Edge-Tunnel sollte jede Route kennen, ein Refresh sollte harmlos
+sein, und ein Remote-Lauf sollte sich ohne Leser abschließen. Dazu kamen
+Belegfehler beim Leitstand selbst:
+- Ein Go-`-run`-Filter traf den neuen Test nicht, die Mutation lief scheinbar grün.
+- Mehrere Mutationen endeten in OOM, Deadlock oder Timeout statt in einer Assertion.
+- Ein Branchwechsel während einer laufenden Prüfkette im selben Checkout
+  verschob gestagte Änderungen in den falschen Branch und machte den Lauf ungültig.
+- Der erste Abnahmebericht behauptete einen Schritt (`.env` bearbeiten), den das
+  Skript nicht ausführte.
+
+**Was trotzdem half:** Die unabhängigen Reviews fingen den überzogenen
+Abnahmebericht und mehrere Lebenszyklusfehler. Der Ursachenplan nach der
+zweiten Runde einer Fehlerklasse beendete die Schleife. Jede in der Abnahme
+gefundene Lücke bekam ein eigenes Issue, einen eigenen PR und ein eigenes Review.
+
+**Die Regel:** Vor dem abschließenden Review läuft ein kurzer Smoke-Test des
+Kandidatenpakets gegen echte Abhängigkeiten. Fixtures für fremde Antworten
+werden gegen den echten Erzeuger abgeglichen. Ein Mutationsbeleg zählt nur mit
+nachweislich gelaufenem Zieltest und fehlschlagender Assertion. Auch der
+Leitstand bearbeitet gleichzeitige Änderungssätze in getrennten Worktrees.
+Berichtsaussagen über Abnahmeschritte zitieren die Schrittliste des Skripts.
+
+**Belege und Grenzen:** Öffentlich:
+[Abschluss-PR #141](https://github.com/florianfinn/docklet-next/pull/141),
+die Korrekturen #147, #151, #154, #156 und der
+[Abnahmebericht #161](https://github.com/florianfinn/docklet-next/pull/161).
+Eine vollständige Zeit- oder Kostenbilanz fehlt; daraus wird keine Einsparung
+abgeleitet. Ob der frühere Smoke-Test alle vier Fehler gefunden hätte, ist nicht
+nachgewiesen; drei davon zeigten sich beim ersten Durchlauf der Oberfläche.
 
 ## Offen
 
