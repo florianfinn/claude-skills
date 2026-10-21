@@ -280,6 +280,11 @@ Projektregel.
 
 - ⚠️ **`<befehl> 2>&1 | tail -25; echo $?` meldet den Exit-Code von `tail`**
   (Vorfall 3). Richtig: `<befehl> > lauf.txt 2>&1; echo "code=$?"; tail -25 lauf.txt`.
+- ⚠️ **Ein Mutationsbeleg zählt nur, wenn der Zieltest nachweislich lief und an
+  einer Assertion scheitert** (Vorfall 33). Testname und Testanzahl stehen im
+  Lauf; OOM, Deadlock, Timeout und ein Filter ohne Treffer sind keine Rot-Belege.
+  Prüfungen, die blockieren können, laufen mit eigener Frist und melden das als
+  Assertion.
 - **Zähl jede gemeldete Zahl nach** (`grep -c`, `wc -l`), bevor sie in einen
   Commit- oder Änderungstext kommt.
 - ⚠️ **Bestands- und Totcode-Aussagen ohne Rohbefehl und Ausgabe gelten als
@@ -288,6 +293,9 @@ Projektregel.
   statt übernehmen.
 - Prüfbefehle laufen auf dem **zusammengeführten** Stand. Was einzeln grün ist,
   kann zusammen rot sein.
+- ⚠️ **Auch der Leitstand arbeitet gleichzeitige Änderungssätze in getrennten
+  Worktrees** und wechselt während einer laufenden Prüfkette nicht den Branch
+  (Vorfall 33).
 - ⚠️ **Prüfläufe laufen im Worktree, nie aus einer Kopie** (Vorfall 14). Tests,
   die `git ls-files` oder `core.hooksPath` lesen, werden außerhalb des
   Arbeitsbaums falsch rot. Eine Mutationsprobe ändert genau eine Datei im
@@ -362,6 +370,12 @@ werden dokumentiert.
 ## 7. Abnehmen
 
 - Abgenommen wird auf dem **zusammengeführten** Stand.
+- ⚠️ **Vor dem abschließenden Review läuft ein Smoke-Test des Kandidatenpakets
+  gegen echte Abhängigkeiten**, und Fixtures für fremde Antworten werden gegen
+  den echten Erzeuger abgeglichen (Vorfall 33). Reviews und synthetische Tests
+  prüfen sonst gegen dieselbe falsche Annahme.
+- **Berichtsaussagen über Abnahmeschritte zitieren die Schrittliste des Prüf-
+  skripts**, nicht das Gedächtnis (Vorfall 33).
 - ⚠️ **Prüfe den Fall, der ohne den Fix falsch wäre**, nicht den, der ohnehin
   gewinnt (Vorfall 6). Bei sortierten Größen den kleinsten Wert, nicht den
   größten.
