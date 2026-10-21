@@ -6,7 +6,7 @@ die **Kurzvorlage für Scouts**, die nur suchen, zählen und melden, und die
 Stand. Beide Kurzfassungen stehen am Ende dieser Datei.
 
 Was ein Subagent mitbekommt. Platzhalter in `<spitzen Klammern>` aus dem
-Projektprofil ersetzen, den Rest wörtlich stehen lassen.
+Projektprofil ersetzen und die Vorlage auf Auftrag und Projektregeln anpassen.
 
 Ein Auftrag ist **selbsttragend**: der Agent hat weder deinen Verlauf noch den
 Vorgang gelesen. Was er nicht im Auftrag findet, leitet er her — plausibel, aber
@@ -42,9 +42,17 @@ Gemeinsame Grundlagen werden vor abhängiger Parallelität geprüft und gemergt.
 Ändere keinen gemeinsam berührten Vertrag außerhalb deiner Zuständigkeit;
 melde eine nötige Änderung an den Vertrags-Owner.
 
+## Aktueller Kontext und Unterlagen
+
+<Freigegebene Entscheidungen, Ziel und Abnahme, Voraussetzungen und offene
+Befundkennungen. Vollständige relevante Berichte mit Stand/SHA einmal über
+geprüfte erreichbare Pfade angeben; keine rekursiv eingebettete Auftragshistorie.
+Kritische Grenzen und Entscheidungen stehen direkt im Auftrag.>
+
 ## Auftrag
 
-<Was zu tun ist, mit vollständiger Dateiliste.>
+<Zusammenhängende abnehmbare Lieferung, verantwortlicher Owner und eigene Pfade.
+Lokale Checkpoints innerhalb der Lieferung; Dateizahlen bestimmen keine PR-Grenze.>
 
 <Falls Alt gegen Neu getauscht wird: Das Alte fällt im selben Commit, in dem
 sein Ersatz entsteht. Ein Umbau, der den Bestand stehen lässt, ist nicht
@@ -145,6 +153,7 @@ und sieht dabei grün aus.
 | Feld | Vorgabe |
 | --- | --- |
 | Fehlerklasse | <z. B. Audit fehlt, ungefangener Fehler, falscher Timeout, unbegrenztes Wachstum> |
+| Wirkungskette | <Produzent → Transport/DTO → tatsächlicher Consumer; initialer Fehler, Teilzustand, Latenz, Identitätswechsel und Wiederanlauf soweit betroffen> |
 | Vergleichbare Pfade | <alle betroffenen Stellen der Klasse, nicht nur die Fundstelle> |
 | Prüfmatrix | <anwendbare Kombinationen und begründete Ausschlüsse> |
 | Grenzwerte | <Längengrenzen, Wartezeit, Wachstum, Uhrsprung — soweit betroffen> |
@@ -155,6 +164,9 @@ und sieht dabei grün aus.
 Matrix und Rot-Belege stehen schon im Erstauftrag. Prüfe Modus, Eigentum,
 Zielzustand, Aktion, Fehlerstufe und Transport sowie Wiederanlauf und
 Persistenz, soweit sachlich betroffen. Eine Testzahl ersetzt keine Abdeckung.
+Warte bei asynchronen Gegenproben über Barrieren auf die tatsächliche Wirkung,
+bevor du Zähler liest. Compilerfehler, Timeouts und äquivalente Mutationen sind
+keine gültigen Rot-Belege für einen entfernten Schutz.
 Bei einer Korrektur prüfst du alle vergleichbaren Pfade derselben Fehlerklasse.
 Scheitert die erste Korrektur wieder an ihr, **stopp und melde einen
 Ursachenplan**, bevor du weiterbaust.
@@ -222,8 +234,9 @@ stattdessen zwingend braucht: den **Suchraum** und den **Rohbefehl als Beleg**.
 Ohne beides liefert er falsche Negative, die wie Fakten aussehen
 (field-notes, Vorfall 10).
 
-Höchstens **fünf** Suchpunkte je Auftrag. Darüber endet der Lauf am Zugbudget,
-bevor die Antwort geschrieben ist (Vorfall 11) — dann wird geschnitten.
+Fünf Suchpunkte sind eine Budgetheuristik (Vorfall 11). Begrenze den Suchraum
+und sichere Ergebnisse fortlaufend; erzeuge keine weitere Scout-Kette allein
+wegen einer Punktzahl.
 
 ```
 Du suchst <was genau>, du änderst nichts.
@@ -259,9 +272,10 @@ Für den unabhängigen Blick auf einen fertigen Stand: Prüfkette fahren,
 gemeldete Zahlen gegenzählen, mit Mutationen belegen, dass die Tests überhaupt
 greifen. Der Prüfer ändert nichts dauerhaft und committet nicht.
 
-Höchstens **sechs** Kriterien und **ein** Durchlauf der Prüfkette je Auftrag.
-Größere Prüfaufträge endeten dreimal am Zugbudget, ohne ein einziges Urteil
-abzugeben, obwohl die Läufe auf Platte lagen (field-notes, Vorfall 11).
+Sechs Kriterien und ein geplanter Durchlauf sind Budgetheuristiken aus
+früheren Abbrüchen (field-notes, Vorfall 11). Erhalte die vollständige nötige
+Abdeckung mit Checkpoints und fortsetzbarem Bericht; wiederhole Läufe bei
+Änderungen, Fehlern oder konkreten offenen Unsicherheiten.
 
 ```
 Du prüfst <Paket> auf dem Stand <prüf-head-sha> im Worktree <worktree-pfad>. Du
@@ -289,12 +303,12 @@ nicht. In T3 startet der Koordinator dafür eine neue delegate_task-Runde.
 
 ## Kriterien
 
-<Höchstens sechs, je als Ja/Nein-Frage mit dem Befehl, der sie entscheidet.>
+<Prüfbare Kriterien mit Methode, relevanter Wirkungskette und erwarteten Belegen.>
 
 ## Prüflauf
 
-<Prüfbefehle>, EINMAL, und zwar im Worktree — nicht in einer Kopie und nicht in
-einem Temp-Verzeichnis. Tests, die `git ls-files`, `core.hooksPath` oder sonst
+<Vorgeschriebene Prüfbefehle auf dem integrierten Stand>, im Worktree — nicht
+in einer Kopie und nicht in einem Temp-Verzeichnis. Tests, die `git ls-files`, `core.hooksPath` oder sonst
 den Arbeitsbaum lesen, werden außerhalb des Worktrees falsch rot.
 
 Fang den echten Exit-Code: `<befehl> > lauf.txt 2>&1; echo "code=$?"; tail -25

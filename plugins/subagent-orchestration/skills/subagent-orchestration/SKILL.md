@@ -43,11 +43,36 @@ Auftraggeber.
 
 ## 0. Projektprofil
 
+Dieser Skill wird zentral und projektübergreifend gepflegt. Verbindliche
+Projektregeln, Modell-/Kostenvorgaben und ausdrückliche Aufträge gehen seinen
+allgemeinen Heuristiken vor. Übertrage lokale Ausnahmen nicht auf andere Projekte
+oder spätere Aufträge.
+
 Suche zuerst `.claude/subagent-profile.md`. Fehlt es, leite es aus `CLAUDE.md`
 oder `AGENTS.md` ab und schreibe nur nach, was dort fehlt — meist Wächtertests
 und stille Fallen. Vorlage:
 [`references/project-profile.md`](references/project-profile.md). Ohne Profil
 schreibst du unvollständige Aufträge und merkst es erst an den Rückläufern.
+
+## Vor dem Start: Entscheidungen und Abschlussgrenze
+
+Kläre vor der betroffenen Etappe offene Produkt-, Umfangs- und
+Schnittstellenfragen. Lies zuerst vorhandene Entscheidungen; routinemäßige
+Umsetzungsfragen löst du innerhalb des freigegebenen Plans selbst. Echte offene
+Entscheidungen legst du dem Auftraggeber früh und gebündelt mit Empfehlung vor,
+bevor ein Agent auf einer ungeklärten Annahme aufbaut.
+
+Halte den vereinbarten Plan stabil. Wesentliche Abweichungen, zusätzliche
+Funktionen oder fremde Voraussetzungen werden mit Beleg und Auswirkung sichtbar
+gemacht und vor der betroffenen Arbeit entschieden. Unabhängige freigegebene
+Arbeit kann weiterlaufen.
+
+Nach der Klärung arbeitest du autonom bis zum vereinbarten Abschlusskriterium,
+bei einem entsprechenden Entwicklungsauftrag bis zum Abschluss-PR. Ein
+Agentenbericht oder eine bestandene Einzelprüfung beendet den Gesamtauftrag
+nicht. Übergaben halten den nächsten zulässigen Schritt und echte Blockaden
+fest. Das erweitert keine Freigabe für Push, Merge, Veröffentlichung oder Deploy;
+maßgeblich bleiben Auftrag und Projektregeln.
 
 ## 1. Schneiden
 
@@ -68,12 +93,16 @@ Der Schnitt steht **schriftlich, bevor der erste Agent läuft**.
   geben genügt nicht. Steht der Vertrag erst durch die Umsetzung fest, müssen
   die betroffenen Pakete vor ihrem abschließenden Review auf demselben
   integrierten Stand stehen. Freie Plätze ändern die Reihenfolge nicht.
-- **Ein Agent bekommt eine Etappe.** Zwei Etappen in einem Diff lassen sich
-  hinterher nicht mehr in zwei Änderungssätze schneiden.
-- ⚠️ **Ein Paket, das das Zugbudget des Agenten sprengt, endet ohne
-  Rückmeldung** (Vorfall 11). Deckel, die sich gehalten haben: Scout höchstens
-  **5** Suchpunkte, Prüfauftrag höchstens **6** Kriterien und **ein** Prüflauf,
-  Umbau höchstens **8–10** Dateien. Darüber wird geschnitten, nicht gehofft.
+- **Ein Agent verantwortet eine klar begrenzte Lieferung.** Zusammengehörige
+  lokale Checkpoints bleiben bei diesem Owner; getrennte Lieferungen brauchen
+  einen begründeten fachlichen oder vertraglichen Schnitt.
+- **Schneide nach einer zusammenhängenden, abnehmbaren Lieferung mit einem
+  verantwortlichen Owner.** Dateizahlen sind ein Hinweis auf Kontext- und
+  Zugbudget, keine PR-Grenze. Die früher gemessenen 5 Scout-Suchpunkte,
+  6 Prüfkriterien und 8–10 Umbau-Dateien (Vorfall 11) sind Startheuristiken.
+  Plane bei größerer Arbeit lokale Checkpoints und fortsetzbare Berichte;
+  zusätzliche Scouts, PRs oder Reviews brauchen einen sachlichen Grund.
+  Gemeinsame Grundlagen und vorgeschriebene Risikoprüfungen bleiben erhalten.
 - ⚠️ **Die vorgegebene Reihenfolge ist eine Vermutung, bis du sie gemessen
   hast.** Prüfe vorher, wer wen importiert (`grep -rl`). Eine vermeintliche
   Flächendatei kann eine gemeinsame Datei mit Dutzenden Importeuren sein
@@ -123,8 +152,19 @@ Rohbefehl samt Ausgabe.
 
 Vorlage: [`references/agent-brief.md`](references/agent-brief.md). Ein Auftrag
 ist **selbsttragend**: der Agent hat weder deinen Verlauf noch den Vorgang
-gelesen. Was fehlt, leitet er her — plausibel, nicht unbedingt richtig. In jeden
-Bauauftrag gehören:
+gelesen. Was fehlt, leitet er her — plausibel, nicht unbedingt richtig.
+Prüfe vor dem Start, ob der Auftrag ohne deinen Gesprächsverlauf ausführbar ist:
+Ziel und Abnahme, freigegebene Entscheidungen, Grenzen, Voraussetzungen,
+Zuständigkeiten, bekannte Fallen und Prüfweg müssen enthalten sein. Verweise
+müssen für den Agenten erreichbar sein; ein Verweis auf den Elternchat ersetzt
+keinen Kontext. Ungeklärte Voraussetzungen werden nicht als Fakten delegiert.
+Stelle den aktuellen Kontext voran: Ziel, Entscheidungen, exakte SHAs,
+Zuständigkeiten und Abnahme. Verlinke vollständige relevante Vorberichte einmal
+über geprüfte, für den Agenten erreichbare Pfade; kopiere keine rekursiven
+Auftragshistorien. Ein Berichtindex nennt Stand und offene Befundkennungen.
+Werkzeuglimits rechtfertigen weder fehlenden kritischen Kontext noch abgeschnittene
+Einwände; lagere vollständige Unterlagen erreichbar aus und prüfe den Zugang.
+In jeden Bauauftrag gehören:
 
 1. ⚠️ **Ein eigenes Worktree auf dem Basis-Commit als SHA.** Bietet das
    Agent-Werkzeug Worktree-Isolation je Aufruf (in Claude Code
@@ -227,7 +267,16 @@ Befund; nachverhandelt wird es nicht.
 
 ## 5. Prüfen
 
-Lies den **Diff**, nicht den Bericht.
+Lies den **Diff**, nicht nur den Bericht.
+
+Staffle die Prüfungen: früh Import-/Abhängigkeitsgraph, Fixtures, Metadaten und
+Projektwächter, während der Umsetzung fokussierte Verhaltenstests, am integrierten
+Abschluss die vorgeschriebene vollständige Kette. Wiederhole erfolgreiche volle
+Läufe nur bei Änderungen, Fehlern oder verbleibenden konkreten Unsicherheiten.
+Bekannte Flakes mit Erstfehler und Wiederholung dokumentieren und zur Behebung
+verfolgen; ein späterer grüner Lauf löscht den Erstfehler nicht. Verbindliche
+Hooks werden nicht umgangen; Evidenzwiederverwendung braucht eine ausdrückliche
+Projektregel.
 
 - ⚠️ **`<befehl> 2>&1 | tail -25; echo $?` meldet den Exit-Code von `tail`**
   (Vorfall 3). Richtig: `<befehl> > lauf.txt 2>&1; echo "code=$?"; tail -25 lauf.txt`.
@@ -243,14 +292,21 @@ Lies den **Diff**, nicht den Bericht.
   die `git ls-files` oder `core.hooksPath` lesen, werden außerhalb des
   Arbeitsbaums falsch rot. Eine Mutationsprobe ändert genau eine Datei im
   Worktree und stellt sie danach mit `git show HEAD:<pfad>` zurück.
-- ⚠️ **Jeder Nachtrag an einem schon geprüften Paket wiederholt die volle
-  Prüfkette** auf dem Paketstand (Vorfall 13). Ein Nachtrag von 57 Zeilen lief
-  nur seinen Einzeltest und ließ einen Wächter rot zurück, bis das nächste Paket
-  darauf aufsetzte.
+- **Nachträge machen betroffene Prüfevidenz ungültig.** Prüfe die berührten
+  Verhaltenspfade und Wächter erneut und fahre die vorgeschriebene volle Kette
+  auf dem abschließenden Paketstand. Bündle verwandte Korrekturen vor diesem
+  Lauf; ein Einzeltest ersetzt die integrierte Abschlussprüfung nicht
+  (Vorfall 13).
 - ⚠️ **Die erste Korrektur deckt die Fehlerklasse ab**, nicht nur die
   Fundstelle (Vorfall 24). Bei fehlendem Audit, ungefangenem Fehler, falschem
   Timeout oder unbegrenztem Wachstum werden alle vergleichbaren Pfade geprüft.
-  Der Fixbericht nennt Klasse, verwandte Stellen und Rot-Belege. Scheitert die
+  Der Fixbericht nennt Klasse, verwandte Stellen und Rot-Belege. Bilde die
+  Wirkungskette bereits beim ersten Fix ab: Produzent → Transport/DTO →
+  tatsächlicher Consumer, einschließlich initialem Fehler, Teilzustand, Latenz,
+  Identitätswechsel und Wiederanlauf, soweit betroffen. Asynchrone Tests warten
+  über Barrieren auf die relevante Wirkung, bevor sie Zähler prüfen. Ein
+  Compilerfehler, Timeout oder eine äquivalente Mutation ist kein Rot-Beleg für
+  den behaupteten Schutz. Scheitert die
   erste Korrektur an derselben Klasse, folgt sofort ein **Ursachenplan**, bevor
   weitergebaut wird; eine Zwei-Runden-Grenze ist die äußerste Grenze.
 - ⚠️ **Ein Folgereview erhält den vollständigen Vorbericht und den Diff seit
@@ -258,6 +314,13 @@ Lies den **Diff**, nicht den Bericht.
   Antworten, Entscheidungen und offene Einwände. Ein dauerhafter, für den
   Prüfer lesbarer Verweis spart Wiederholung; er ersetzt keine fehlenden Teile
   durch eine Kurzfassung. Der Prüfer liest den Vorbericht vollständig.
+
+Nach jedem Review ordnet der Koordinator die Befunde einmal zu: Blocker,
+ausgewählte verwandte Korrekturen und begründet vertagte Verbesserungen mit
+Nachverfolgung. Ein Korrekturpaket behebt zusammengehörige Ursachen; nach PASS
+lösen akzeptierte nichtblockierende Befunde keine weitere Schleife aus.
+Neue Produktfragen werden sofort sichtbar gemeldet, nicht nur im privaten
+Zwischenbericht abgelegt.
 
 ## 6. Zusammenführen und in Änderungssätze schneiden
 
@@ -275,8 +338,11 @@ Historie wird nicht rebased oder force-gepusht.
 doppelt kodierter Betreff auf dem Standardbranch (`â€” A4 des RÃ¼ckbaus`) —
 einmal aus einem `--title` in derselben Bash-Zeile wie ein `perl -pi`, einmal
 aus einem `printf`. Der Squash-Merge übernimmt den PR-Titel ungeprüft. Also:
-Text in eine UTF-8-Datei, Übergabe per `-F` / `--body-file`, vor dem Merge den
-Titel gegenlesen und nach dem Commit `git log --format=%s -1 | od -c`.
+Text in eine UTF-8-Datei, Übergabe per `-F` / `--body-file`. Den tatsächlich
+vorgesehenen Squash-Betreff samt Body vor dem Merge gegen die
+Projektregeln prüfen: insbesondere erforderliche Issue-Referenz im Betreff,
+Identitäten und Veröffentlichungseignung. Nach dem Commit den tatsächlichen
+Betreff prüfen, bei Kodierungsverdacht auch mit `git log --format=%s -1 | od -c`.
 
 ⚠️ **Der Schnitt folgt den Wächtern, nicht der Ästhetik** (Vorfall 5). Ein Test
 mit `assert gefunden > 0` fällt **per Bauart**, sobald der Übergang zu Ende ist;
@@ -288,9 +354,10 @@ Schnitt, welcher Wächter bei welcher Kombination kippt.
 deterministisch — und sein Fehltext sieht aus wie ein Netzwerkfehler. Vier
 Anläufe mit Backoff gingen so verloren, während der Haken in jener Umgebung für
 **keinen** Commit grün werden konnte. Wiederholen ist nur bei einem belegten
-Netzwerkfehler richtig. Muss der Haken fallen, fährst du die Kette vorher von
-Hand, legst ihre echten Exit-Codes in den Änderungstext und schreibst in den
-PR, dass sie auf einer tauglichen Maschine nachzufahren ist.
+Netzwerkfehler richtig. Ein reproduzierbar fehlerhafter Haken wird in einer
+tauglichen Umgebung behoben oder nach ausdrücklicher Projektregel behandelt;
+kein eigenmächtiges Abschalten. Echte Exit-Codes und verbleibende Grenzen
+werden dokumentiert.
 
 ## 7. Abnehmen
 
@@ -302,13 +369,18 @@ PR, dass sie auf einer tauglichen Maschine nachzufahren ist.
 
 ## 8. Bericht
 
-Je Agent: Typ, Modell, Auftrag, Ergebnis in Zahlen. Dazu die Summe und die
-offenen Punkte — **als Frage, nicht als Vermutung**.
+Je Agent: Typ, tatsächlich belegtes Modell, Auftrag, Ergebnis und offene Punkte.
+Unterscheide Produktverhalten, Prüfbelege und Grenzen; PR- oder Testzahlen allein
+belegen keinen Nutzen. Zeit-, Token- und Kostenangaben nur aus tatsächlichen
+Messungen ableiten, keine eingesparten Stunden oder Modellkosten erfinden.
+Echte offene Entscheidungen mit Empfehlung vorlegen; bekannte vertagte Befunde
+mit ihrer Disposition berichten.
 
 ## T3 Code / Codex
 
-Bei T3-Delegation, Claude-OAuth-Nutzungsabfragen oder Wiederanlauf per Scheduler
+Bei T3-Delegation und Fortsetzung nach Hintergrundarbeit oder Unterbrechungen
 lies [`references/t3-codex.md`](references/t3-codex.md).
 Nutze den aktuellen Werkzeugkatalog, eigene delegierte Review-Runden und geprüfte Worktrees.
 Arbeiter committen lokal; Integration und Push bleiben beim Koordinator nach Projektfreigabe.
-Plane Claude-Budget mit Reserve; schütze Tokens auch in Prozessargumenten (Vorfälle 29, 31).
+Beachte Modellkosten und tatsächliche Anbieterfehler; eine Claude-Nutzungsabfrage
+ist keine Startbedingung. Schütze Tokens auch in Prozessargumenten (Vorfall 31).
