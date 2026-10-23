@@ -55,3 +55,24 @@ Nach Unterbrechungen zuerst Taskstatus, Bericht, Worktree/Commits und tatsächli
 Exit-Codes prüfen. Bei unterbrochenem Push auch den Remote-Ref vergleichen, bevor
 er wiederholt wird. Eine verlorene Antwort bedeutet weder Erfolg noch Fehlschlag;
 mit gespeicherten Task-/Request-IDs weiterarbeiten und keine Doppelaufträge starten.
+
+## Warten und Wecken
+
+Ein offener Zug des Leitstands nimmt neue Nachrichten nur als Nachsteuern an;
+ein beendeter Zug startet bei jeder Nachricht oder Abschlussmeldung einen neuen
+(Vorfall 34).
+
+- Nach `delegate_task(mode:"async")` kein `t3_thread_wait` und kein
+  `task_status` in Schleife. `mode:"wait"` nur, wenn das Ergebnis in wenigen
+  Minuten kommt und der nächste Schritt davon abhängt.
+- ⚠️ **Beim Claude-Anbieter endet ein Hintergrundbefehl (`run_in_background`,
+  `&`, `nohup`) mit der Provider-Sitzung und weckt den Leitstand nicht.**
+  Lange Pushes (Pre-Push-Hooks), Image-Builds und Sandbox-Läufe gehen als
+  delegierter Hilfsauftrag hinaus; CI und Merge über `watch_pull_request`.
+- Der PR-Watch weckt bei „required checks pass“. Bleibt ein Pflichtstatus
+  dauerhaft offen (etwa ein Review-Status, den erst der Leitstand setzt),
+  kommt diese Meldung nie. Solche Status aus jeder Wartebedingung ausnehmen
+  und den Weckweg dann über einen Hilfsauftrag sichern.
+- Lange Züge laufen voll; eine Abschlussmeldung kann dann nicht mehr zugestellt
+  werden. Zustandsdatei pflegen, früh kompaktieren oder in einem neuen Thread
+  mit Zustandsdatei fortsetzen.

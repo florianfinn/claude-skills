@@ -764,6 +764,78 @@ Eine vollständige Zeit- oder Kostenbilanz fehlt; daraus wird keine Einsparung
 abgeleitet. Ob der frühere Smoke-Test alle vier Fehler gefunden hätte, ist nicht
 nachgewiesen; drei davon zeigten sich beim ersten Durchlauf der Oberfläche.
 
+## 34. Der Leitstand wartete im eigenen Zug
+
+**Was passierte:** In Docklet Next M7 startete der Leitstand (Claude Opus) seine
+Aufträge asynchron und wartete danach doch: mit blockierenden Warteaufrufen bis
+zu 60 Minuten und mit Shell-Schleifen auf Logdateien und CI. Zwei Züge liefen
+je rund zwölf Stunden. Nachrichten des Auftraggebers kamen nur als Nachsteuern
+an, Abschlussmeldungen stauten sich, am Ende lief der Kontext voll und eine
+Zustellung scheiterte. In M8 hielten Shell-Schleifen bis zur Befehlsfrist von
+zehn Minuten und ein Push mit Pre-Push-Hook im Vordergrund Züge 18 bis 25
+Minuten offen; eine Nachricht des Auftraggebers wartete 14 Minuten. Drei
+Hintergrundbefehle (zwei Pushes, ein Image-Build) endeten mit der
+Provider-Sitzung ohne Meldung; der Stillstand fiel erst nach 56 Minuten,
+96 Minuten und elf Stunden auf, jeweils durch Nachfrage des Auftraggebers.
+Zweimal wartete eine Bedingung auf einen Pflichtstatus, der bei Schritt-PRs
+dauerhaft offen bleibt; weder Schleife noch PR-Watch weckten. Einmal endete
+ein Zug mit „Als Nächstes folgen …“, einmal fragte der Leitstand trotz
+„arbeite alleine durch“ eine Entscheidung im Auftragsrahmen nach.
+
+**Was trotzdem half:** In M8 lösten 47 Abschlussmeldungen binnen Sekunden den
+nächsten Zug aus. Der Mechanismus trägt, sobald der Zug endet. Ein Leitstand
+auf Codex beendete seine Züge nach asynchroner Delegation von sich aus
+(Beobachtung des Auftraggebers, nicht gemessen).
+
+**Die Regel:** Nach dem Start im Hintergrund endet der Zug. Keine
+Warteschleifen und keine langen Läufe im Vordergrund des Leitstands; lange
+Läufe als Hilfsauftrag. Vor jedem Zugende hat jede offene Arbeit einen
+Weckmechanismus, der das Zugende überlebt, und jede Wartebedingung einen
+erreichbaren Endzustand. Kein Zugende mit Ankündigung. „Selbständig“ heißt:
+nur bei Zuschnitt, Kosten, Sicherheit und Veröffentlichung fragen.
+
+**Belege und Grenzen:** Aus der privaten Auswertung beider Koordinationsverläufe.
+Token-Zahlen fehlen. Dass Wartezeiten über rund fünf Minuten den Prompt-Cache
+verfallen lassen und so jede Wiederaufnahme verteuern, ist abgeleitet, nicht
+gemessen.
+
+## 35. Wer baut, wer prüft — gezählt
+
+**Was passierte:** Ausgewertet wurden 63 Subagenten aus Docklet Next M7 und M8.
+In M7 baute der Leitstand (Claude Opus) selbst, GPT-6.1 Sol prüfte: der
+Abschluss-PR und eine Korrektur brauchten je vier Runden, eine weitere drei.
+Danach baute GPT-6.1 Sol, meist auf hoher Stufe, und Claude Opus oder Sonnet
+prüften; der Median sank auf eine Runde. Blockierende Befunde fanden
+GPT-6.1 Sol 14 (hohe Stufe 9, mittlere 3, niedrige 2), Opus 9 und Sonnet
+keinen; Sonnet hatte allerdings nur kleine Merge-, Doku- und Folgeprüfungen.
+Mindestens vier der 23 blockierenden Befunde entstanden durch Korrekturen, bei
+beiden Bauagenten. Zwei Schritt-PRs ohne eigenes Review verschoben zwei Blocker
+ins Abschlussreview und drei Fehler in die Sandbox-Abnahme. In beiden
+Meilensteinen fand erst die Sandbox Vertragsfehler, die reine Code-Reviews
+übersahen (M7 vier, M8 drei). Die Prüfung auf mittlerer Stufe brauchte vier
+Runden.
+
+**Was trotzdem half:** Prüfer und Bauagent kamen immer von verschiedenen
+Anbietern; die Reviews fanden echte Blocker mit Rot-Belegen. Der frühe
+Sandbox-Smoke aus Vorfall 33 fing in M8 einen Teil der Vertragsfehler vor dem
+Abschluss.
+
+**Die Regel:** Der Leitstand baut nicht, auch keine Korrekturen. Prüfer von
+einem anderen Anbieter, auf hoher Stufe; niedrige Stufe nur für Doku. Jeder
+Schritt-PR mit Laufzeit-, Vertrags- oder Lebenszyklusrisiko bekommt ein eigenes
+Review. Korrekturprüfungen suchen Regressionen derselben Fehlerklasse im ganzen
+Fix-Diff, mit dem mittleren Modell auf hoher Stufe; das starke Modell bei
+großen Fixmengen oder neuen Blockern.
+
+**Belege und Grenzen:** Öffentlich: die Abschluss-PRs
+[#141](https://github.com/florianfinn/docklet-next/pull/141) und
+[#195](https://github.com/florianfinn/docklet-next/pull/195) sowie die
+Korrekturen [#151](https://github.com/florianfinn/docklet-next/pull/151) und
+[#176](https://github.com/florianfinn/docklet-next/pull/176). Token-Zahlen
+fehlen; Laufzeiten und Verlaufslängen sind grobe Kostenhinweise. Der
+Rundenvergleich mischt verschiedene Pakete und Leitstandsrollen; dass der
+Rollenwechsel die Ursache ist, ist plausibel, nicht nachgewiesen.
+
 ## Offen
 
 - ⚠️ **Ob eine Marke sinken darf, ist die eine Regel, die ein Agent nicht allein

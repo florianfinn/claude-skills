@@ -52,17 +52,24 @@ Vier Beilagen:
 - **`references/project-profile.md`** — ein Blatt, das einmal je Repo
   ausgefüllt wird (Standardbranch, Prüfbefehle, Worktree-Einrichtung,
   Konventionen, Wächtertests, stille Fallen). Jeder Auftrag zieht daraus.
-- **`references/field-notes.md`** — woher jede Regel stammt. Dreiunddreißig Vorfälle
+- **`references/field-notes.md`** — woher jede Regel stammt. Fünfunddreißig Vorfälle
   aus echten Vorgängen — einer Nacht mit neun Agentenläufen, einem Vorgang über
   12 Pakete in zwei Repos, einem Vertragsabgleich und einer Effizienzprüfung
-  bei docklet hub sowie Nachträgen aus früheren Läufen und Docklet Next M6 und M7 —, je mit der Regel,
+  bei docklet hub sowie Nachträgen aus früheren Läufen und Docklet Next M6, M7 und M8 —, je mit der Regel,
   die daraus wurde.
 - **`references/t3-codex.md`** — bedingte Betriebsregeln für T3-Delegation,
   Fortsetzung nach Unterbrechungen und Umgang mit tatsächlicher Drosselung;
   einschließlich Schutz vor Tokens in Prozessargumenten. Eine Claude-Nutzungsabfrage
   oder feste Prozentgrenze ist keine Startbedingung.
 
-Fassung **0.7.0** ergänzt die Auswertung von Docklet Next M7: Smoke-Test des
+Fassung **0.8.0** ergänzt die Auswertung der Koordination von Docklet Next M7
+und M8: Der Leitstand beendet seinen Zug nach dem Start im Hintergrund, statt
+zu warten, und sichert jede offene Arbeit mit einem Weckmechanismus, der das
+Zugende überlebt; dazu gemessene Regeln zur Rollen- und Modellverteilung
+(Leitstand baut nicht, Prüfer von einem anderen Anbieter auf hoher Stufe,
+Review für jeden riskanten Schritt-PR, Korrekturprüfung auf Regressionen).
+
+Fassung **0.7.0** ergänzte die Auswertung von Docklet Next M7: Smoke-Test des
 Kandidatenpakets vor dem abschließenden Review, Fixtures gegen den echten
 Erzeuger, Mutationsbelege nur mit nachweislich gelaufenem Zieltest, getrennte
 Worktrees auch für den Leitstand und Abnahmeberichte aus der Schrittliste des
