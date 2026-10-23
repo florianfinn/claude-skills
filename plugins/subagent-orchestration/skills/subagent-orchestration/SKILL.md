@@ -41,10 +41,12 @@ Du schneidest, rüstest aus, prüfst, führst zusammen. Gebaut wird von den Agen
 kann: Konfliktauflösung, Schnitt in Änderungssätze, Abnahme, Fragen an den
 Auftraggeber.
 
-⚠️ **Das gilt auch für Korrekturen** (Vorfall 35). Ein Leitstand, der selbst
-baut, füllt den eigenen Kontext mit Bauarbeit und hat niemanden, der sein
-Ergebnis unabhängig prüft. Gemessen: drei bis vier Review-Runden je PR, solange
-der Leitstand baute; eine Runde im Median, seit ein Bauagent baut.
+⚠️ **Das gilt auch für Korrekturen** (Vorfall 35), damit dein Kontext für die
+Koordination frei bleibt. In Docklet Next M7 baute der Leitstand, ein Agent
+eines anderen Anbieters prüfte: Der Abschluss-PR und eine Korrektur brauchten
+je vier Runden, eine weitere drei. Nach dem Wechsel zu einem Bauagenten lag der
+Median bei einer Runde. Der Vergleich umfasst unterschiedliche Pakete und
+belegt keine Ursache.
 
 ## 0. Projektprofil
 
@@ -140,10 +142,10 @@ Das Modell folgt der **Fehlerklasse**, nicht der Textmenge:
 
 ⚠️ **Der Prüfer kommt von einem anderen Anbieter als der Bauagent und arbeitet
 auf hoher Denkstufe** (Vorfall 35). Eine Prüfung auf mittlerer Stufe brauchte
-vier Runden; niedrige Stufe nur für Doku- und Textprüfungen. Bauagenten für
-Zustand, Lebenszyklus und Verträge laufen ebenfalls auf hoher Stufe — eine
-höhere Stufe kostet weniger als eine weitere Review-Runde. Die mittlere Stufe
-reicht für kleine, klar begrenzte Pakete.
+vier Runden; niedrige Stufe nur für Doku- und Textprüfungen. Als Heuristik
+laufen Bauagenten für Zustand, Lebenszyklus und Verträge ebenfalls auf hoher
+Stufe, die mittlere Stufe für kleine, klar begrenzte Pakete. Ob die höhere
+Stufe Prüfrunden oder Kosten spart, ist nicht gemessen.
 
 ⚠️ **Das Zugbudget ist die vierte Stellschraube**, neben Typ, Modell und
 Zuschnitt (Vorfälle 11, 19). Die Zahl der Züge folgt der Länge der
@@ -273,9 +275,9 @@ Befund; nachverhandelt wird es nicht.
   Warteschleifen (`sleep`/`until`, Statusabfragen in Schleife, blockierendes
   Warten auf Agenten) und keine langen Builds, Tests oder Pushes im Vordergrund
   des Leitstands. Solange dein Zug läuft, erreicht dich der Auftraggeber nur
-  per Nachsteuern, Meldungen stauen sich, der Kontext wächst, und jede
-  Wiederaufnahme nach mehr als rund fünf Minuten liest den ganzen Kontext
-  ungecacht neu. Lange Läufe gehören in einen eigenen Hilfsauftrag.
+  per Nachsteuern, Meldungen stauen sich und der Kontext wächst. Lange Läufe
+  gehören in einen eigenen Hilfsauftrag; Einzelheiten für T3 in
+  [`references/t3-codex.md`](references/t3-codex.md).
 - ⚠️ **Vor jedem Zugende hat jede offene Arbeit einen Weckmechanismus**, der
   das Zugende überlebt (Vorfall 34): ein laufender Agent mit Abschlussmeldung
   oder eine App-Überwachung. Wartebedingungen stützen sich nur auf Prüfungen,
@@ -349,8 +351,10 @@ Projektregel.
 - ⚠️ **Korrekturen erzeugen neue Befunde** (Vorfall 35): mindestens vier von
   23 blockierenden Befunden in zwei Meilensteinen, bei beiden Bauagenten. Die
   Korrekturprüfung sucht deshalb ausdrücklich Regressionen derselben
-  Fehlerklasse im ganzen Fix-Diff. Dafür reicht das mittlere Modell auf hoher
-  Stufe; bei großen Fixmengen oder neuen Blockern prüft wieder das starke.
+  Fehlerklasse im gesamten Korrektur-Diff. Für kleine, klar begrenzte
+  Korrekturprüfungen kann das mittlere Modell auf hoher Stufe genügen; das ist
+  eine Heuristik, kein belegter Gleichstand mit dem starken Modell. Bei großen
+  Korrekturmengen oder neuen Blockern prüft wieder das starke.
 - ⚠️ **Jeder Schritt-PR mit Laufzeit-, Vertrags- oder Lebenszyklusrisiko
   bekommt vor dem Merge ein eigenes Review** (Vorfall 35). Zwei ausgelassene
   Einzelreviews verschoben zwei Blocker ins Abschlussreview und drei Fehler in
@@ -433,6 +437,7 @@ mit ihrer Disposition berichten.
 Bei T3-Delegation und Fortsetzung nach Hintergrundarbeit oder Unterbrechungen
 lies [`references/t3-codex.md`](references/t3-codex.md).
 Nutze den aktuellen Werkzeugkatalog, eigene delegierte Review-Runden und geprüfte Worktrees.
-Arbeiter committen lokal; Integration und Push bleiben beim Koordinator nach Projektfreigabe.
+Bauagenten committen lokal; Integration und die Freigabe zum Push bleiben beim Koordinator.
+Ein gesonderter Hilfsauftrag darf nur einen bereits freigegebenen Push ausführen.
 Beachte Modellkosten und tatsächliche Anbieterfehler; eine Claude-Nutzungsabfrage
 ist keine Startbedingung. Schütze Tokens auch in Prozessargumenten (Vorfall 31).

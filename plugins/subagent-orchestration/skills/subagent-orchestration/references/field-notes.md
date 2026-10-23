@@ -775,14 +775,14 @@ Zustellung scheiterte. In M8 hielten Shell-Schleifen bis zur Befehlsfrist von
 zehn Minuten und ein Push mit Pre-Push-Hook im Vordergrund Züge 18 bis 25
 Minuten offen; eine Nachricht des Auftraggebers wartete 14 Minuten. Drei
 Hintergrundbefehle (zwei Pushes, ein Image-Build) endeten mit der
-Provider-Sitzung ohne Meldung; der Stillstand fiel erst nach 56 Minuten,
+Anbietersitzung ohne Meldung; der Stillstand fiel erst nach 56 Minuten,
 96 Minuten und elf Stunden auf, jeweils durch Nachfrage des Auftraggebers.
 Zweimal wartete eine Bedingung auf einen Pflichtstatus, der bei Schritt-PRs
 dauerhaft offen bleibt; weder Schleife noch PR-Watch weckten. Einmal endete
 ein Zug mit „Als Nächstes folgen …“, einmal fragte der Leitstand trotz
 „arbeite alleine durch“ eine Entscheidung im Auftragsrahmen nach.
 
-**Was trotzdem half:** In M8 lösten 47 Abschlussmeldungen binnen Sekunden den
+**Was trotzdem half:** In M8 lösten 47 weitere Meldungen binnen Sekunden den
 nächsten Zug aus. Der Mechanismus trägt, sobald der Zug endet. Ein Leitstand
 auf Codex beendete seine Züge nach asynchroner Delegation von sich aus
 (Beobachtung des Auftraggebers, nicht gemessen).
@@ -791,13 +791,17 @@ auf Codex beendete seine Züge nach asynchroner Delegation von sich aus
 Warteschleifen und keine langen Läufe im Vordergrund des Leitstands; lange
 Läufe als Hilfsauftrag. Vor jedem Zugende hat jede offene Arbeit einen
 Weckmechanismus, der das Zugende überlebt, und jede Wartebedingung einen
-erreichbaren Endzustand. Kein Zugende mit Ankündigung. „Selbständig“ heißt:
+erreichbaren Endzustand. Ein abhängiger Folgeauftrag startet auf die
+Abschlussmeldung hin, nicht nach blockierendem Warten. Kein Zugende mit
+Ankündigung. „Selbständig“ heißt:
 nur bei Zuschnitt, Kosten, Sicherheit und Veröffentlichung fragen.
 
-**Belege und Grenzen:** Aus der privaten Auswertung beider Koordinationsverläufe.
-Token-Zahlen fehlen. Dass Wartezeiten über rund fünf Minuten den Prompt-Cache
-verfallen lassen und so jede Wiederaufnahme verteuern, ist abgeleitet, nicht
-gemessen.
+**Belege und Grenzen:** Aus der privaten Auswertung beider Koordinationsverläufe;
+auch die Zahl der Meldungen und die Nachfragen des Auftraggebers stammen
+daraus. Token-Zahlen und Cache-Messungen fehlen; zusätzliche Token- oder
+Cache-Kosten lassen sich daraus nicht beziffern. Dass Hintergrundbefehle
+grundsätzlich mit der Anbietersitzung enden, ist aus drei Fällen nicht
+bewiesen.
 
 ## 35. Wer baut, wer prüft — gezählt
 
@@ -817,15 +821,16 @@ Runden.
 
 **Was trotzdem half:** Prüfer und Bauagent kamen immer von verschiedenen
 Anbietern; die Reviews fanden echte Blocker mit Rot-Belegen. Der frühe
-Sandbox-Smoke aus Vorfall 33 fing in M8 einen Teil der Vertragsfehler vor dem
+Smoke-Test des Kandidatenpakets aus Vorfall 33 fing in M8 einen Teil der Vertragsfehler vor dem
 Abschluss.
 
 **Die Regel:** Der Leitstand baut nicht, auch keine Korrekturen. Prüfer von
 einem anderen Anbieter, auf hoher Stufe; niedrige Stufe nur für Doku. Jeder
 Schritt-PR mit Laufzeit-, Vertrags- oder Lebenszyklusrisiko bekommt ein eigenes
-Review. Korrekturprüfungen suchen Regressionen derselben Fehlerklasse im ganzen
-Fix-Diff, mit dem mittleren Modell auf hoher Stufe; das starke Modell bei
-großen Fixmengen oder neuen Blockern.
+Review. Korrekturprüfungen suchen Regressionen derselben Fehlerklasse im gesamten
+Korrektur-Diff. Für kleine, klar begrenzte Korrekturprüfungen kann als
+Heuristik das mittlere Modell auf hoher Stufe genügen; bei großen
+Korrekturmengen oder neuen Blockern prüft das starke Modell.
 
 **Belege und Grenzen:** Öffentlich: die Abschluss-PRs
 [#141](https://github.com/florianfinn/docklet-next/pull/141) und

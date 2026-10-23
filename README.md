@@ -65,7 +65,7 @@ Vier Beilagen:
 Fassung **0.8.0** ergänzt die Auswertung der Koordination von Docklet Next M7
 und M8: Der Leitstand beendet seinen Zug nach dem Start im Hintergrund, statt
 zu warten, und sichert jede offene Arbeit mit einem Weckmechanismus, der das
-Zugende überlebt; dazu gemessene Regeln zur Rollen- und Modellverteilung
+Zugende überlebt; dazu aus der Auswertung abgeleitete Regeln zur Rollen- und Modellverteilung
 (Leitstand baut nicht, Prüfer von einem anderen Anbieter auf hoher Stufe,
 Review für jeden riskanten Schritt-PR, Korrekturprüfung auf Regressionen).
 

@@ -14,8 +14,10 @@ Projektregeln und die Modellvorgabe des Auftraggebers bleiben verbindlich.
   Fortsetzen einer Review-Runde. `taskId` je Runde behalten; eine eigene
   `clientRequestId` je Runde bleibt bei Wiederholungen derselben Runde gleich.
 - **Ein Worktree je schreibendem Arbeiter**, mit geprüfter Basis-SHA; Prüfer
-  bekommen einen eigenen Stand für Mutationen. Arbeiter committen nur lokal,
-  der Koordinator integriert und pusht nach der Projektfreigabe. ⚠️ Gemeinsame
+  bekommen einen eigenen Stand für Mutationen. Bauagenten committen nur lokal.
+  Integration und die Freigabe zum Push bleiben beim Koordinator; ein
+  gesonderter Hilfsauftrag darf ausschließlich einen bereits freigegebenen
+  Push ausführen. ⚠️ Gemeinsame
   Vertragsgrundlagen bleiben beim benannten Owner (Vorfälle 9, 27). Reviewer
   zählen zur Kapazitätsgrenze oder werden ausdrücklich gesondert budgetiert.
 - **Keine verpflichtende Claude-Nutzungsabfrage oder feste Prozentgrenze.**
@@ -43,10 +45,11 @@ Die vorbereitete Umgebung muss für den Kindauftrag erreichbar sein; ein
 angeforderter Pfad im Text ersetzt keine korrekte Werkzeug-/Worktree-Bindung.
 Schwere Prüfläufe bei knappen gemeinsamen Ressourcen serialisieren.
 
-Ein Hintergrundbefehl ist noch keine Fortsetzung des Gesamtauftrags. Vor Turn-Ende
-mit offener Arbeit eine app-eigene Aufgabenbenachrichtigung oder den verfügbaren
-PR-Watch einrichten und ID, nächsten Schritt sowie tatsächlichen Befehlsstatus
-privat festhalten. Endet nur der Push, folgt die erlaubte PR-/Review-Aktion weiter.
+Ein Hintergrundbefehl ist noch keine Fortsetzung des Gesamtauftrags. Vor Zugende
+muss jede offene Arbeit eine app-eigene Aufgabenbenachrichtigung oder einen
+PR-Watch haben, der das Zugende überlebt (Vorfall 34). Wartebedingungen dürfen
+nur Prüfungen enthalten, die einen Endzustand erreichen. ID, nächsten Schritt
+und tatsächlichen Befehlsstatus privat festhalten. Endet nur der Push, folgt die erlaubte PR-/Review-Aktion weiter.
 Beim autorisierten Beobachten den App-Watch verwenden; bei Rückgabe an den
 Auftraggeber den Watch nach App-Vorgabe aufheben. Das erteilt keine neue
 Freigabe für Veröffentlichung, Merge oder Deploy.
@@ -63,12 +66,18 @@ ein beendeter Zug startet bei jeder Nachricht oder Abschlussmeldung einen neuen
 (Vorfall 34).
 
 - Nach `delegate_task(mode:"async")` kein `t3_thread_wait` und kein
-  `task_status` in Schleife. `mode:"wait"` nur, wenn das Ergebnis in wenigen
-  Minuten kommt und der nächste Schritt davon abhängt.
-- ⚠️ **Beim Claude-Anbieter endet ein Hintergrundbefehl (`run_in_background`,
-  `&`, `nohup`) mit der Provider-Sitzung und weckt den Leitstand nicht.**
-  Lange Pushes (Pre-Push-Hooks), Image-Builds und Sandbox-Läufe gehen als
-  delegierter Hilfsauftrag hinaus; CI und Merge über `watch_pull_request`.
+  `task_status` in Schleife. Beende den Zug mit eingerichtetem Weckmechanismus.
+  Ein abhängiger Folgeauftrag startet nach der Abschlussmeldung auf dem
+  geprüften Stand seines Vorgängers.
+- ⚠️ **In den ausgewerteten Claude-Anbietersitzungen brachen drei
+  Hintergrundbefehle (gestartet mit `run_in_background` bzw. `&`) beim
+  Sitzungsende ohne Meldung ab** (Vorfall 34). Verlasse dich nur auf einen
+  Weckmechanismus, der nachweislich über das Sitzungsende hinaus wirkt.
+  Lange Prüfläufe, Image-Builds und Sandbox-Läufe gehen als delegierter
+  Hilfsauftrag hinaus. Für einen langen Push (etwa mit Pre-Push-Hook) darf der
+  Leitstand nach erteilter Projektfreigabe einen gesonderten Hilfsauftrag mit
+  genauem Commit und Ziel-Ref erteilen; dieser Auftrag integriert nichts und
+  erweitert keine Freigabe. CI und Merge über `watch_pull_request` beobachten.
 - Der PR-Watch weckt bei „required checks pass“. Bleibt ein Pflichtstatus
   dauerhaft offen (etwa ein Review-Status, den erst der Leitstand setzt),
   kommt diese Meldung nie. Solche Status aus jeder Wartebedingung ausnehmen
