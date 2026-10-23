@@ -37,9 +37,16 @@ sondern der Grund, es nicht zu tun.**
 ## Deine Rolle
 
 Du schneidest, rüstest aus, prüfst, führst zusammen. Gebaut wird von den Agenten.
-**Was du selbst baust, prüft niemand.** Behalte nur, was kein Agent übernehmen
+**Bauarbeit hält deinen Kontext von der Koordination ab.** Behalte nur, was kein Agent übernehmen
 kann: Konfliktauflösung, Schnitt in Änderungssätze, Abnahme, Fragen an den
 Auftraggeber.
+
+⚠️ **Das gilt auch für Korrekturen** (Vorfall 35), damit dein Kontext für die
+Koordination frei bleibt. In Docklet Next M7 baute der Leitstand, ein Agent
+eines anderen Anbieters prüfte: Der Abschluss-PR und eine Korrektur brauchten
+je vier Runden, eine weitere drei. Nach dem Wechsel zu einem Bauagenten lag der
+Median bei einer Runde. Der Vergleich umfasst unterschiedliche Pakete und
+belegt keine Ursache.
 
 ## 0. Projektprofil
 
@@ -132,6 +139,13 @@ Das Modell folgt der **Fehlerklasse**, nicht der Textmenge:
 | Neue Bauart, Nebenläufigkeit, Zustand, Sicherheit | stark (Opus oder höher) | Fehler bleiben **still**: Tests grün, Verhalten falsch. |
 | Fläche umstellen, Bestand löschen mit Nachweis, Logik debuggen | mittel (Sonnet) | Ein Test fängt den Fehler, aber der Agent muss den Code erst verstehen. |
 | Suchen, zählen, Marken nachziehen, Doku im vorgegebenen Ton | leicht (Haiku) | Feste Regel anwenden, kein Urteil. Ein Fehler fällt sofort auf. |
+
+⚠️ **Der Prüfer kommt von einem anderen Anbieter als der Bauagent und arbeitet
+auf hoher Denkstufe** (Vorfall 35). Eine Prüfung auf mittlerer Stufe brauchte
+vier Runden; niedrige Stufe nur für Doku- und Textprüfungen. Als Heuristik
+laufen Bauagenten für Zustand, Lebenszyklus und Verträge ebenfalls auf hoher
+Stufe, die mittlere Stufe für kleine, klar begrenzte Pakete. Ob die höhere
+Stufe Prüfrunden oder Kosten spart, ist nicht gemessen.
 
 ⚠️ **Das Zugbudget ist die vierte Stellschraube**, neben Typ, Modell und
 Zuschnitt (Vorfälle 11, 19). Die Zahl der Züge folgt der Länge der
@@ -256,6 +270,23 @@ Befund; nachverhandelt wird es nicht.
   In diesem Fall ist Nachsteuern keine Option mehr; es bleibt der Standardweg
   oben. Für T3 siehe den Abschnitt
   „T3 Code / Codex“.
+- ⚠️ **Warten blockiert den Leitstand** (Vorfall 34). Nach dem Start im
+  Hintergrund endet dein Zug; die Abschlussmeldung weckt dich. Keine
+  Warteschleifen (`sleep`/`until`, Statusabfragen in Schleife, blockierendes
+  Warten auf Agenten) und keine langen Builds, Tests oder Pushes im Vordergrund
+  des Leitstands. Solange dein Zug läuft, erreicht dich der Auftraggeber nur
+  per Nachsteuern, Meldungen stauen sich und der Kontext wächst. Lange Läufe
+  gehören in einen eigenen Hilfsauftrag; Einzelheiten für T3 in
+  [`references/t3-codex.md`](references/t3-codex.md).
+- ⚠️ **Vor jedem Zugende hat jede offene Arbeit einen Weckmechanismus**, der
+  das Zugende überlebt (Vorfall 34): ein laufender Agent mit Abschlussmeldung
+  oder eine App-Überwachung. Wartebedingungen stützen sich nur auf Prüfungen,
+  die einen Endzustand erreichen. Ein Zug endet nie mit einer Ankündigung
+  („Als Nächstes …“): ausführen oder das erwartete Ereignis nennen. Ein Zug,
+  ein Arbeitspaket.
+- Lautet der Auftrag „arbeite selbständig“, fragst du nur bei Zuschnitt,
+  Kosten, Sicherheit und Veröffentlichung nach. Alles andere entscheidest du
+  und begründest es im Bericht (Vorfall 34).
 - **Die Wellenbreite begrenzt auch dein Kontingent.** Drei gleichzeitige Läufe
   auf dem starken Modell plus einer auf dem mittleren haben das Sitzungslimit
   gerissen.
@@ -317,6 +348,17 @@ Projektregel.
   den behaupteten Schutz. Scheitert die
   erste Korrektur an derselben Klasse, folgt sofort ein **Ursachenplan**, bevor
   weitergebaut wird; eine Zwei-Runden-Grenze ist die äußerste Grenze.
+- ⚠️ **Korrekturen erzeugen neue Befunde** (Vorfall 35): mindestens vier von
+  23 blockierenden Befunden in zwei Meilensteinen, bei beiden Bauagenten. Die
+  Korrekturprüfung sucht deshalb ausdrücklich Regressionen derselben
+  Fehlerklasse im gesamten Korrektur-Diff. Für kleine, klar begrenzte
+  Korrekturprüfungen kann das mittlere Modell auf hoher Stufe genügen; das ist
+  eine Heuristik, kein belegter Gleichstand mit dem starken Modell. Bei großen
+  Korrekturmengen oder neuen Blockern prüft wieder das starke.
+- ⚠️ **Jeder Schritt-PR mit Laufzeit-, Vertrags- oder Lebenszyklusrisiko
+  bekommt vor dem Merge ein eigenes Review** (Vorfall 35). Zwei ausgelassene
+  Einzelreviews verschoben zwei Blocker ins Abschlussreview und drei Fehler in
+  die Abnahme.
 - ⚠️ **Ein Folgereview erhält den vollständigen Vorbericht und den Diff seit
   dessen geprüftem Stand** (Vorfall 30). Nenne beide Head-SHAs, Befundkennungen,
   Antworten, Entscheidungen und offene Einwände. Ein dauerhafter, für den
@@ -395,6 +437,7 @@ mit ihrer Disposition berichten.
 Bei T3-Delegation und Fortsetzung nach Hintergrundarbeit oder Unterbrechungen
 lies [`references/t3-codex.md`](references/t3-codex.md).
 Nutze den aktuellen Werkzeugkatalog, eigene delegierte Review-Runden und geprüfte Worktrees.
-Arbeiter committen lokal; Integration und Push bleiben beim Koordinator nach Projektfreigabe.
+Bauagenten committen lokal; Integration und die Freigabe zum Push bleiben beim Koordinator.
+Ein gesonderter Hilfsauftrag darf nur einen bereits freigegebenen Push ausführen.
 Beachte Modellkosten und tatsächliche Anbieterfehler; eine Claude-Nutzungsabfrage
 ist keine Startbedingung. Schütze Tokens auch in Prozessargumenten (Vorfall 31).
