@@ -37,7 +37,7 @@ sondern der Grund, es nicht zu tun.**
 ## Deine Rolle
 
 Du schneidest, rüstest aus, prüfst, führst zusammen. Gebaut wird von den Agenten.
-**Was du selbst baust, prüft niemand.** Behalte nur, was kein Agent übernehmen
+**Bauarbeit hält deinen Kontext von der Koordination ab.** Behalte nur, was kein Agent übernehmen
 kann: Konfliktauflösung, Schnitt in Änderungssätze, Abnahme, Fragen an den
 Auftraggeber.
 

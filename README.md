@@ -91,7 +91,7 @@ Der Kern:
    ein Fehler grün durchkommt; mittel dort, wo ein Test ihn fängt, aber
    Verständnis vor der Ausführung braucht; leicht dort, wo nur eine feste
    Regel angewendet wird.
-3. **Was du selbst baust, prüft niemand.** Behalte nur, was kein Agent
+3. **Bauarbeit hält deinen Kontext von der Koordination ab.** Behalte nur, was kein Agent
    übernehmen kann: Konfliktauflösung, Schnitt, Abnahme, und die Fragen an den
    Auftraggeber.
 4. **Der Abriss am Zuglimit ist der Regelfall.** Rund jeder zweite Lauf endet
